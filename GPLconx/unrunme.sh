@@ -7,4 +7,5 @@ rm -f config.h config.h.in aclocal.m4 configure Makefile Makefile.in missing \
       mkinstalldirs install-sh stamp-h stamp-h.in ltmain.sh ltconfig libtool \
       config.guess config.sub config.log config.status config.cache \
       src/Makefile src/Makefile.in Togl/Makefile.in Togl/Makefile \
-      src/Tcl/Makefile src/Tcl/Makefile.in doc/Makefile doc/Makefile.in
+      src/Tcl/Makefile src/Tcl/Makefile.in doc/Makefile doc/Makefile.in \
+      src/lcl/Makefile src/lcl/Makefile.in

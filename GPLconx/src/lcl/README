@@ -1,0 +1,5 @@
+Here is the part of the Linux Class Library that we need for GPLconx.
+The whole library can be found (as lcl-0.3.tar.gz), and it's GPL'ed
+(maybe LGPL'ed, the docs say LGPL but the file `COPYING' is the GPL v2).
+
+The authors are named in `AUTHORS'.
