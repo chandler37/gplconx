@@ -18,14 +18,14 @@
 */
 
 /*
-  Implementation of C++ classes in `stmparse.hh'.
+  Implementation of C++ classes in `sth_mpar.hh'.
 */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#include "stmparse.hh"
+#include "sth_mpar.hh"
 
 CF_INLINE
 CConxClsMetaParser::CConxClsMetaParser(CConxCanvas *kdCanvas,
