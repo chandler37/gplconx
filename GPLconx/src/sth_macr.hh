@@ -35,6 +35,8 @@
 
 #define RETURN_NEW_RESULT(result, newObj) \
    do { \
+     LLL("Smalltalkishly returning a new Smalltalkish object @" \
+         << (newObj) << " that prints as `" << (*(newObj)) << "'"); \
      SET_RESULT(result, newObj); return OK_NEW_THING; /* DLC check oom GC */ \
    } while (0)
 
@@ -255,6 +257,14 @@ class CClsFloat;
      return CClsBase::OK_NEW_THING; \
    } while (0)
 
+class CClsSmallInt;
+
+#define RETURN_SMALLINT(result, fl) \
+   do { \
+     SET_RESULT(result, new CClsSmallInt(fl));  /* DLC GC this will cause a throw in removeUsers */ \
+     return CClsBase::OK_NEW_THING; \
+   } while (0)
+
 #define ANSWERER_IMPL(classType, staticFunctionName, correspondingMethodName) \
 inline \
 int classType::staticFunctionName(CClsBase *receiver, \
@@ -287,12 +297,23 @@ class CClsNumber;
                                      functionName, c, \
                                      comment))
 
+#define ST_CMETHOD_BOTH(am, stMethodName, c, functionName, comment) \
+        (am)->append(CConxClsAnsMach(stMethodName, \
+                                     CConxClsAnsMach::CLASS, \
+                                     functionName, c, \
+                                     comment)); \
+        (am)->append(CConxClsAnsMach(stMethodName, \
+                                     CConxClsAnsMach::OBJECT, \
+                                     functionName, c, \
+                                     comment))
+
 #define ADD_ANS_GETTER(mname, fn) \
-   ST_METHOD(ansMachs, mname, OBJECT, oiAnswerer ## fn, "Returns the " mname)
+   ST_CMETHOD(ansMachs, mname, "getting", OBJECT, oiAnswerer ## fn, \
+              "Returns the " mname)
 
 #define ADD_ANS_SETTER(mname, fn) \
-   ST_METHOD(ansMachs, mname, OBJECT, oiAnswerer ## fn, \
-             "Sets the `" mname "' field; returns the receiver")
+   ST_CMETHOD(ansMachs, mname, "setting", OBJECT, oiAnswerer ## fn, \
+              "Sets the `" mname "' field; returns the receiver")
 
 // The following makes implementing actions easy, but may be hard to
 // unnecessarily hard to understand: DLC
@@ -303,7 +324,11 @@ cls ## :: ## func(CClsBase **result, CConxClsMessage &o) constness \
 
 // The following macros assume that the result pointer is named `result':
 #define RETURN_FLOAT_R(m) RETURN_FLOAT(result, m)
-#define RETURN_BOOLE_R(m) RETURN_BOOLE(result, m)
+#define RETURN_SMALLINT_R(m) RETURN_SMALLINT(result, m)
+#define RETURN_BOOLE_R(m) RETURN_BOOLE(m, result)
+
+#define RETURN_ERROR_R(m) RETURN_ERROR_RESULT(result, m)
+#define RETURN_NEW_R(m) RETURN_NEW_RESULT(result, m)
 
 #define REQUIRE_METHOD_IN_SUBCLASS() \
     RETURN_ERROR_RESULT(result, \
