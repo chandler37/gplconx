@@ -31,25 +31,25 @@ $ >>> 3.3
 $ >>> ModelIdentifier
 $ >>> ParseError: unknown keyword message
 $ >>> ParseError: `m:', keyword number 3, requires an argument of type ``ModelIdentifier object instance''
-$ >>> [puhp(3.3, 4.4), kd(0.2112, 0.936), pd(0.164794, 0.730337)]
-$ >>> [puhp(3.3, 4.4), kd(0.2112, 0.936), pd(0.164794, 0.730337)]
-$ >>> [puhp(3.3, 4.4), kd(0.2112, 0.936), pd(0.164794, 0.730337)]
-$ >>> [puhp(3.3, 4.7), kd(0.194232, 0.941142), pd(0.152144, 0.737206)]
+$ >>> Point(x: 3.3, y: 4.4, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Point(x: 3.3, y: 4.4, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Point(x: 3.3, y: 4.4, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Point(x: 3.3, y: 4.7, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
 $ >>> 0.065958
-$ >>> [puhp(0.428571, 1.29363), kd(0.3, 0.3), pd(0.157436, 0.157436)]
-$ >>> [puhp(-0.230769, 0.696568), kd(-0.3, -0.3), pd(-0.157436, -0.157436)]
+$ >>> Point(x: 0.3, y: 0.3, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Point(x: -0.3, y: -0.3, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
 $ >>> ParseError: Syntax error: parse error
-$ >>> [puhp(0, 1), kd(0, 0), pd(0, 0)]
+$ >>> Point(x: 0, y: 0, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
 $ >>> ParseError: unknown unary message
 $ >>> ParseError: unknown keyword message
 $ >>> true
 $ >>> false
-$ >>> [puhp(3.3, 4.4), kd(0.2112, 0.936), pd(0.164794, 0.730337)]
+$ >>> Point(x: 3.3, y: 4.4, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
 $ >>> 0.1
-$ >>> [puhp(3.3, 4.4), kd(0.2112, 0.936), pd(0.164794, 0.730337)]
+$ >>> Point(x: 3.3, y: 4.4, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
 $ >>> 0.1
-$ >>> [puhp(0.1, 4.4), kd(0.00981836, 0.901816), pd(0.00685636, 0.629757)]
-$ >>> [puhp(3.3, 4.4), kd(0.2112, 0.936), pd(0.164794, 0.730337)]
+$ >>> Point(x: 0.1, y: 4.4, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Point(x: 3.3, y: 4.4, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
 $ $ >>> ParseError: receiver is read-only
 $ >>> Model Identifier 'P ' which refers to no valid model
 $ >>> true
@@ -87,7 +87,7 @@ $ >>> false
 $ >>> true
 $ >>> #( 3 4 5 #hi )
 $ >>> #( )
-$ >>> #( 'first' )
+$ >>> 'first'
 $ >>> Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
 $ >>> #BRESENHAM
 $ >>> #B
@@ -125,7 +125,7 @@ $ >>> ParseError: `at:', keyword number 1, requires an argument of type ``SmallI
 $ >>> #a1
 $ >>> #a3
 $ >>> ParseError: not yet implemented, should grow I guess -- I need an integer class first.
-$ >>> #( #a1 #a2 #a3 'wow' )
+$ >>> 'wow'
 $ >>> Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
 $ >>> Color(RGB=[0, 1, 0.3])
 $ >>> #BRESENHAM
@@ -139,20 +139,20 @@ $ >>> Drawable -- Color(RGB=[0.1, 0.3, 0.44]), garnishing on, thickness 2.5, slo
 $ >>> Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
 $ >>> 0.001
 $ >>> Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.001, drawing method #BRESENHAM
-$ >>> [puhp(0.36, 0.37), kd(0.568496, -0.579155), pd(0.358834, -0.365562)]
+$ >>> Point(x: 0.36, y: 0.37, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
 $ >>> 0.36
 $ >>> 0.37
 $ >>> 0.39
-$ >>> [puhp(0.36, 0.39), kd(0.561754, -0.560428), pd(0.349226, -0.348402)]
+$ >>> Point(x: 0.36, y: 0.39, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
 $ >>> ParseError: unknown unary message
 $ >>> Model Identifier 'uhp' which refers to the Poincare Upper Half Plane
 $ >>> Model Identifier 'kd' which refers to the Beltrami-Klein Disk
-$ >>> [puhp(0.590164, 1.38939), kd(0.36, 0.39), pd(0.194855, 0.211093)]
+$ >>> Point(x: 0.36, y: 0.39, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
 $ >>> 0.36
 $ >>> 0.39
 $ >>> -0.1
 $ >>> Model Identifier 'uhp' which refers to the Poincare Upper Half Plane
-$ >>> [puhp(0.36, 0), kd(0.637394, -0.770538), pd(0.637394, -0.770538)]
+$ >>> Point(x: 0.36, y: -0.1, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
 $ >>> 'that was truncated as it should have been'
 $ >>> 'This is the Smalltalk-80-ish system that GPLconx uses to give you incredible expressive power (um, one day...).  The system's documentation is in the Texinfo document that you'll find bundled with the source, which is freely available since GPLconx is GPL'ed.  To get up to speed more quickly, download and check out GNU Smalltalk, which is full-featured and better-documented.
 Another good source of help is by typing `Object help', or `System help', or `2 help', or `0.3 help', e.g.  This gives you information about the class of the receiver, such as which methods work.  There are no binary methods in this system, and you cannot extend it unless you alter the C++ source code.'
@@ -185,7 +185,7 @@ Class methods:
 	class -- Returns the class of which the receiver is a class instance
 	printString -- Returns a human-readable String object instance representation
 	isClass -- Returns true if the receiver is a class instance rather than an object instance
-	clone -- Returns an identical copy of the receiver (not the receiver itself)
+	clone -- Returns an identical copy of the receiver (not the receiver itself) that shares any contents if the receiver is a container
 	help -- Returns help on using the receiver
 	isNil -- Returns true if the receiver isNil
 	notNil -- Returns true if the receiver is notNil
@@ -215,14 +215,22 @@ Class methods:
 	notSystem -- Returns true if the receiver is notSystem
 	isCanvas -- Returns true if the receiver isCanvas
 	notCanvas -- Returns true if the receiver is notCanvas
+	isLine -- Returns true if the receiver isLine
+	notLine -- Returns true if the receiver is notLine
+	isCircle -- Returns true if the receiver isCircle
+	notCircle -- Returns true if the receiver is notCircle
 
 
 Instance methods:
+	makeReadOnly -- Makes the object instance read-only; if the object is a container, such as Array, Canvas, Drawable, Point, Line, etc., then the contents become read-only also.  This is irreversible and comes with some performance advantages.  Clone a read-only object to get a read-write equivalent
+	isReadOnly -- Returns a Boolean to indicate the receiver's read-only status
 	superClass -- Returns the class from which the receiver is derived
 	class -- Returns the class of which the receiver is an object instance
 	printString -- Returns a human-readable String object instance representation
 	isClass -- Returns true if the receiver is a class instance rather than an object instance
-	clone -- Returns an identical copy of the receiver (not the receiver itself)
+	cloneDeep -- Returns a copy of the receiver with, in the case or containers, all contents replaced by cloneDeep copies
+	clone -- Returns an identical copy of the receiver (not the receiver itself) that shares any contents if the receiver is a container
+	exactlyEquals: -- Returns true iff the receiver is precisely the same object instance as the argument (iff the pointers are equal, for you C folk)
 	set: -- Sets the receiver's value to a copy of the argument's value
 	help -- Returns help on using the receiver
 	isNil -- Returns true if the receiver isNil
@@ -253,5 +261,115 @@ Instance methods:
 	notSystem -- Returns true if the receiver is notSystem
 	isCanvas -- Returns true if the receiver isCanvas
 	notCanvas -- Returns true if the receiver is notCanvas
+	isLine -- Returns true if the receiver isLine
+	notLine -- Returns true if the receiver is notLine
+	isCircle -- Returns true if the receiver isCircle
+	notCircle -- Returns true if the receiver is notCircle
 '
+$ >>> Point(x: 0.36, y: -0.1, model: uhp) -- Drawable -- Color(RGB=[0.1, 0.9, 0.512]), garnishing on, thickness 3, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> true
+$ >>> true
+$ >>> false
+$ >>> true
+$ >>> true
+$ >>> false
+$ >>> true
+$ >>> false
+$ >>> true
+$ >>> false
+$ >>> true
+$ >>> Point(x: 0.3, y: 0.301, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Point(x: 0.3, y: 0.301, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> 0.4
+$ >>> Point(x: 0.4, y: 0.301, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> 0.4
+$ >>> 0.4
+$ >>> Point(x: 0.21, y: 0.22, model: pd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> 0.225
+$ >>> Point(x: 0.21, y: 0.225, model: pd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> #( Point(x: 0.3, y: 0.301, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM Point(x: 0.21, y: 0.225, model: pd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM )
+$ >>> 0.212
+$ >>> Point(x: 0.212, y: 0.225, model: pd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> #( Point(x: 0.3, y: 0.301, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM Point(x: 0.212, y: 0.225, model: pd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM )
+$ >>> ParseError: receiver is read-only
+$ >>> Point(x: 0.3, y: 0.301, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> ParseError: receiver is read-only
+$ >>> 0.3
+$ >>> ParseError: receiver is read-only
+$ >>> ParseError: receiver is read-only
+$ >>> Point(x: 0.3, y: 0.301, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> ParseError: receiver is read-only
+$ >>> false
+$ >>> true
+$ >>> ParseError: receiver is read-only
+$ >>> Point(x: 0.3, y: 0.301, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> 0.3
+$ >>> 4.34
+$ >>> Point(x: 4.34, y: 0.301, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> #( Point(x: 0.3, y: 0.301, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM Point(x: 0.212, y: 0.225, model: pd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM )
+$ >>> Point(x: 0.3, y: 0.301, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> true
+$ >>> ParseError: receiver is read-only
+$ >>> ParseError: receiver is read-only
+$ >>> nil
+$ >>> #( Point(x: 0.3, y: 0.301, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM Point(x: 0.212, y: 0.225, model: pd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM )
+$ >>> true
+$ >>> #( Point(x: 0.3, y: 0.301, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM Point(x: 0.212, y: 0.225, model: pd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM )
+$ >>> true
+$ >>> false
+$ >>> true
+$ >>> false
+$ >>> #( Point(x: 0.3, y: 0.301, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM Point(x: 0.212, y: 0.225, model: pd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM )
+$ >>> Point(x: 0.36, y: 0.37, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Point(x: 0.36, y: 0.37, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> 0.39
+$ >>> Point(x: 0.39, y: 0.37, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Point(x: 0.39, y: 0.37, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> 2.2
+$ >>> 2.2
+$ >>> 2.2
+$ >>> #( 2.2 )
+$ >>> #( 2.2 )
+$ >>> #( 2.2 )
+$ >>> ParseError: `put:', keyword number 2, requires an argument of type ``Drawable object instance''
+$ >>> Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Point(x: 0.36, y: 0.37, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Line(A: Point(x: 0.36, y: 0.37, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM, B: Point(x: 0.36, y: 0.37, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> ParseError: This object instance is not tied to any canvas.
+$ >>> Canvas(0 Drawable object instances, 3 entries)
+$ >>> Canvas(0 Drawable object instances, 3 entries)
+$ >>> Point(x: 0.36, y: 0.37, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Canvas(0 Drawable object instances, 3 entries)
+$ >>> true
+$ >>> Canvas(0 Drawable object instances, 3 entries)
+$ >>> false
+$ >>> Canvas(0 Drawable object instances, 0 entries)
+$ >>> ParseError: This object instance is not tied to any canvas.
+$ >>> #( )
+$ >>> #justice
+$ >>> #( #justice #number2 #plum )
+$ >>> Point(x: 0.36, y: 0.37, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Point(x: 0.3, y: 0.37, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Point(x: 0.3, y: 0.37, model: uhp) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> 0.3
+$ >>> #( 0.3 0.4 )
+$ >>> 0.2
+$ >>> 0.5
+$ >>> #( 0.2 0.3 0.4 0.5 )
+$ >>> 0.5
+$ >>> 0.5
+$ >>> 0.2
+$ >>> Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1.3, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1.3, slow drawing method tolerance 0.005, drawing method #BRESENHAM
+$ >>> Drawable -- Color(RGB=[0, 0, 0]), garnishing on, thickness 1.3, slow drawing method tolerance 0.005, drawing method #BRESENHAM
+$ >>> Drawable -- Color(RGB=[0, 0, 0]), garnishing on, thickness 1.3, slow drawing method tolerance 0.005, drawing method #longway
+$ >>> #longway
+$ >>> #bresenham
+$ >>> #bresenham
+$ >>> Drawable -- Color(RGB=[0, 0, 0]), garnishing on, thickness 1.3, slow drawing method tolerance 0.005, drawing method #longway
+$ >>> #longway
+$ >>> Drawable -- Color(RGB=[0, 0, 0]), garnishing on, thickness 1.3, slow drawing method tolerance 0.005, drawing method #bresenham
+$ >>> #longway
+$ >>> #bresenham
 $ 

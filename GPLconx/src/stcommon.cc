@@ -71,6 +71,10 @@ const char *CClsBase::getClsNameByType(ClsType c)
     return CClsSystem::sGetClsName();
   case CLS_CANVAS:
     return CClsCanvas::sGetClsName();
+  case CLS_LINE:
+    return CClsLine::sGetClsName();
+  case CLS_CIRCLE:
+    return CClsCircle::sGetClsName();
 // DLC NEWSTCLASS
   case CLS_SYMBOL:
     return CClsSymbol::sGetClsName();
@@ -93,6 +97,12 @@ void CClsBase::initializeAnsweringMachines()
 
     // DLC for efficiency, don't allow `Boolean true' and `Boolean false',
     // force copying `true' and `false'.
+    ansMachs->append(CConxClsAnsMach("makeReadOnly", CConxClsAnsMach::OBJECT,
+                                     oiAnswererMakeReadOnly,
+                                     "Makes the object instance read-only; if the object is a container, such as Array, Canvas, Drawable, Point, Line, etc., then the contents become read-only also.  This is irreversible and comes with some performance advantages.  Clone a read-only object to get a read-write equivalent"));
+    ansMachs->append(CConxClsAnsMach("isReadOnly", CConxClsAnsMach::OBJECT,
+                                     oiAnswererIsReadOnly,
+                                     "Returns a Boolean to indicate the receiver's read-only status"));
     ansMachs->append(CConxClsAnsMach("superClass", CConxClsAnsMach::CLASS,
                                      ciAnswererSuperClass,
                                      "Returns the class from which the receiver is derived"));
@@ -117,12 +127,19 @@ void CClsBase::initializeAnsweringMachines()
     ansMachs->append(CConxClsAnsMach("isClass", CConxClsAnsMach::OBJECT,
                                      iAnswererIsClass,
                                      "Returns true if the receiver is a class instance rather than an object instance"));
+    ansMachs->append(CConxClsAnsMach("cloneDeep", CConxClsAnsMach::OBJECT,
+                                     oiAnswererCloneDeep,
+                                     "Returns a copy of the receiver with, in the case or containers, all contents replaced by cloneDeep copies"));
     ansMachs->append(CConxClsAnsMach("clone", CConxClsAnsMach::CLASS,
                                      iAnswererClone,
-                                     "Returns an identical copy of the receiver (not the receiver itself)"));
+                                     "Returns an identical copy of the receiver (not the receiver itself) that shares any contents if the receiver is a container"));
     ansMachs->append(CConxClsAnsMach("clone", CConxClsAnsMach::OBJECT,
                                      iAnswererClone,
-                                     "Returns an identical copy of the receiver (not the receiver itself)"));
+                                     "Returns an identical copy of the receiver (not the receiver itself) that shares any contents if the receiver is a container"));
+    ansMachs->append(CConxClsAnsMach("exactlyEquals:",
+                                     CConxClsAnsMach::OBJECT,
+                                     oiAnswererExactlyEquals,
+                                     "Returns true iff the receiver is precisely the same object instance as the argument (iff the pointers are equal, for you C folk)"));
     ansMachs->append(CConxClsAnsMach("set:", CConxClsAnsMach::OBJECT,
                                      oiAnswererSet,
                                      "Sets the receiver's value to a copy of the argument's value"));
@@ -174,6 +191,8 @@ void CClsBase::initializeAnsweringMachines()
     HANDLE_CLASS_TYPE_TESTS("Number", CLS_NUMBER, Number);
     HANDLE_CLASS_TYPE_TESTS("System", CLS_SYSTEM, System);
     HANDLE_CLASS_TYPE_TESTS("Canvas", CLS_CANVAS, Canvas);
+    HANDLE_CLASS_TYPE_TESTS("Line", CLS_LINE, Line);
+    HANDLE_CLASS_TYPE_TESTS("Circle", CLS_CIRCLE, Circle);
 // DLC NEWSTCLASS
   }
 }

@@ -96,7 +96,7 @@ void conxP_send_unary_message(SimpleClsRef *result, SimpleClsRef receiver,
 // Sets result to the result of receiver's application of the unary message
 // unaryMessage
 {
-  // DLC try..catch
+try {
   LLL("int conxP_send_unary_message(SimpleClsRef *result, SimpleClsRef receiver, const char *unaryMessage)");
   assert(unaryMessage != NULL);
   assert(result != NULL);
@@ -108,6 +108,16 @@ void conxP_send_unary_message(SimpleClsRef *result, SimpleClsRef receiver,
   assert(trueResult != NULL);
   result->ptr = trueResult;
   result->ptr_type = trueResult->getType();
+} catch (const char *errs) {
+  cerr << "\n008GPLconx tparser had a const char * exception thrown:\n`" << errs << "'\nAborting.\n";
+  exit(3);
+} catch (int k1) {
+  cerr << "\n008GPLconx tparser had an int exception thrown:\n`" << k1 << "'\nAborting.\n";
+  exit(3);
+} catch (...) {
+  cerr << "\n008GPLconx tparser had some exception thrown.\n\nAborting.\n";
+  exit(3);
+}
 }
 
 void conxP_new_Float_instance(SimpleClsRef *result, double f)

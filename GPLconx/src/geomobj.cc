@@ -294,11 +294,11 @@ CConxLine &CConxLine::operator=(const CConxLine &o)
 }
 
 CF_INLINE
-CConxLine::CConxLine(const CConxPoint &A, const CConxPoint &B)
+CConxLine::CConxLine(const CConxPoint &A, const CConxPoint &B, Boole isSeg)
   : isValid(0)
 {
-  MMM("CConxLine(const CConxPoint &A, const CConxPoint &B)");
-  isSegment = FALSE;
+  MMM("CConxLine(const CConxPoint &A, const CConxPoint &B, Boole isSeg = FALSE)");
+  isSegment = isSeg;
   setA(A);
   setB(B);
 }

@@ -512,6 +512,13 @@ private:
                                        oiAnswerer ## fn, \
                                        "Returns the " mname))
 
+#define ADD_ANS_SETTER(mname, fn) \
+      ansMachs->append(CConxClsAnsMach(mname, \
+                                       CConxClsAnsMach::OBJECT, \
+                                       oiAnswerer ## fn, \
+                                       "Sets the `" mname "' field; returns the receiver"))
+
+
 #define ANS_GETTER(obj, fn, attribute) \
   ErrType oiAction ## fn(CClsBase **result, CConxClsMessage &o) \
   /* This is not const because you can modify the returned object */ \
@@ -520,6 +527,17 @@ private:
   } \
   ANSWERER(obj, oiAnswerer ## fn, oiAction ## fn)
 
+#define ANS_SETTER(cls, fieldCls, ansName, field) \
+  ErrType oiAction ## ansName(CClsBase **result, CConxClsMessage &o) \
+  { \
+    CHECK_READ_ONLYNESS(result); \
+    ENSURE_SINGLE_ARG_IS_OF_TYPE(fieldCls, argv, o); \
+    MAYBE_REMOVE_A_USER(field); \
+    (field) = argv[0]; \
+    (field)->incrementUsers(); \
+    RETURN_THIS(result); \
+  } \
+  ANSWERER(cls, oiAnswerer ## ansName, oiAction ## ansName)
 
 
 typedef CConxOwnerArray<CConxClsAnsMach> Answerers;

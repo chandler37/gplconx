@@ -25,6 +25,8 @@
 #include <config.h>
 #endif
 
+#include <stdlib.h>
+
 #include "CObject.hh"
 
 size_t CConxObject::numCreated = 0;
@@ -32,3 +34,13 @@ size_t CConxObject::numDestroyed = 0;
 #ifndef NDEBUG
 Boole CConxObject::cerr_from_destructor = FALSE;
 #endif
+
+void unexpected()
+{
+  cerr << "\nAn unexpected C++ exception was thrown, which means that there is a bug or you are out of memory.\n";
+#ifndef NDEBUG
+  abort();
+#else
+  exit(4);
+#endif
+}

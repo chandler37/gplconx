@@ -28,10 +28,12 @@
 #include "stconx.hh"
 
 CConxOwnerArray<CConxClsAnsMach> *CClsPoint::ansMachs = NULL;
+CConxOwnerArray<CConxClsAnsMach> *CClsLine::ansMachs = NULL;
 CConxOwnerArray<CConxClsAnsMach> *CClsModelIdentifier::ansMachs = NULL;
 CConxOwnerArray<CConxClsAnsMach> *CClsColor::ansMachs = NULL;
 CConxOwnerArray<CConxClsAnsMach> *CClsDrawable::ansMachs = NULL;
 CConxOwnerArray<CConxClsAnsMach> *CClsCanvas::ansMachs = NULL;
+CConxOwnerArray<CConxClsAnsMach> *CClsCircle::ansMachs = NULL;
 // DLC NEWSTCLASS
 
 
@@ -41,11 +43,14 @@ CConxString CClsPoint::printString() const
   if (isClassInstance())
     return getClsName();
   else {
-    try {
-      DEFAULT_PRINTSTRING(getValue());
-    } catch (CClsError *ne) {
-      DEFAULT_PRINTSTRING(*ne);
-      delete ne;
-    }
+    assert(xCoord != NULL); assert(yCoord != NULL); assert(model != NULL);
+    CConxString s = getClsName();
+    s += "(x: " + xCoord->printString() + ", y: " + yCoord->printString()
+      + ", model: " + model->printShortString() + ")";
+    s += " -- " + CClsDrawable::printString();
+    return s;
+    // DLC this may show `Point(x: 0.36, y: -0.1, model: uhp)' when
+    // -0.1 will be clamped to [0.0, inf)
+
   }
 }

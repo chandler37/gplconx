@@ -11,7 +11,6 @@
  * See the file "../doc/TK_LICENSE" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id$
  */
 
 #ifndef _TKINTDECLS

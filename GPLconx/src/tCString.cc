@@ -38,8 +38,8 @@
 #include "tester.hh"
 
 static int tcstring(void);
-static int tstringarray(void);
-static int tsimplearray(void);
+static int tstringarray(void); // DLC test prepend()
+static int tsimplearray(void); // DLC test prepend()
 
 int tsimplearray(void)
 // Returns zero if the CConxSimpleArray class passes.

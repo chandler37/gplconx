@@ -308,6 +308,8 @@ protected:
     LOAD_CLASS_INSTANCE(CClsNumber);
     LOAD_CLASS_INSTANCE(CClsSystem);
     LOAD_CLASS_INSTANCE(CClsCanvas);
+    LOAD_CLASS_INSTANCE(CClsLine);
+    LOAD_CLASS_INSTANCE(CClsCircle);
     // DLC NEWSTCLASS
     LOAD_CLASS_INSTANCE(CClsBase);
     LOAD_CLASS_INSTANCE(CClsFloat);
@@ -594,3 +596,11 @@ OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxClsManager);
 
 #endif // GPLCONX_CLSMGR_CXX_H
 
+// DLC
+// l2 := Line A: Point new B: Point new isSegment: true. l2 isSegment set: false
+// should not cause an error.  Be smart and check in ciActionABIsSegment()
+// to see if the args are read-only.  If they are, then optimize.  Make
+// makeReadOnly an Object method that is unreversible.
+// Alternatively, if the args are read-only, clone them.  Then the whole
+// line could be read-only, but a non-read-only line will have editable
+// members.

@@ -157,3 +157,109 @@ p
 ((Array with: System) at: 1) helpMe
 Boolean help
 Object help
+p thickness set: 3 . p color R: .1 G: .9 B: .512 . p
+true isReadOnly
+false isReadOnly
+Boolean true isReadOnly
+Boolean true makeReadOnly
+Boolean false makeReadOnly isReadOnly
+3.3 isReadOnly
+3.3 makeReadOnly isReadOnly
+3.3 isReadOnly
+nil exactlyEquals: nil
+3.3 exactlyEquals: 3.3
+(L := 3.3) exactlyEquals: L
+p1 := Point x: .3 y: .301 m: kd
+p2 := Point x: (x := .3) y: .301 m: kd
+x set: .4
+p2
+x makeReadOnly
+p2 x
+p3 := Point x: (x2 := .21) y: (y2 := .22) model: pd
+y2 set: .225
+p3
+a1 := Array with: p1 with: p3
+x2 set: .212
+p3
+a1 makeReadOnly
+x2 set: .213
+p2 set: p1
+p1 set: Point new
+p2 x
+p1 x set: .4
+p2 x set: .4
+p2 set: p1 clone
+p2 x set: .4
+p2 isReadOnly
+p2 x isReadOnly
+p1 x set: 4.34
+p4 := p1 cloneDeep
+p4 x
+p4 x set: 4.34
+p4
+a1
+a11 := a1 at: 1
+a11 isReadOnly
+a11 set: Point new
+a11 makeReadOnly
+a2
+a2 := a1 clone
+(a2 at: 1) isReadOnly
+a3 := a1 cloneDeep
+(a1 at: 1) isReadOnly
+(a3 at: 1) isReadOnly
+(a1 at: 1) y isReadOnly
+(a3 at: 1) y isReadOnly
+a3
+pt1 := Point new
+pt2 := pt1 clone
+pt2 x set: .39
+pt2
+pt1
+Array new at: 1 put: 2.2
+ans
+ans
+Array new at: 1 put: 2.2; yourself
+ans
+ans
+kdc at: 1 put: 2.2
+kdc at: 1 put: Drawable new
+kdc at: 2 put: Point new
+kdc at: 3 put: Line new
+kdc sync
+kdc
+a := kdc
+kdc at: 1 put: Point new
+kdc makeReadOnly
+(kdc at: 1) x isReadOnly
+a := kdc cloneDeep
+(a at: 1) x isReadOnly
+pdc set: Canvas new
+a sync
+a := Array new
+(a addFirst: #number2; at: 2 put: #plum; yourself) addFirst: #justice
+a
+p := Point new
+p x: .3
+p
+p x
+a := Array with: .3 with: .4
+a addFirst: .2
+a addLast: .5
+a
+a at: 4
+a at: 6
+a at: 1
+d := Drawable new
+d thickness: 1.3
+d longwayMethodTolerance: .005
+d color: Color new
+d drawingMethod: (l := #longway)
+l
+d drawingMethod set: #bresenham
+l
+d drawingMethod: (l := #longway)
+l
+d drawingMethod: #bresenham
+l
+d drawingMethod

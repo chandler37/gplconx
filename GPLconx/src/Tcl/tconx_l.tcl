@@ -65,6 +65,18 @@ proc tconx_init_file_menu { m } {
 
 proc tconx_init_input_menu { m } {
     tconx_new_nameless_menu $m
+
+    global tconx_globls
+    $m add checkbutton -label "Word-wrapping for parse results" -underline 0 \
+        -offvalue none -onvalue word -variable tconx_globls(prw_wrap) \
+        -command {tconx_set_prw_wrapping $tconx_globls(prw_wrap)}
+    if ![info exists tconx_globls(prw_wrap)] {
+        set tconx_globls(prw_wrap) word; #DLC .GPLconx entry
+        tconx_set_prw_wrapping $tconx_globls(prw_wrap)
+    }
+
+    $m add command -label "Conic distance" -underline 0 \
+        -command {tconx_get_viz_input CONXCMD_GETCD CONXCMD_SHOWCD}
     $m add command -label "Conic distance" -underline 0 \
         -command {tconx_get_viz_input CONXCMD_GETCD CONXCMD_SHOWCD}
     $m add command -label "Tolerance for slow method" -underline 0 \

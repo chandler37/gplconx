@@ -36,6 +36,8 @@ typedef int Boole;
 #define FALSE 0
 #endif
 
+#define BOOLE_CAST(x) ((x) ? TRUE : FALSE)
+#define IS_A_BOOLE(x) ((x) == TRUE || (x) == FALSE)
 
 // `Bitflag b = A|B|C;' support:
 typedef unsigned int Bitflag;

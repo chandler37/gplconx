@@ -60,6 +60,11 @@ void llextern_set_interactive(int isInteractive);
     } \
   } while (0)
 
+typedef struct CascadedMsg {
+  SimpleClsRef receiver;
+  SimpleClsRef result;
+} CascadedMsg;
+
 
 
 #ifdef __cplusplus

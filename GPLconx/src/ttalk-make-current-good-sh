@@ -1,7 +1,7 @@
 #! /bin/sh
 
-# When `make check' calls this, srcdir is set.  We'll set it in case
-# you want to try `/bin/sh ./ttalk-sh' or `/bin/sh src/ttalk-sh.
+# When `ttalk-sh' fails, run this and it won't fail anymore.  Make sure it
+# is not really a failure first!
 
 if test -z "$srcdir"; then
     srcdir=.
@@ -24,6 +24,5 @@ if test ! -f "${top_builddir}/src/tparser"; then
     exit 77;
 fi
 
-# The real test:
 rm ${srcdir}/ttalk-o
 ${top_builddir}/src/tparser any three args < ${srcdir}/ttalk-in > ${srcdir}/ttalk-o

@@ -385,9 +385,46 @@ private:
   int c;
 }; // class Cbadnormal
 
+class D1 {
+public:
+  D1() { }
+  virtual const char *shout() { return "D1 shout\n"; }
+
+  // This is a virtual function calling a virtual function:
+  virtual const char *shouter() { return shout(); }
+
+}; // class D1
+
+class D2 : public D1 {
+public:
+  D2() { }
+  virtual const char *shout() { return "D2 shout\n"; }
+}; // class D2
+
+class D3 : public D2 {
+public:
+  D3() { }
+  virtual const char *shout() { return "D3 shout\n"; }
+}; // class D3
 
 static int test_normal_base_classes(void);
+static int test_virtvirt(void);
 static int test_virtual_base_classes(void);
+
+int test_virtvirt(void)
+{
+  class D1 *d1p;
+  class D2 *d2p;
+  class D3 d3;
+  
+  d1p = &d3;
+  d2p = &d3;
+  RET1(!strcmp("D3 shout\n", d1p->shout()));
+  RET1(!strcmp("D3 shout\n", d1p->shouter()));
+  RET1(!strcmp("D3 shout\n", d2p->shout()));
+  RET1(!strcmp("D3 shout\n", d2p->shouter()));
+  return 0;
+}
 
 int test_normal_base_classes(void)
 // Returns zero if the CConxString class passes.
@@ -472,6 +509,8 @@ int test_virtual_base_classes(void)
 int main(int argc, char **argv)
 {
   HANDLE_ARGS(argc, argv);
+  OUT("Before virtvirt test\n");
+  TEST(test_virtvirt() == 0);
   OUT("Before virtual base class test\n");
   TEST(test_virtual_base_classes() == 0);
   OUT("\n\n\nBefore normal base class test\n");

@@ -1,3 +1,5 @@
+GPLconx is in the pre-alpha stage.  Use at your own risk.
+
 GPLconx is a visualization tool that provides interactive visualization of
 points, lines, circles, ellipses, hyperbolas, parabolas, and equidistant
 curves in three models of the hyperbolic geometry of two dimensions,
@@ -40,10 +42,18 @@ You can find GPLconx on the web at `http://gplconx.sourceforge.net'.  There
 are two mailing lists of general interest, gplconx-users and
 gplconx-announce.
 
-To install, you can usually just run `/bin/sh ./configure; make all install'.
+To install, you can usually just edit `src/Makefile.inc' and tell where
+to find your libGL, libGLU, libtcl, libtk, etc. and then run
+`/bin/sh ./configure; make all install'.  The only non-standard package
+you need is `lcl-0.3', the Linux Class Library.  Download and install it,
+and then edit `src/Makefile.inc' to point to it too.
+Later versions of GPLconx may include it, who knows...
+
 Before running `make', you can edit `config.h' to change a few things that
 make little difference (unless you run into trouble later).  More instructions
 on installation can be found in `INSTALL'.
+
+There is Texinfo documentation in `doc/', but it is only a start. DLC
 
 See `AUTHOR', `NEWS', `THANKS', `TODO', `README.DEV', `LICENSE', `INSTALL'
 and `COPYING' for more information.

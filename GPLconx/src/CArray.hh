@@ -156,9 +156,37 @@ public:
     ownedObjects[sz++] = a;
   }
   void append(const Type &s) throw(const char *)
+  // A copy of s is put at the end of the array.
   {
     Type *n = new Type(s);
     append(n);
+  }
+  void prepend(Type *a) throw(const char *)
+  // This array takes ownership of *a, which is put at the head of the
+  // array (index 0) and will delete it when clear()
+  // is called or this object is destroyed.  If out of memory is thrown,
+  // then a is still your property.
+  {
+    if (a == NULL)
+      throw "illegal NULL a in CConxOwnerArray::append(Type *a)";
+    if (sz + 1 >= alloced_sz) {
+      // yes >= is necessary due to initial sz=alloced_sz=0
+
+#define ONE_HALF_INITIAL_SIZE 2
+      grow(2*((alloced_sz < ONE_HALF_INITIAL_SIZE)
+              ? ONE_HALF_INITIAL_SIZE : alloced_sz));
+    }
+    for (size_t i = sz; i > 0; i--) {
+      ownedObjects[i] = ownedObjects[i-1];
+    }
+    ++sz;
+    ownedObjects[0] = a;
+  }
+  void prepend(const Type &s) throw(const char *)
+  // A copy of s is put at the beginning of the array.
+  {
+    Type *n = new Type(s);
+    prepend(n);
   }
 
   // DLC is there a need to replace elements rather than change elements in place?
@@ -306,6 +334,7 @@ public:
     return simpleObjects[n];
   }
   void append(const Type &a) throw(const char *)
+  // Puts a at the end of the array.
   {
     if (sz + 1 >= alloced_sz) {
       // yes >= is necessary due to initial sz=alloced_sz=0
@@ -315,6 +344,22 @@ public:
               ? ONE_HALF_INITIAL_SIZE : alloced_sz));
     }
     simpleObjects[sz++] = a;
+  }
+  void prepend(const Type &a) throw(const char *)
+  // Puts a at the beginning of the array.
+  {
+    if (sz + 1 >= alloced_sz) {
+      // yes >= is necessary due to initial sz=alloced_sz=0
+
+#define ONE_HALF_INITIAL_SIZE 2
+      grow(2*((alloced_sz < ONE_HALF_INITIAL_SIZE)
+              ? ONE_HALF_INITIAL_SIZE : alloced_sz));
+    }
+    for (size_t i = sz; i > 0; i--) {
+      simpleObjects[i] = simpleObjects[i-1];
+    }
+    ++sz;
+    simpleObjects[0] = a;
   }
   // DLC is there a need to replace elements rather than change elements in place?
 

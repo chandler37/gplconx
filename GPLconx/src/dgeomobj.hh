@@ -266,6 +266,7 @@ public:
 
   void drawOn(CConxCanvas &) const throw(int);
   const CConxPoint &getPoint() const { return P; }
+  CConxPoint &getPoint() { setValidity(FALSE); return P; }
   void setPoint(const CConxPoint &p)
   {
     // DLC test for equality for max efficiency.
@@ -342,6 +343,7 @@ public:
 
   void setLine(const CConxLine &l) { setValidity(FALSE); invalSD(); L = l; }
   const CConxLine &getLine() const { return L; }
+  CConxLine &getLine() { setValidity(FALSE); return L; }
   void setA(const CConxPoint &A) { setValidity(FALSE); invalSD(); L.setA(A); }
   void setB(const CConxPoint &B) { setValidity(FALSE); invalSD(); L.setB(B); }
   void drawOn(CConxCanvas &) const throw(int);
@@ -412,6 +414,7 @@ public:
 
   void setCircle(const CConxCircle &l) { setValidity(FALSE); invalSD(); L = l; }
   const CConxCircle &getCircle() const { return L; }
+  CConxCircle &getCircle() { setValidity(FALSE); return L; }
   void setRadius(double r) { setValidity(FALSE); invalSD(); L.setRadius(r); }
   void setCenter(const CConxPoint &C) { setValidity(FALSE); invalSD(); L.setCenter(C); }
   void drawOn(CConxCanvas &) const throw(int);

@@ -1,4 +1,19 @@
-WidGet file, version 1.1, created:  Wed Feb 28 21:00:36 EST 2001
+WidGet file, version 1.1, created:  Fri Mar 30 01:17:35 EST 2001
+Widget entry#3
+	geometry row 1
+	other error {}
+	other type entry
+	other master .frame#7
+	other pathname entry#3
+	configure font Fixed,12
+	other tags {}
+	other level {}
+	other help {}
+	other comments {}
+	geometry column 2
+	other tabbing {}
+	other item_name entry#3
+	geometry sticky nesw
 Widget menubutton#4
 	other error {}
 	other tags {}
@@ -15,47 +30,65 @@ Widget menubutton#4
 	geometry column 6
 	other comments {}
 	configure underline 0
+Widget text#1
+	configure xscrollcommand {%B.scrollbar#1 set}
+	other error {}
+	other tags {}
+	other level {}
+	other help {}
+	configure height 1
+	other master .frame#7
+	other pathname text#1
+	configure yscrollcommand {%B.scrollbar#2 set}
+	geometry sticky nesw
+	other tabbing {}
+	other item_name text#1
+	geometry row 2
+	other type text
+	configure width 1
+	geometry column 2
+	other comments {}
 Widget frame#5
 	other panel {}
 	geometry row 3
 	other resize_row 0
-	other type frame
 	other error {}
+	other type frame
 	other min_row 6
 	other master {}
 	other pathname frame#5
-	other tags {}
 	other resize_column 3
+	other tags {}
 	other level 1
-	other help {}
 	other min_column 30
-	configure borderwidth 2
+	other help {}
 	other comments {}
+	configure borderwidth 2
 	geometry column 1
-	configure relief ridge
-	other tabbing {}
 	other item_name frame#5
+	other tabbing {}
+	configure relief ridge
 	geometry sticky nesw
 Widget frame#6
 	other panel {}
 	geometry row 2
-	other resize_row {3 3 3}
-	other type frame
+	other resize_row {3 1 1 1}
 	other error {}
-	other min_row {12 30 30}
+	other type frame
+	other min_row {81 12 12 19}
 	other master {}
 	other pathname frame#6
-	other tags {}
 	other resize_column 3
+	other tags {}
 	other level 1
-	other help {}
 	other min_column 27
-	configure borderwidth 2
+	other help {}
 	other comments {}
+	configure borderwidth 2
 	geometry column 1
-	configure relief sunken
-	other tabbing {}
 	other item_name mainframe
+	other tabbing {}
+	configure relief sunken
 	geometry sticky nesw
 Widget menubutton#8
 	other error {}
@@ -73,6 +106,25 @@ Widget menubutton#8
 	geometry column 3
 	other comments {}
 	configure underline 0
+Widget frame#7
+	other panel {}
+	geometry row 1
+	other resize_row {1 3 0}
+	other error {}
+	other type frame
+	other min_row {17 2 19}
+	other master .frame#6
+	other pathname frame#7
+	other resize_column {0 3}
+	other tags {}
+	other level 2
+	other min_column {6 30}
+	other help {}
+	other comments {}
+	geometry column 1
+	other item_name frame#7
+	other tabbing {}
+	geometry sticky nesw
 Widget menubutton#10
 	other error {}
 	other tags {}
@@ -114,15 +166,15 @@ Widget checkbutton#1
 	configure command {tconx_mother_check puhp}
 	other master .frame#6
 	other pathname checkbutton#1
-	configure font Helvetica,20,Bold
+	configure font Helvetica,12,Bold
 	other tabbing {}
 	other item_name checkbutton#1
-	geometry row 1
+	geometry row 2
 	other type checkbutton
 	configure text {Poincare Upper Half Plane}
+	geometry column 1
 	configure underline 9
 	other comments {}
-	geometry column 1
 Widget f
 	other generic_options {button {activebackground #ececec activeforeground Black anchor center background #d9d9d9 bitmap {} borderwidth 2 command {} comments {} cursor {} default disabled disabledforeground #a3a3a3 error {- button configuration -} font Times,0 foreground Black height 0 help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 image {} item_name sample_button justify center level {} master {} padx 9 pady 3 pathname sample_button relief raised state normal tabbing {} tags {} takefocus {} text button textvariable {} type button underline -1 width 0 wraplength 0
 		} canvas {background #d9d9d9 borderwidth 0 closeenough 1.0 comments {} confine 1 cursor {} error {- canvas configuration -} height 207 help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 insertbackground Black insertborderwidth 0 insertofftime 300 insertontime 600 insertwidth 2 item_name sample_canvas level {} master {} pathname sample_canvas relief flat scrollregion {} selectbackground #c3c3c3 selectborderwidth 1 selectforeground Black tabbing {} tags {} takefocus {} type canvas width 295 xscrollcommand {} xscrollincrement 0 yscrollcommand {} yscrollincrement 0
@@ -135,7 +187,7 @@ Widget f
 		} message {
 		} radiobutton {activebackground #ececec activeforeground Black anchor center background #d9d9d9 bitmap {} borderwidth 2 command {} comments {} cursor {} disabledforeground #a3a3a3 error {- radiobutton configuration -} font Times,0 foreground Black height 0 help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 image {} indicatoron 1 item_name sample_radiobutton justify center level {} master {} padx 1 pady 1 pathname sample_radiobutton relief flat selectcolor #b03060 selectimage {} state normal tabbing {} tags {} takefocus {} text radiobutton textvariable {} type radiobutton underline -1 value {} variable example_radiobutton width 0 wraplength 0
 		} scale {
-		} scrollbar {activebackground #ececec activerelief raised background #d9d9d9 borderwidth 2 command {} comments {} cursor {} elementborderwidth -1 error {- scrollbar configuration -} help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 item_name sample_scrollbar jump 0 level {} master {} orient vertical pathname sample_scrollbar relief sunken repeatdelay 300 repeatinterval 100 tabbing {} tags {} takefocus {} troughcolor #c3c3c3 type scrollbar width 15
+		} scrollbar {activebackground #ececec activerelief raised background #d9d9d9 borderwidth 2 command {} comments {} cursor {} elementborderwidth -1 error {- scrollbar configuration -} help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 item_name sample_scrollbar jump 0 level {} master {} orient v pathname sample_scrollbar relief sunken repeatdelay 300 repeatinterval 100 sticky ns tabbing {} tags {} takefocus {} troughcolor #c3c3c3 type scrollbar width 15
 		} text {
 		}
 	}
@@ -166,15 +218,30 @@ Widget checkbutton#2
 	configure command {tconx_mother_check kd}
 	other master .frame#6
 	other pathname checkbutton#2
-	configure font Helvetica,20,Bold
+	configure font Helvetica,12,Bold
 	other tabbing {}
 	other item_name checkbutton#2
-	geometry row 2
+	geometry row 3
 	other type checkbutton
 	configure text {Beltrami-Klein Disk}
+	geometry column 1
 	configure underline 9
 	other comments {}
-	geometry column 1
+Widget scrollbar#1
+	geometry row 3
+	configure orient h
+	other type scrollbar
+	other master .frame#7
+	other pathname scrollbar#1
+	other tags {}
+	other level {}
+	other help {}
+	geometry column 2
+	other comments {}
+	geometry sticky ew
+	other item_name scrollbar#1
+	other tabbing {}
+	configure command {%B.text#1 xview}
 Widget checkbutton#3
 	configure variable tconx_globls(check_pd)
 	other error {}
@@ -184,15 +251,43 @@ Widget checkbutton#3
 	configure command {tconx_mother_check pd}
 	other master .frame#6
 	other pathname checkbutton#3
-	configure font Helvetica,20,Bold
+	configure font Helvetica,12,Bold
 	other tabbing {}
 	other item_name checkbutton#3
-	geometry row 3
+	geometry row 4
 	other type checkbutton
 	configure text {Poincare Disk}
+	geometry column 1
 	configure underline 0
 	other comments {}
+Widget scrollbar#2
+	geometry row 2
+	configure orient v
+	other type scrollbar
+	other master .frame#7
+	other pathname scrollbar#2
+	other tags {}
+	other level {}
+	other help {}
 	geometry column 1
+	other comments {}
+	geometry sticky ns
+	other item_name scrollbar#2
+	other tabbing {}
+	configure command {%B.text#1 yview}
+Widget label#1
+	geometry row 1
+	other type label
+	other master .frame#7
+	configure text {$}
+	other pathname label#1
+	other tags {}
+	other level {}
+	other help {}
+	other comments {}
+	geometry column 1
+	other tabbing {}
+	other item_name label#1
 Widget menubutton#1
 	other error {}
 	other tags {}
@@ -209,6 +304,25 @@ Widget menubutton#1
 	geometry column 1
 	other comments {}
 	configure underline 0
+Widget frame#1
+	other panel {}
+	geometry row 1
+	other resize_row 0
+	other error {can't modify -container option after widget is created}
+	other type frame
+	other min_row 13
+	other master {}
+	other pathname frame#1
+	other resize_column {0 0 0 0 3 0}
+	other tags {}
+	other level 1
+	other min_column {26 26 10 30 30 30}
+	other help {}
+	other comments {}
+	geometry column 1
+	other item_name frame#1
+	other tabbing {}
+	geometry sticky new
 Widget entry#2
 	other {} {}
 	geometry row 1
@@ -217,35 +331,16 @@ Widget entry#2
 	configure textvariable tconx_globls(bottom_entry)
 	other master .frame#5
 	other pathname entry#2
-	other tags {}
 	configure font Helvetica,12,Bold
-	other level {}
-	configure width 1
-	other help {}
-	other comments {}
-	configure selectborderwidth 0
-	geometry column 1
-	other item_name bottom_entry
-	other tabbing {}
-	configure relief flat
-	geometry sticky ew
-Widget frame#1
-	other panel {}
-	geometry row 1
-	other resize_row 0
-	other type frame
-	other error {can't modify -container option after widget is created}
-	other min_row 13
-	other master {}
-	other pathname frame#1
 	other tags {}
-	other resize_column {0 0 0 0 3 0}
-	other level 1
+	configure width 1
+	other level {}
 	other help {}
-	other min_column {26 26 10 30 30 30}
+	configure selectborderwidth 0
 	other comments {}
 	geometry column 1
+	configure relief flat
 	other tabbing {}
-	other item_name frame#1
-	geometry sticky new
+	other item_name bottom_entry
+	geometry sticky ew
 

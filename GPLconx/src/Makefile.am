@@ -19,6 +19,10 @@
 
 AUTOMAKE_OPTIONS = 1.4 foreign
 
+## We either let configure find the libraries or we have to include this
+## to make installation bearable:
+include Makefile.inc
+
 # Tell bison/yacc to make a header file:
 AM_YFLAGS = -d
 ## For a C++ lexer, name scanner.l scanner.ll and use AM_LFLAGS = -+ -olex.yy.c
@@ -45,12 +49,13 @@ check-local:
 endif
 EXTRA_TESTS = ttalk-sh
 
-EXTRA_DIST = tconxopt.ggo getopt.h parser.h ttalk-in ttalk-o ttalk-sh
+EXTRA_DIST = tconxopt.ggo getopt.h parser.h ttalk-in ttalk-o ttalk-sh \
+             Makefile.inc
 
 BUILT_SOURCES = tconxopt.c tconxopt.h
 
 ## We have to include togl.h, and it is located relative to top_srcdir.
-AM_CPPFLAGS = -I$(top_srcdir) -I/home/davidc/installed/linux_class_library/include
+AM_CPPFLAGS = -I$(top_srcdir) $(lcl_CPPFLAGS) $(glut_CPPFLAGS) $(glu_CPPFLAGS) $(gl_CPPFLAGS) $(tk_CPPFLAGS) $(tcl_CPPFLAGS)
 
 ## Conceptually, EXTRA_libconxu_la_SOURCES = acosh.c, but it is
 ## discovered by automake.
@@ -67,13 +72,16 @@ libcls_la_SOURCES = parser.y scanner.l cparse.cc clsmgr.cc mparse.cc \
 
 tparser_SOURCES = tparser.cc tester.cc
 tparser_LDADD = libcls.la libcxxconx.la libconxu.la \
-                -L/home/davidc/installed/linux_class_library/lib -llcl \
-                -lpthread
+                $(lcl_LDFLAGS) $(lcl_LIBS)
 
 EXTRA_tconx_SOURCES = getopt1.c getopt.c
 tconx_SOURCES = toglconx.c tclprocs.c tconxopt.c gl.c
 tconx_LDADD = @GGOOBJS@ libconx.la libconxu.la \
-              $(top_builddir)/Togl/libtogl.la -lGLU -lGL -ltk -ltcl
+              $(top_builddir)/Togl/libtogl.la \
+              $(glu_LDFLAGS) $(glu_LIBS) \
+              $(gl_LDFLAGS) $(gl_LIBS) \
+              $(tk_LDFLAGS) $(tk_LIBS) \
+              $(tcl_LDFLAGS) $(tcl_LIBS)
 tconx_DEPENDENCIES = @GGOOBJS@ libconx.la libconxu.la \
                      $(top_builddir)/Togl/libtogl.la
 
@@ -85,9 +93,9 @@ libcxxconx_la_SOURCES = geomobj.cc hypmathx.cc CString.cc canvas.cc \
 EXTRA_cxxconx_SOURCES = getopt1.c getopt.c
 cxxconx_SOURCES = toglobj.cc cxxconx.cc tclprocs.c tconxopt.c gl.c glcanvas.cc
 cxxconx_LDADD = @GGOOBJS@ libcls.la libcxxconx.la libconx.la libconxu.la \
-                $(top_builddir)/Togl/libtogl.la -lGLU -lGL -ltk -ltcl \
-                -L/home/davidc/installed/linux_class_library/lib -llcl \
-                -lpthread
+                $(top_builddir)/Togl/libtogl.la $(glu_LDFLAGS) $(glu_LIBS) \
+                $(gl_LDFLAGS) $(gl_LIBS) $(tk_LDFLAGS) $(tk_LIBS) \
+                $(tcl_LDFLAGS) $(tcl_LIBS) $(lcl_LDFLAGS) $(lcl_LIBS)
 
 cxxconx_DEPENDENCIES = @GGOOBJS@ libconx.la libconxu.la \
                        $(top_builddir)/Togl/libtogl.la
@@ -105,7 +113,8 @@ tCString_SOURCES = tCString.cc tester.cc
 tCString_LDADD = libcxxconx.la libconxu.la
 
 gconx_SOURCES = glutconx.c gl.c
-gconx_LDADD = libconx.la libconxu.la -L/usr/X11R6/lib -lglut -lGLU -lGL
+gconx_LDADD = libconx.la libconxu.la $(glut_LDFLAGS) $(glut_LIBS) \
+                $(glu_LDFLAGS) $(glu_LIBS) $(gl_LDFLAGS) $(gl_LIBS)
 
 # Dependency so that we can do a `./configure; cd src; make tconx cxxconx':
 $(top_srcdir)/Togl/libtogl.la:
@@ -161,8 +170,8 @@ NL_SOURCE_FILES = $(srcdir)/toglconx.c $(srcdir)/glutconx.c \
 	$(srcdir)/sthelper.hh $(srcdir)/sthelper.cc \
 	$(srcdir)/stconx.hh $(srcdir)/stconx.cc \
 	$(srcdir)/cmparse.hh \
-	$(srcdir)/Makefile.am $(top_srcdir)/Makefile.am \
-	$(top_srcdir)/configure.in \
+	$(srcdir)/Makefile.am $(srcdir)/Makefile.inc \
+        $(top_srcdir)/Makefile.am $(top_srcdir)/configure.in \
 	$(srcdir)/Tcl/tconx_a.tcl $(srcdir)/Tcl/tconx_b.tcl \
         $(srcdir)/Tcl/tconx.tcl \
 	$(srcdir)/Tcl/tconx_d.tcl $(srcdir)/Tcl/tconx_l.tcl \

@@ -63,13 +63,12 @@
       delete [] val; \
       return sval
 
-#define SET_RESULT(result, obj) *(result) = obj
+#define SET_RESULT(result, obj) if ((result) != NULL) *(result) = obj
 
 #define RETURN_EXISTING(result, obj) \
    do { SET_RESULT(result, obj); return OK; } while (0)
 
-#define RETURN_THIS(result) \
-   do { SET_RESULT(result, this); return OK; } while (0)
+#define RETURN_THIS(result) RETURN_EXISTING(result, this)
 
 #define SET_ERROR_RESULT(result, specificError) \
         SET_RESULT(result, new CClsError(specificError)) // DLC GC thiswill cause a throw in removeUsers
@@ -157,7 +156,6 @@ private:
            ANSWERER_DECL(c, s, d); \
            ErrType d(CClsBase **result, CConxClsMessage &o) e
 
-
 #define ANSWERER_IMPL(classType, staticFunctionName, correspondingMethodName) \
 inline \
 int classType::staticFunctionName(CClsBase *receiver, \
@@ -192,7 +190,7 @@ private:
 // Relies on the copy constructor and assignment operator:
 #define STCLONE(cls) \
 public: \
-  cls *stClone() const { return new cls(*this); } \
+  CClsBase *stClone() const { return new cls(*this); } \
   void setToCopyOf(const CClsBase &o) throw(const char *) \
   { \
     if (!o.isType(sGetType())) \
@@ -201,6 +199,12 @@ public: \
   } \
 private:
 
+// Relies on the copy constructor and assignment operator:
+#define STCLONE2(cls) \
+  STCLONE(cls) \
+public: \
+  CClsBase *stCloneDeep() const { return stClone(); } \
+private:
 
 
 #define REMOVE_A_USER(obj) \
@@ -219,7 +223,18 @@ private:
     if (isReadOnly()) RETURN_ERROR_RESULT(result, "receiver is read-only"); \
   } while(0)
 
+#define NEW_OI_ANSWERER(cls) \
+  ErrType ciActionNew(CClsBase **result, CConxClsMessage &o) const \
+  { \
+    RETURN_NEW_RESULT(result, new cls()); \
+  } \
+  ANSWERER(cls, ciAnswererNew, ciActionNew)
 
+#ifndef NDEBUG
+#define INVARIANTS() invariants()
+#else
+#define INVARIANTS() // do nothing
+#endif
 
 //////////////////////////////////////////////////////////////////////////////
 // An object with a reference count, useful for garbage collection (GC)
@@ -251,7 +266,9 @@ public:
   size_t decrementUsers() throw(int)
   {
     MMM("size_t decrementUsers() throw(int)");
+    LLL("decrementing from " << getNumUsers());
     if (getNumUsers() == 0) throw 0;
+    LLL("before setNumUsers");
     setNumUsers(getNumUsers() - 1);
     return getNumUsers();
   }
@@ -295,6 +312,8 @@ public: // types
     CLS_NUMBER,
     CLS_SYSTEM,
     CLS_CANVAS,
+    CLS_LINE,
+    CLS_CIRCLE,
     // DLC NEWSTCLASS
     CLS_ERROR,
     CLS_SYMBOL,             /* #symbol */
@@ -316,22 +335,26 @@ public:
     // `isObjectInstance = TRUE;'.  There are no constructors that make
     // class instances (yet).
     isObjectInstance = isModifiable = TRUE;
+    INVARIANTS();
   }
   CClsBase(const CClsBase &o) : CConxGCObject(o)
   {
     isObjectInstance = o.isObjectInstance;
-    isModifiable = TRUE; // a copy is read-only.
+    isModifiable = TRUE; // a copy is not read-only.
+    INVARIANTS();
   }
   CClsBase &operator=(const CClsBase &o)
   {
     (void) CConxGCObject::operator=(o);
     isObjectInstance = o.isObjectInstance;
     isModifiable = TRUE; // a copy is read-only.
+    INVARIANTS();
     return *this;
   }
 
   ostream &printOn(ostream &o) const
   {
+    INVARIANTS();
     o << "<" << className() << " "
       << ((isClassInstance()) ? "object" : "class")
       << " instance value:" << printString() << ">";
@@ -339,6 +362,7 @@ public:
   }
   int operator==(const CClsBase &o)
   {
+    INVARIANTS();
     return (isClassInstance() == o.isClassInstance()
             && isReadOnly() == o.isReadOnly());
     // read-onlyness does not affect Smalltalk equality but does affect C++
@@ -349,11 +373,27 @@ public:
   // In Smalltalk, we have class instances and object instances.  When you
   // call "String new", you get an object instance "''", but when you call
   // "'hi' new", you get a parse error.
-  void setClassInstance(Boole isClass) { isObjectInstance = !isClass; }
-  Boole isClassInstance() const { return !isObjectInstance; }
+  void setClassInstance(Boole isClass)
+  {
+    INVARIANTS();
+    isObjectInstance = !isClass;
+  }
+  Boole isClassInstance() const
+  {
+    INVARIANTS();
+    return !isObjectInstance;
+  }
 
-  void setReadOnly(Boole readOnly) { isModifiable = !readOnly; }
-  Boole isReadOnly() const { return !isModifiable; }
+  virtual void setReadOnly(Boole readOnly)
+  {
+    INVARIANTS();
+    isModifiable = !readOnly;
+  }
+  Boole isReadOnly() const
+  {
+    INVARIANTS();
+    return !isModifiable;
+  }
 
 public: // virtual functions
 
@@ -369,9 +409,14 @@ public: // virtual functions
 
   virtual Boole answers(const CConxString &msg) const;
 
-  virtual Answerers *getAnswerers() { return ansMachs; }
+  virtual Answerers *getAnswerers()
+  {
+    INVARIANTS();
+    return ansMachs;
+  }
   virtual void setToCopyOf(const CClsBase &o) throw(const char *)
   {
+    INVARIANTS();
     (void) operator=(o);
   }
 
@@ -387,12 +432,18 @@ public: // virtual functions
   // superclass (except in CClsBase itself).
   virtual ErrType sendMessage(CClsBase **result, CConxClsMessage &o);
 
-public: // virtual functions
-
   // Return the type of the object.
-  virtual ClsType getType() const { return CLS_OBJECT_BASE; }
+  virtual ClsType getType() const
+  {
+    INVARIANTS();
+    return CLS_OBJECT_BASE;
+  }
   static ClsType sGetType() { return CLS_OBJECT_BASE; }
-  virtual Boole isType(ClsType m) const { return m == CLS_OBJECT_BASE; }
+  virtual Boole isType(ClsType m) const
+  {
+    INVARIANTS();
+    return m == CLS_OBJECT_BASE;
+  }
   static ClsType sGetSuperClassType() { return CLS_INVALID; }
   virtual ClsType getSuperClassType() const { return CLS_INVALID; }
 #define CLSTYPE(SUPERCLASS, x) \
@@ -418,6 +469,7 @@ public: // virtual functions
   // printString, e.g.
   virtual const char *getClsComment() const
   {
+    INVARIANTS();
     return "I am the root of the " PACKAGE " class hierarchy.  All other classes are derived from me.";
   }
   virtual const char *getClsName() const { return "Object"; }
@@ -433,6 +485,7 @@ public: // virtual functions
   // Like Smalltalk's 'Object new printString'
   virtual CConxString printString() const
   {
+    INVARIANTS();
     if (isClassInstance())
       return getClsName();
     else
@@ -441,7 +494,29 @@ public: // virtual functions
 
   // Cloning preserves the receiver and creates a new instance identical to
   // the receiver.  A pointer to a newly allocated instance is returned.
-  virtual CClsBase *stClone() const { return new CClsBase(*this); }
+  virtual CClsBase *stClone() const
+  {
+    INVARIANTS();
+    return new CClsBase(*this);
+  }
+  // stClone() makes a shallow copy, i.e. a copy in which all CClsBase
+  // objects are shared, i.e. both the original and the copy point to
+  // the same things.  This only matters for Drawables, Arrays, and other
+  // containers.
+  virtual CClsBase *stCloneDeep() const
+  {
+    LLL("CClsBase *CClsBase::stCloneDeep()");
+    INVARIANTS();
+    return stClone();
+  }
+  // stCloneDeep() makes a deep copy, i.e. a copy in which all CClsBase
+  // objects are copied.  This means that a container will have new, copied
+  // contents.
+  virtual void makeReadOnly()
+  {
+    INVARIANTS();
+    setReadOnly(TRUE);
+  }
 
 
 public: // static functions
@@ -453,7 +528,7 @@ public: // static functions
 
   static CConxString clsTypeToString(ClsType c);
 
-private:
+protected:
   ANSWERER_AND_ACTION_DECL(CClsBase, iAnswererHelp, iActionHelp,
                            /* const, actually */);
   ANSWERER_AND_ACTION_DECL(CClsBase, oiAnswererSet, oiActionSet,
@@ -462,17 +537,26 @@ private:
   ANSWERER_AND_ACTION_DECL(CClsBase, oiAnswererClass, oiActionClass, const);
   ANSWERER_AND_ACTION_DECL(CClsBase, ciAnswererSuperClass, ciActionSuperClass,
                            const);
+  ANSWERER_AND_ACTION_DECL(CClsBase, oiAnswererMakeReadOnly,
+                           oiActionMakeReadOnly, /* non-const */);
+  ANSWERER_AND_ACTION_DECL(CClsBase, oiAnswererIsReadOnly,
+                           oiActionIsReadOnly, const);
   ANSWERER_AND_ACTION_DECL(CClsBase, oiAnswererSuperClass, oiActionSuperClass,
                            const);
   ANSWERER_AND_ACTION_DECL(CClsBase, iAnswererPrintString, iActionPrintString,
                            const);
   ANSWERER_AND_ACTION_DECL(CClsBase, iAnswererIsClass, iActionIsClass, const);
   ANSWERER_AND_ACTION_DECL(CClsBase, iAnswererClone, iActionClone, const);
+  ANSWERER_AND_ACTION_DECL(CClsBase, oiAnswererCloneDeep, oiActionCloneDeep,
+                           const);
+  ANSWERER_AND_ACTION_DECL(CClsBase, oiAnswererExactlyEquals,
+                           oiActionExactlyEquals, const);
 
 #define TEST_TYPE_IMPL(action, clsType) \
   inline \
   CClsBase::ErrType CClsBase::action(CClsBase **result, CConxClsMessage &o) \
   { \
+    INVARIANTS(); \
     RETURN_BOOLE(isType(clsType) && !isClassInstance(), result); \
   }
 
@@ -493,42 +577,38 @@ private:
   ErrType action(CClsBase **result, CConxClsMessage &o)
 
 
-  TEST_TYPE_DECL(iAnswererIsNil, iActionIsNil, CLS_UNDEFINED_OBJECT);
-  TEST_TYPE_DECL(iAnswererIsFloat, iActionIsFloat, CLS_FLOAT);
-  TEST_TYPE_DECL(iAnswererIsSymbol, iActionIsSymbol, CLS_SYMBOL);
-  TEST_TYPE_DECL(iAnswererIsString, iActionIsString, CLS_STRING);
-  TEST_TYPE_DECL(iAnswererIsParseError, iActionIsParseError, CLS_ERROR);
-  TEST_TYPE_DECL(iAnswererIsModelIdentifier, iActionIsModelIdentifier,
-                 CLS_MODELIDENTIFIER);
-  TEST_TYPE_DECL(iAnswererIsColor, iActionIsColor, CLS_COLOR);
-  TEST_TYPE_DECL(iAnswererIsCharacterArray, iActionIsCharacterArray,
-                 CLS_CHARACTERARRAY);
-  TEST_TYPE_DECL(iAnswererIsArray, iActionIsArray, CLS_ARRAY);
-  TEST_TYPE_DECL(iAnswererIsSmallInt, iActionIsSmallInt, CLS_SMALLINT);
-  TEST_TYPE_DECL(iAnswererIsDrawable, iActionIsDrawable, CLS_DRAWABLE);
-  TEST_TYPE_DECL(iAnswererIsNumber, iActionIsNumber, CLS_NUMBER);
-  TEST_TYPE_DECL(iAnswererIsSystem, iActionIsSystem, CLS_SYSTEM);
-  TEST_TYPE_DECL(iAnswererIsCanvas, iActionIsCanvas, CLS_CANVAS);
+#define TYPE_TESTS_DECLS(cn, clsType) \
+  TEST_TYPE_DECL(iAnswererIs ## cn, iActionIs ## cn, clsType); \
+  TEST_NOT_TYPE_DECL(iAnswererNot ## cn, iActionNot ## cn, clsType)
+
+  TYPE_TESTS_DECLS(Nil, CLS_UNDEFINED_OBJECT);
+  TYPE_TESTS_DECLS(Float, CLS_FLOAT);
+  TYPE_TESTS_DECLS(Symbol, CLS_SYMBOL);
+  TYPE_TESTS_DECLS(String, CLS_STRING);
+  TYPE_TESTS_DECLS(ParseError, CLS_ERROR);
+  TYPE_TESTS_DECLS(ModelIdentifier, CLS_MODELIDENTIFIER);
+  TYPE_TESTS_DECLS(Color, CLS_COLOR);
+  TYPE_TESTS_DECLS(CharacterArray, CLS_CHARACTERARRAY);
+  TYPE_TESTS_DECLS(Array, CLS_ARRAY);
+  TYPE_TESTS_DECLS(SmallInt, CLS_SMALLINT);
+  TYPE_TESTS_DECLS(Drawable, CLS_DRAWABLE);
+  TYPE_TESTS_DECLS(Number, CLS_NUMBER);
+  TYPE_TESTS_DECLS(System, CLS_SYSTEM);
+  TYPE_TESTS_DECLS(Canvas, CLS_CANVAS);
+  TYPE_TESTS_DECLS(Line, CLS_LINE);
+  TYPE_TESTS_DECLS(Circle, CLS_CIRCLE);
 // DLC NEWSTCLASS
 
-  TEST_NOT_TYPE_DECL(iAnswererNotNil, iActionNotNil, CLS_UNDEFINED_OBJECT);
-  TEST_NOT_TYPE_DECL(iAnswererNotFloat, iActionNotFloat, CLS_FLOAT);
-  TEST_NOT_TYPE_DECL(iAnswererNotSymbol, iActionNotSymbol, CLS_SYMBOL);
-  TEST_NOT_TYPE_DECL(iAnswererNotString, iActionNotString, CLS_STRING);
-  TEST_NOT_TYPE_DECL(iAnswererNotParseError, iActionNotParseError, CLS_ERROR);
-  TEST_NOT_TYPE_DECL(iAnswererNotModelIdentifier, iActionNotModelIdentifier,
-                     CLS_MODELIDENTIFIER);
-  TEST_NOT_TYPE_DECL(iAnswererNotColor, iActionNotColor, CLS_COLOR);
-  TEST_NOT_TYPE_DECL(iAnswererNotCharacterArray, iActionNotCharacterArray,
-                     CLS_CHARACTERARRAY);
-  TEST_NOT_TYPE_DECL(iAnswererNotArray, iActionNotArray, CLS_ARRAY);
-  TEST_NOT_TYPE_DECL(iAnswererNotSmallInt, iActionNotSmallInt, CLS_SMALLINT);
-  TEST_NOT_TYPE_DECL(iAnswererNotDrawable, iActionNotDrawable, CLS_DRAWABLE);
-  TEST_NOT_TYPE_DECL(iAnswererNotNumber, iActionNotNumber, CLS_NUMBER);
-  TEST_NOT_TYPE_DECL(iAnswererNotSystem, iActionNotSystem, CLS_SYSTEM);
-  TEST_NOT_TYPE_DECL(iAnswererNotCanvas, iActionNotCanvas, CLS_CANVAS);
-// DLC NEWSTCLASS
-
+private:
+#ifndef NDEBUG
+  void invariants() const
+  // This makes sure that things that are always true are always true.
+  {
+    assert(IS_A_BOOLE(isObjectInstance));
+    assert(IS_A_BOOLE(isModifiable));
+    // Yes, this caught a bug once, when 1344131342 was stored in one of them.
+  }
+#endif
   static void initializeAnsweringMachines();
 
 private:
@@ -544,10 +624,15 @@ class CClsError : VIRT public CClsBase {
   CLSNAME("ParseError",
           "I am an error, like those you get when you type something in wrong.")
   CLSTYPE(CClsBase, CLS_ERROR)
-  STCLONE(CClsError)
+  STCLONE2(CClsError)
 public:
   CClsError() : errstr("unspecified error") { }
-  CClsError(const CConxString &s) { setValue(s); }
+  CClsError(const CConxString &s)
+  {
+    MMM("CClsError(const CConxString &s)");
+    LLL("Error is " << s);
+    setValue(s);
+  }
   CClsError(const CClsError &o) : CClsBase(o), errstr(o.errstr) { }
   CClsError &operator=(const CClsError &o)
   {
@@ -583,7 +668,7 @@ class CClsCharacterArray : VIRT public CClsBase {
   CLSTYPE(CClsBase, CLS_CHARACTERARRAY)
   DEFAULT_SEND_MESSAGE(CClsBase)
   ANSMACH_ANSWERS(CClsBase)
-  STCLONE(CClsCharacterArray)
+  STCLONE2(CClsCharacterArray)
 public:
   CClsCharacterArray() : string() { }
   CClsCharacterArray(const CConxString &s) : string(s) { }
@@ -601,7 +686,7 @@ public:
   int operator==(const CClsCharacterArray &o) { return string == o.string; }
   int operator!=(const CClsCharacterArray &o) { return !operator==(o); }
 
-private:
+protected:
   ANSWERER(CClsCharacterArray, oiAnswererSet, oiActionSet);
   ErrType oiActionSet(CClsBase **result, CConxClsMessage &o)
   {
@@ -614,6 +699,7 @@ private:
   }
   ANSWERER_FOR_ACTION_DEFN_BELOW(CClsCharacterArray, oiAnswererLength,
                                  oiActionLength, const);
+private:
   static void initializeAnsweringMachines()
   {
     if (ansMachs == NULL) {
@@ -646,7 +732,7 @@ class CClsStringLiteral : VIRT public CClsCharacterArray {
   CCONX_CLASSNAME("CClsStringLiteral")
   CLSNAME("String", "I am a string of characters.")
   CLSTYPE(CClsCharacterArray, CLS_STRING)
-  STCLONE(CClsStringLiteral)
+  STCLONE2(CClsStringLiteral)
 public:
   CClsStringLiteral() { }
   CClsStringLiteral(const CConxString &s) : CClsCharacterArray(s) { }
@@ -683,7 +769,7 @@ class CClsBoolean : VIRT public CClsBase {
   CLSTYPE(CClsBase, CLS_BOOLEAN)
   DEFAULT_SEND_MESSAGE(CClsBase)
   ANSMACH_ANSWERS(CClsBase)
-  STCLONE(CClsBoolean)
+  STCLONE2(CClsBoolean)
 public:
   CClsBoolean() { d = TRUE; }
   CClsBoolean(Boole od) { setValue(od); }
@@ -714,7 +800,7 @@ public:
   }
   int operator!=(const CClsBoolean &o) { return !operator==(o); }
 
-private:
+protected:
   ANSWERER(CClsBoolean, ciAnswererTrue, ciActionTrue);
   ErrType ciActionTrue(CClsBase **result, CConxClsMessage &o) const
   {
@@ -763,7 +849,7 @@ private:
     RETURN_NEW_RESULT(result,
             new CClsStringLiteral(getCompleteHelpMessage(*this, *ansMachs)));
   }
-
+private:
   static void initializeAnsweringMachines()
   {
     if (ansMachs == NULL) {
@@ -811,7 +897,7 @@ class CClsUndefinedObject : VIRT public CClsBase {
   CCONX_CLASSNAME("CClsUndefinedObject")
   CLSNAME("UndefinedObject", "I have a very popular instance, `nil', that you will encounter when you have a variable that is not set.")
   CLSTYPE(CClsBase, CLS_UNDEFINED_OBJECT)
-  STCLONE(CClsUndefinedObject)
+  STCLONE2(CClsUndefinedObject)
 public:
   CClsUndefinedObject() { MMM("CClsUndefinedObject"); }
   CClsUndefinedObject(const CClsUndefinedObject &o)
@@ -849,7 +935,7 @@ class CClsNumber : VIRT public CClsBase {
   CLSTYPE(CClsBase, CLS_NUMBER)
   DEFAULT_SEND_MESSAGE(CClsBase)
   ANSMACH_ANSWERS(CClsBase)
-  STCLONE(CClsNumber)
+  STCLONE2(CClsNumber)
 public:
   CClsNumber() { }
   CClsNumber(double od) { }
@@ -900,7 +986,7 @@ class CClsFloat : VIRT public CClsNumber {
   CLSTYPE(CClsNumber, CLS_FLOAT)
   DEFAULT_SEND_MESSAGE(CClsNumber)
   ANSMACH_ANSWERS(CClsNumber)
-  STCLONE(CClsFloat)
+  STCLONE2(CClsFloat)
 public:
   CClsFloat() { d = 37.0; }
   CClsFloat(double od) { setValue(od); }
@@ -936,7 +1022,7 @@ public:
   int operator==(const CClsFloat &o) { return isClassInstance() == o.isClassInstance() && d == o.d; }
   int operator!=(const CClsFloat &o) { return !operator==(o); }
 
-private:
+protected:
   ANSWERER(CClsFloat, oiAnswererSet, oiActionSet); // DLC Is the semicolon OK?
   ErrType oiActionSet(CClsBase **result, CConxClsMessage &o)
   {
@@ -952,6 +1038,7 @@ private:
     RETURN_BOOLE(this->getValue() >= fargv[0] && this->getValue() <= fargv[1],
                  result);
   }
+private:
   static void initializeAnsweringMachines()
   {
     if (ansMachs == NULL) {
@@ -985,7 +1072,7 @@ class CClsSmallInt : VIRT public CClsNumber {
   CLSTYPE(CClsNumber, CLS_SMALLINT)
   DEFAULT_SEND_MESSAGE(CClsNumber)
   ANSMACH_ANSWERS(CClsNumber)
-  STCLONE(CClsSmallInt)
+  STCLONE2(CClsSmallInt)
 public:
   CClsSmallInt() { d = 37; }
   CClsSmallInt(long od) { setValue(od); }
@@ -1021,7 +1108,7 @@ public:
   int operator==(const CClsSmallInt &o) { return isClassInstance() == o.isClassInstance() && d == o.d; }
   int operator!=(const CClsSmallInt &o) { return !operator==(o); }
 
-private:
+protected:
   ANSWERER(CClsSmallInt, oiAnswererBetweenAnd, oiActionBetweenAnd); // DLC Is the semicolon OK?
   ErrType oiActionBetweenAnd(CClsBase **result, CConxClsMessage &o) const
   {
@@ -1032,11 +1119,8 @@ private:
                  && this->getValue() <= ((CClsSmallInt *)argv[1])->getValue(),
                  result);
   }
-  ANSWERER(CClsSmallInt, oiAnswererNew, oiActionNew);
-  ErrType oiActionNew(CClsBase **result, CConxClsMessage &o) const
-  {
-    RETURN_NEW_RESULT(result, new CClsSmallInt());
-  }
+  NEW_OI_ANSWERER(CClsSmallInt);
+private:
   static void initializeAnsweringMachines()
   {
     if (ansMachs == NULL) {
@@ -1050,7 +1134,7 @@ private:
                                        " argument contains the receiver"));
       ansMachs->append(CConxClsAnsMach("new",
                                        CConxClsAnsMach::CLASS,
-                                       oiAnswererNew,
+                                       ciAnswererNew,
                                        "Returns a new SmallInt object instance"));
     }
   }
@@ -1069,7 +1153,7 @@ class CClsSymbol : VIRT public CClsCharacterArray {
   CCONX_CLASSNAME("CClsSymbol")
   CLSNAME("Symbol", "I am a special kind of string of characters that starts with an alphabetic character and contains only alphanumeric characters")
   CLSTYPE(CClsCharacterArray, CLS_SYMBOL)
-  STCLONE(CClsSymbol)
+  STCLONE2(CClsSymbol)
 public:
   CClsSymbol() { }
   CClsSymbol(const CConxString &s) : CClsCharacterArray(s) { }
@@ -1108,24 +1192,49 @@ class CClsArray : VIRT public CClsBase {
   ANSMACH_ANSWERS(CClsBase)
   STCLONE(CClsArray)
 public:
-  CClsArray() : smartArray() { }
+  CClsArray() : contents() { init(); }
   CClsArray(const CClsArray &o)
-    : CClsBase(o), smartArray(o.smartArray) { }
+    : CClsBase(o), contents(o.contents)
+  {
+    incrementAllUsersCounts();
+    requiredType = o.requiredType;
+  }
   CClsArray &operator=(const CClsArray &o)
   {
     (void) CClsBase::operator=(o);
-    smartArray = o.smartArray;
+    clear();
+    contents = o.contents;
+    incrementAllUsersCounts();
+    requiredType = o.requiredType;
     return *this;
   }
 
+  CClsBase *stCloneDeep() const
+  {
+    CClsArray *v = new CClsArray();
+    v->requiredType = requiredType;
+    if (v == NULL) OOM();
+    for (size_t i = 0; i < contents.size(); i++) {
+      v->contents.append((contents.get(i))->stCloneDeep());
+    }
+    v->incrementAllUsersCounts();
+    return v;
+  }
+
 protected: // because checking for NULL pointers would be required.
-  CClsArray(CClsBase *o1) : smartArray(o1) { }
-  CClsArray(CClsBase *o1, CClsBase *o2) : smartArray(o1, o2) { }
+  void incrementAllUsersCounts()
+  {
+    for (size_t i = 0; i < contents.size(); i++) {
+      (contents.get(i))->incrementUsers();
+    }
+  }
+  CClsArray(CClsBase *o1) : contents(o1) { init(); }
+  CClsArray(CClsBase *o1, CClsBase *o2) : contents(o1, o2) { init(); }
   CClsArray(CClsBase *o1, CClsBase *o2, CClsBase *o3)
-    : smartArray(o1, o2, o3) { }
+    : contents(o1, o2, o3) { init(); }
   CClsArray(CClsBase *o1, CClsBase *o2, CClsBase *o3, CClsBase *o4)
-    : smartArray(o1, o2, o3, o4) { }
-  CClsArray(const CConxSimpleArray<CClsBase *> &s) : smartArray(s) { }
+    : contents(o1, o2, o3, o4) { init(); }
+  CClsArray(const CConxSimpleArray<CClsBase *> &s) : contents(s) { init(); }
 
 public:
   ~CClsArray()
@@ -1133,78 +1242,139 @@ public:
     clear();
   }
 
-  int operator==(const CClsArray &o) { return smartArray == o.smartArray; }
+  int operator==(const CClsArray &o) { return contents == o.contents
+                                         && requiredType == o.requiredType; }
   int operator!=(const CClsArray &o) { return !operator==(o); }
 
+  size_t numElements() const { return contents.size(); }
   CConxString printString() const
   {
     if (isClassInstance())
       return getClsName();
     else {
       CConxString s("#( ");
-      for (size_t i = 0; i < smartArray.size(); i++)
-        s += smartArray.get(i)->printString() + " ";
+      for (size_t i = 0; i < contents.size(); i++)
+        s += contents.get(i)->printString() + " ";
       return s + ")";
     }
   }
 
 protected:
-  CConxSimpleArray<CClsBase *> &getSimpleArray() { return smartArray; }
-  const CConxSimpleArray<CClsBase *> &getSimpleArray() const { return smartArray; }
+  void setRequiredType(ClsType t) { requiredType = t; }
+  ClsType getRequiredType() { return requiredType; }
+
+  CConxSimpleArray<CClsBase *> &getSimpleArray() { return contents; }
+  const CConxSimpleArray<CClsBase *> &getSimpleArray() const { return contents; }
 
 private:
+  void init()
+  {
+    requiredType = CLS_OBJECT_BASE;
+  }
   void clear()
   {
-    for (size_t i = 0; i < smartArray.size(); i++) {
-      CClsBase *r = smartArray.get(i);
+    for (size_t i = 0; i < contents.size(); i++) {
+      CClsBase *r = contents.get(i);
       MAYBE_REMOVE_A_USER(r);
     }
   }
 
+public:
+  void makeReadOnly()
+  {
+    if (!isReadOnly()) {
+      CClsBase::makeReadOnly();
+      for (size_t i = 0; i < contents.size(); i++) {
+        CClsBase *r = contents.get(i);
+        assert(r != NULL);
+        r->makeReadOnly();
+      }
+    }
+  }
 protected:
   ANSWERER(CClsArray, oiAnswererAt, oiActionAt);
   ErrType oiActionAt(CClsBase **result, CConxClsMessage &o) const
   {
+    MMM("ErrType oiActionAt(CClsBase **result, CConxClsMessage &o) const");
     ENSURE_SINGLE_ARG_IS_OF_TYPE(CClsSmallInt, argv, o);
-    if (smartArray.size() == 0)
+    if (contents.size() == 0)
       RETURN_ERROR_RESULT(result, "this array is empty");
     long x = argv[0]->getValue();
     
-    if (x > (long)smartArray.size()) x = smartArray.size();
+    if (x > (long)contents.size()) x = contents.size();
     if (x < 1) x = 1;
-    RETURN_EXISTING(result, smartArray.get(x - 1));
+    RETURN_EXISTING(result, contents.get(x - 1));
+  }
+  ANSWERER(CClsArray, oiAnswererYourself, oiActionYourself);
+  ErrType oiActionYourself(CClsBase **result, CConxClsMessage &o)
+  {
+    MMM("ErrType oiActionYourself(CClsBase **result, CConxClsMessage &o) const");
+    RETURN_THIS(result);
   }
   ANSWERER(CClsArray, oiAnswererAtPut, oiActionAtPut);
   ErrType oiActionAtPut(CClsBase **result, CConxClsMessage &o)
   {
+    MMM("ErrType oiActionAtPut(CClsBase **result, CConxClsMessage &o)");
+    CHECK_READ_ONLYNESS(result);
     assert(result != NULL); CClsBase *argv[2]; o.getBoundObjects(argv);
     ENSURE_KEYWD_TYPE(result, o, argv, 0, CLS_SMALLINT, TRUE);
+    if (getRequiredType() != CLS_OBJECT_BASE) {
+      ENSURE_KEYWD_TYPE(result, o, argv, 1, getRequiredType(), TRUE);
+    }
 
     long x = ((CClsSmallInt *)argv[0])->getValue();
     
     if (x < 1) x = 1;
 
-    if (x <= (long) smartArray.size()) {
-      CClsBase *r = smartArray.get(x - 1);
+    if (x <= (long) contents.size()) {
+      CClsBase *r = contents.get(x - 1);
       MAYBE_REMOVE_A_USER(r);
       argv[1]->incrementUsers();
-      smartArray.atPut(x - 1, argv[1]);
+      contents.atPut(x - 1, argv[1]);
     } else {
-      if (x == (long) smartArray.size() + 1) {
+      if (x == (long) contents.size() + 1) {
         argv[1]->incrementUsers();
-        smartArray.append(argv[1]);
+        contents.append(argv[1]);
       } else {
         RETURN_ERROR_RESULT(result, "not yet implemented, should grow I guess -- I need an integer class first.");
         // grow the array
         // DLC implement, fill with `nil's
       }
     }
-    RETURN_THIS(result);
+    RETURN_EXISTING(result, argv[1]);
+  }
+  ANSWERER(CClsArray, oiAnswererAddFirst, oiActionAddFirst);
+  ErrType oiActionAddFirst(CClsBase **result, CConxClsMessage &o)
+  {
+    MMM("ErrType oiActionAddFirst(CClsBase **result, CConxClsMessage &o)");
+    CHECK_READ_ONLYNESS(result);
+    assert(result != NULL); CClsBase *argv[1]; o.getBoundObjects(argv);
+    if (getRequiredType() != CLS_OBJECT_BASE) {
+      ENSURE_KEYWD_TYPE(result, o, argv, 0, getRequiredType(), TRUE);
+    }
+
+    argv[0]->incrementUsers();
+    contents.prepend(argv[0]);
+    RETURN_EXISTING(result, argv[0]);
+  }
+  ANSWERER(CClsArray, oiAnswererAddLast, oiActionAddLast);
+  ErrType oiActionAddLast(CClsBase **result, CConxClsMessage &o)
+  {
+    MMM("ErrType oiActionAddLast(CClsBase **result, CConxClsMessage &o)");
+    CHECK_READ_ONLYNESS(result);
+    assert(result != NULL); CClsBase *argv[1]; o.getBoundObjects(argv);
+    if (getRequiredType() != CLS_OBJECT_BASE) {
+      ENSURE_KEYWD_TYPE(result, o, argv, 0, getRequiredType(), TRUE);
+    }
+
+    argv[0]->incrementUsers();
+    contents.append(argv[0]);
+    RETURN_EXISTING(result, argv[0]);
   }
   ANSWERER(CClsArray, oiAnswererSize, oiActionSize);
   ErrType oiActionSize(CClsBase **result, CConxClsMessage &o) const
   {
-    RETURN_NEW_RESULT(result, new CClsSmallInt(smartArray.size()));
+    RETURN_NEW_RESULT(result, new CClsSmallInt(contents.size()));
   }
   ANSWERER(CClsArray, ciAnswererWithWithWithWith, ciActionWithWithWithWith);
   ErrType ciActionWithWithWithWith(CClsBase **result, CConxClsMessage &o) const
@@ -1231,17 +1401,13 @@ protected:
     CClsBase *argv[1]; o.getBoundObjects(argv);
     RETURN_NEW_RESULT(result, new CClsArray(argv[0]));
   }
-  ANSWERER(CClsArray, ciAnswererNew, ciActionNew);
-  ErrType ciActionNew(CClsBase **result, CConxClsMessage &o) const
-  {
-    RETURN_NEW_RESULT(result, new CClsArray());
-  }
-
+  NEW_OI_ANSWERER(CClsArray);
 private:
   static void initializeAnsweringMachines();
 
 private: // attributes
-  CConxSimpleArray<CClsBase *> smartArray;
+  ClsType requiredType;
+  CConxSimpleArray<CClsBase *> contents;
   static Answerers *ansMachs;
 }; // class CClsArray
 
@@ -1255,7 +1421,7 @@ class CClsSystem : VIRT public CClsBase {
   CLSTYPE(CClsBase, CLS_SYSTEM)
   DEFAULT_SEND_MESSAGE(CClsBase)
   ANSMACH_ANSWERS(CClsBase)
-  STCLONE(CClsSystem)
+  STCLONE2(CClsSystem)
 public:
   CClsSystem() { }
   CClsSystem(const CClsSystem &o) : CClsBase(o) { }
@@ -1276,7 +1442,7 @@ public:
   int operator==(const CClsSystem &o) { return 0; }
   int operator!=(const CClsSystem &o) { return !operator==(o); }
 
-private:
+protected:
   ANSWERER(CClsSystem, iAnswererExit, iActionExit);
   ErrType iActionExit(CClsBase **result, CConxClsMessage &o)
   {
@@ -1290,6 +1456,7 @@ private:
 
     // DLC print strings with formatting! Let tab cause tabbing that far and then another tab for indenting.
   }
+private:
   static void initializeAnsweringMachines()
   {
     if (ansMachs == NULL) {
@@ -1311,6 +1478,7 @@ private: // attributes
 }; // class CClsSystem
 
 
+// Any derived class is also covered by this:
 OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CClsBase);
 
 
@@ -1342,50 +1510,6 @@ CClsBase::sendMessage(CClsBase **result, CConxClsMessage &o)
     RETURN_ERROR_RESULT(result, "unknown unary message");
   }
 }
-
-
-ANSWERER_IMPL(CClsBase, iAnswererHelp, iActionHelp);
-ANSWERER_IMPL(CClsBase, ciAnswererClass, ciActionClass);
-ANSWERER_IMPL(CClsBase, oiAnswererClass, oiActionClass);
-ANSWERER_IMPL(CClsBase, oiAnswererSet, oiActionSet);
-ANSWERER_IMPL(CClsBase, ciAnswererSuperClass, ciActionSuperClass);
-ANSWERER_IMPL(CClsBase, oiAnswererSuperClass, oiActionSuperClass);
-ANSWERER_IMPL(CClsBase, iAnswererPrintString, iActionPrintString);
-ANSWERER_IMPL(CClsBase, iAnswererIsClass, iActionIsClass);
-ANSWERER_IMPL(CClsBase, iAnswererClone, iActionClone);
-
-
-ANSWERER_IMPL(CClsBase, iAnswererIsNil, iActionIsNil);
-ANSWERER_IMPL(CClsBase, iAnswererIsFloat, iActionIsFloat);
-ANSWERER_IMPL(CClsBase, iAnswererIsSymbol, iActionIsSymbol);
-ANSWERER_IMPL(CClsBase, iAnswererIsString, iActionIsString);
-ANSWERER_IMPL(CClsBase, iAnswererIsParseError, iActionIsParseError);
-ANSWERER_IMPL(CClsBase, iAnswererIsModelIdentifier, iActionIsModelIdentifier);
-ANSWERER_IMPL(CClsBase, iAnswererIsColor, iActionIsColor);
-ANSWERER_IMPL(CClsBase, iAnswererIsCharacterArray, iActionIsCharacterArray);
-ANSWERER_IMPL(CClsBase, iAnswererIsArray, iActionIsArray);
-ANSWERER_IMPL(CClsBase, iAnswererIsSmallInt, iActionIsSmallInt);
-ANSWERER_IMPL(CClsBase, iAnswererIsDrawable, iActionIsDrawable);
-ANSWERER_IMPL(CClsBase, iAnswererIsNumber, iActionIsNumber);
-ANSWERER_IMPL(CClsBase, iAnswererIsSystem, iActionIsSystem);
-ANSWERER_IMPL(CClsBase, iAnswererIsCanvas, iActionIsCanvas);
-// DLC NEWSTCLASS
-
-ANSWERER_IMPL(CClsBase, iAnswererNotNil, iActionNotNil);
-ANSWERER_IMPL(CClsBase, iAnswererNotFloat, iActionNotFloat);
-ANSWERER_IMPL(CClsBase, iAnswererNotSymbol, iActionNotSymbol);
-ANSWERER_IMPL(CClsBase, iAnswererNotString, iActionNotString);
-ANSWERER_IMPL(CClsBase, iAnswererNotParseError, iActionNotParseError);
-ANSWERER_IMPL(CClsBase, iAnswererNotModelIdentifier, iActionNotModelIdentifier);
-ANSWERER_IMPL(CClsBase, iAnswererNotColor, iActionNotColor);
-ANSWERER_IMPL(CClsBase, iAnswererNotCharacterArray, iActionNotCharacterArray);
-ANSWERER_IMPL(CClsBase, iAnswererNotArray, iActionNotArray);
-ANSWERER_IMPL(CClsBase, iAnswererNotSmallInt, iActionNotSmallInt);
-ANSWERER_IMPL(CClsBase, iAnswererNotDrawable, iActionNotDrawable);
-ANSWERER_IMPL(CClsBase, iAnswererNotNumber, iActionNotNumber);
-ANSWERER_IMPL(CClsBase, iAnswererNotSystem, iActionNotSystem);
-ANSWERER_IMPL(CClsBase, iAnswererNotCanvas, iActionNotCanvas);
-// DLC NEWSTCLASS
 
 inline CClsBase::ErrType
 CClsBase::iActionHelp(CClsBase **result, CConxClsMessage &o)
@@ -1458,6 +1582,20 @@ CClsBase::oiActionSuperClass(CClsBase **result, CConxClsMessage &o) const
 }
 
 inline CClsBase::ErrType
+CClsBase::oiActionMakeReadOnly(CClsBase **result, CConxClsMessage &o)
+{
+  CHECK_READ_ONLYNESS(result);
+  makeReadOnly(); // this is virtual.
+  RETURN_THIS(result);
+}
+
+inline CClsBase::ErrType
+CClsBase::oiActionIsReadOnly(CClsBase **result, CConxClsMessage &o) const
+{
+  RETURN_NEW_RESULT(result, new CClsBoolean(isReadOnly()));
+}
+
+inline CClsBase::ErrType
 CClsBase::iActionPrintString(CClsBase **result, CConxClsMessage &o) const
 {
   // DLC test case.
@@ -1478,6 +1616,23 @@ CClsBase::iActionClone(CClsBase **result, CConxClsMessage &o) const
 {
   // DLC test case.
   RETURN_NEW_RESULT(result, stClone());
+}
+
+inline CClsBase::ErrType
+CClsBase::oiActionCloneDeep(CClsBase **result, CConxClsMessage &o) const
+{
+  MMM("ErrType oiActionCloneDeep(CClsBase **result, CConxClsMessage &o) const");
+  INVARIANTS();
+  // DLC test case.
+  RETURN_NEW_RESULT(result, stCloneDeep());
+}
+
+inline CClsBase::ErrType
+CClsBase::oiActionExactlyEquals(CClsBase **result, CConxClsMessage &o) const
+{
+  // DLC test case.
+  CClsBase *argv[1]; o.getBoundObjects(argv);
+  RETURN_BOOLE(argv[0] == this, result);
 }
 
 inline void CClsArray::initializeAnsweringMachines()
@@ -1521,6 +1676,18 @@ inline void CClsArray::initializeAnsweringMachines()
                                      CConxClsAnsMach::OBJECT,
                                      oiAnswererAtPut,
                                      "Sets the element at the position specified by the strictly positive integer argument to `at:' to the object that is the `put:' argument"));
+    ansMachs->append(CConxClsAnsMach("addFirst:",
+                                     CConxClsAnsMach::OBJECT,
+                                     oiAnswererAddFirst,
+                                     "Adds the argument to the front of the array, growing automatically"));
+    ansMachs->append(CConxClsAnsMach("addLast:",
+                                     CConxClsAnsMach::OBJECT,
+                                     oiAnswererAddLast,
+                                     "Adds the argument to the end of the array, growing automatically"));
+    ansMachs->append(CConxClsAnsMach("yourself",
+                                     CConxClsAnsMach::OBJECT,
+                                     oiAnswererYourself,
+                                     "Returns the array itself (i.e., the receiver), useful because #at:put: and #addFirst: return their arguments, not their receivers"));
 
   }
 }
@@ -1576,6 +1743,10 @@ inline CConxString CClsBase::clsTypeToString(ClsType c)
     return CConxString("CLS_SYSTEM");
   case CLS_CANVAS:
     return CConxString("CLS_CANVAS");
+  case CLS_LINE:
+    return CConxString("CLS_LINE");
+  case CLS_CIRCLE:
+    return CConxString("CLS_CIRCLE");
     // DLC NEWSTCLASS
   case CLS_SYMBOL:
     return CConxString("CLS_SYMBOL");
@@ -1600,37 +1771,44 @@ CClsCharacterArray::oiActionLength(CClsBase **result, CConxClsMessage &o) const
                     new CClsSmallInt((long)(getValue().getLength())));
 }
 
-TEST_TYPE_IMPL(iActionIsNil, CLS_UNDEFINED_OBJECT);
-TEST_TYPE_IMPL(iActionIsFloat, CLS_FLOAT);
-TEST_TYPE_IMPL(iActionIsSymbol, CLS_SYMBOL);
-TEST_TYPE_IMPL(iActionIsString, CLS_STRING);
-TEST_TYPE_IMPL(iActionIsParseError, CLS_ERROR);
-TEST_TYPE_IMPL(iActionIsModelIdentifier, CLS_MODELIDENTIFIER);
-TEST_TYPE_IMPL(iActionIsColor, CLS_COLOR);
-TEST_TYPE_IMPL(iActionIsCharacterArray, CLS_CHARACTERARRAY);
-TEST_TYPE_IMPL(iActionIsArray, CLS_ARRAY);
-TEST_TYPE_IMPL(iActionIsSmallInt, CLS_SMALLINT);
-TEST_TYPE_IMPL(iActionIsDrawable, CLS_DRAWABLE);
-TEST_TYPE_IMPL(iActionIsNumber, CLS_NUMBER);
-TEST_TYPE_IMPL(iActionIsSystem, CLS_SYSTEM);
-TEST_TYPE_IMPL(iActionIsCanvas, CLS_CANVAS);
+ANSWERER_IMPL(CClsBase, iAnswererHelp, iActionHelp);
+ANSWERER_IMPL(CClsBase, ciAnswererClass, ciActionClass);
+ANSWERER_IMPL(CClsBase, oiAnswererClass, oiActionClass);
+ANSWERER_IMPL(CClsBase, oiAnswererSet, oiActionSet);
+ANSWERER_IMPL(CClsBase, ciAnswererSuperClass, ciActionSuperClass);
+ANSWERER_IMPL(CClsBase, oiAnswererSuperClass, oiActionSuperClass);
+ANSWERER_IMPL(CClsBase, oiAnswererMakeReadOnly, oiActionMakeReadOnly);
+ANSWERER_IMPL(CClsBase, oiAnswererIsReadOnly, oiActionIsReadOnly);
+ANSWERER_IMPL(CClsBase, iAnswererPrintString, iActionPrintString);
+ANSWERER_IMPL(CClsBase, iAnswererIsClass, iActionIsClass);
+ANSWERER_IMPL(CClsBase, iAnswererClone, iActionClone);
+ANSWERER_IMPL(CClsBase, oiAnswererCloneDeep, oiActionCloneDeep);
+ANSWERER_IMPL(CClsBase, oiAnswererExactlyEquals, oiActionExactlyEquals);
+
+
+#define TYPE_TESTS_IMPLS(cn, clsType) \
+   TEST_TYPE_IMPL(iActionIs ## cn, clsType); \
+   TEST_NOT_TYPE_IMPL(iActionNot ## cn, clsType); \
+   ANSWERER_IMPL(CClsBase, iAnswererIs ## cn, iActionIs ## cn); \
+   ANSWERER_IMPL(CClsBase, iAnswererNot ## cn, iActionNot ## cn)
+
+TYPE_TESTS_IMPLS(Nil, CLS_UNDEFINED_OBJECT);
+TYPE_TESTS_IMPLS(Float, CLS_FLOAT);
+TYPE_TESTS_IMPLS(Symbol, CLS_SYMBOL);
+TYPE_TESTS_IMPLS(String, CLS_STRING);
+TYPE_TESTS_IMPLS(ParseError, CLS_ERROR);
+TYPE_TESTS_IMPLS(ModelIdentifier, CLS_MODELIDENTIFIER);
+TYPE_TESTS_IMPLS(Color, CLS_COLOR);
+TYPE_TESTS_IMPLS(CharacterArray, CLS_CHARACTERARRAY);
+TYPE_TESTS_IMPLS(Array, CLS_ARRAY);
+TYPE_TESTS_IMPLS(SmallInt, CLS_SMALLINT);
+TYPE_TESTS_IMPLS(Drawable, CLS_DRAWABLE);
+TYPE_TESTS_IMPLS(Number, CLS_NUMBER);
+TYPE_TESTS_IMPLS(System, CLS_SYSTEM);
+TYPE_TESTS_IMPLS(Canvas, CLS_CANVAS);
+TYPE_TESTS_IMPLS(Line, CLS_LINE);
+TYPE_TESTS_IMPLS(Circle, CLS_CIRCLE);
 // DLC NEWSTCLASS
 
-TEST_NOT_TYPE_IMPL(iActionNotNil, CLS_UNDEFINED_OBJECT);
-TEST_NOT_TYPE_IMPL(iActionNotFloat, CLS_FLOAT);
-TEST_NOT_TYPE_IMPL(iActionNotSymbol, CLS_SYMBOL);
-TEST_NOT_TYPE_IMPL(iActionNotString, CLS_STRING);
-TEST_NOT_TYPE_IMPL(iActionNotParseError, CLS_ERROR);
-TEST_NOT_TYPE_IMPL(iActionNotModelIdentifier, CLS_MODELIDENTIFIER);
-TEST_NOT_TYPE_IMPL(iActionNotColor, CLS_COLOR);
-TEST_NOT_TYPE_IMPL(iActionNotCharacterArray, CLS_CHARACTERARRAY);
-TEST_NOT_TYPE_IMPL(iActionNotArray, CLS_ARRAY);
-TEST_NOT_TYPE_IMPL(iActionNotSmallInt, CLS_SMALLINT);
-TEST_NOT_TYPE_IMPL(iActionNotDrawable, CLS_DRAWABLE);
-TEST_NOT_TYPE_IMPL(iActionNotNumber, CLS_NUMBER);
-TEST_NOT_TYPE_IMPL(iActionNotSystem, CLS_SYSTEM);
-TEST_NOT_TYPE_IMPL(iActionNotCanvas, CLS_CANVAS);
-// DLC NEWSTCLASS
 
 #endif // GPLCONX_STCOMMON_CXX_H
-

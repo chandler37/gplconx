@@ -12,6 +12,6 @@ aclocal -I .
 autoheader
 automake -a -c
 autoconf
-echo "Now use SpecTcl 1.1 to make the \`src/Tcl/*.ui' files into Tcl code"
+echo "Now run `/bin/sh ./configure'"
 
 exit 0

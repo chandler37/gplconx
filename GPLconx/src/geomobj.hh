@@ -171,7 +171,7 @@ public:
   CConxTwoPts::getDebuggingTag;
 #endif
   CConxLine();
-  CConxLine(const CConxPoint &A, const CConxPoint &B);
+  CConxLine(const CConxPoint &A, const CConxPoint &B, Boole isSeg = FALSE);
   CConxLine(const CConxLine &o);
   CConxLine &operator=(const CConxLine &o);
 

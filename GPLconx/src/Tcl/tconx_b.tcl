@@ -23,6 +23,9 @@
 proc pd { } { return [tconx_widg pd] }
 proc kd { } { return [tconx_widg kd] }
 proc puhp { } { return [tconx_widg puhp] }
+proc pdt { } { return [tconx_widg pd].togl_wig }
+proc kdt { } { return [tconx_widg kd].togl_wig }
+proc puhpt { } { return [tconx_widg puhp].togl_wig }
 
 proc tconx_version { } {
 # This program's version number.
@@ -174,6 +177,7 @@ proc tconx_mother_widget_init { W } {
     bind $W <Alt-Key-u> "$base.checkbutton\#1 invoke; break;"
     bind $W <Alt-Key-k> "$base.checkbutton\#2 invoke; break;"
     bind $W <Alt-Key-p> "$base.checkbutton\#3 invoke; break;"
+    tconx_init_pew
 
     wm protocol $W WM_DELETE_WINDOW [list tconx_exit $W]
 
@@ -428,7 +432,7 @@ proc tconx_alias { cmd } {
         VF { tconx_verbosity [tconx_verbosity_level LOGG_FULL] }
         VT { tconx_verbosity [tconx_verbosity_level LOGG_TEXINFO] }
         V0 { tconx_verbosity [tconx_verbosity_level LOGG_OFF] }
-        QCD { return [[puhp].togl_wig query CONXCMD_SHOWCD] }
+        QCD { return [[puhpt] query CONXCMD_SHOWCD] }
         . { tconx_do_conxcmd_only_once CONXCMD_OUTPUT }
         S { sync }
         * { puts "unrecognized alias" }
@@ -436,5 +440,51 @@ proc tconx_alias { cmd } {
 }
 
 proc p { a } {
+    return [tconx_parse_smalltalkish $a]
+}
+
+proc tconx_parse_smalltalkish { a } {
+    # Any togl widget will do -- this should be a built-in command but
+    # I'm lazy.
     return [[puhp].togl_wig yap "$a\n"]
+}
+
+proc Render { } {
+    tconx_parse_smalltalkish {pdc sync. kdc sync. uhpc sync}
+    [pdt] render; [kdt] render; [puhpt] render
+}
+
+proc DLC { } {
+# DLC This gets something on the screen.
+    p {d1 := Point x: -.6 y: .7 model: pd. d1 thickness set: 9 . pdc at: 1 put: d1. pdc sync}
+    Render
+}
+
+proc tconx_pew { } {
+# Returns the path of the parser's entry widget (pew)
+    return [tconx_base].entry\#3
+}
+
+proc tconx_prw { } {
+# Returns the path of the parser's result widget (pew)
+    return [tconx_base].text\#1
+}
+
+proc tconx_init_pew { } {
+    bind [tconx_pew] <Key-Return> tconx_handle_pew
+}
+
+proc tconx_set_prw_wrapping { e } {
+    if {"$e" != "word" && "$e" != "char"} {
+        set e none
+    }
+    [tconx_prw] configure -wrap $e
+}
+
+proc tconx_handle_pew { } {
+    set r [tconx_parse_smalltalkish [[tconx_pew] get]]
+    [tconx_prw] configure -state normal
+    [tconx_prw] delete 1.0 end
+    [tconx_prw] insert 1.0 $r
+    [tconx_prw] configure -state disabled
 }

@@ -34,7 +34,7 @@ long CConxClsManager::makeAssignments(const CConxClsAssignmentList &al,
   // Returns the number of failures due to attempting to assign to classes,
   // or zero on success.
 {
-  MMM("long CConxClsManager::makeAssignments(const CConxClsAssignmentList &al, CClsBase *assignTo)");
+  MMM("long makeAssignments(const CConxClsAssignmentList &al, CClsBase *assignTo)");
   if (assignTo == NULL) return -1;
   long retval = 0;
   //  cout << "DLC alist is " << flush << al << endl;

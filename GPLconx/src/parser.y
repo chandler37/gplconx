@@ -152,6 +152,7 @@ char id[MAX_ID_LENGTH];
 double r;
 long l;
 SimpleClsRef otherthing;
+CascadedMsg cascmsg;
 KeywordMessage kmsg;
 AssnList assnlist;
 }
@@ -178,7 +179,9 @@ static void local_yyprint(FILE *f, int toktype, YYSTYPE v);
 %token <r> TOK_REAL
 %token <l> TOK_LONG
 %right TOK_ASSIGN
-%type <otherthing> keywordarg obj simpleobj fancyobj msgobj partofline line
+%type <otherthing> keywordarg obj simpleobj fancyobj msgobj cascrecv
+%type <cascmsg> carriedobj
+%type <otherthing> partofline line
 %type <kmsg> keymsg
 %type <assnlist> assignments
 
@@ -291,7 +294,10 @@ assignments:	TOK_ID TOK_ASSIGN
 obj:	fancyobj
 ;
 
-fancyobj: simpleobj | msgobj
+fancyobj:	msgobj
+		| carriedobj
+			{ $$ = $1.result; /* GC receiver? */ }
+
 ;
 
 obj:	assignments fancyobj
@@ -311,22 +317,45 @@ obj:	assignments fancyobj
                 }
 ;
 
-msgobj:	simpleobj keymsg /* 'between:and:'-style message */
-                 {
-                   HANDLE_KEYWORD_MESSAGE(&$$, $1, &$2);
-                 }
+msgobj:	simpleobj
+	| simpleobj keymsg /* 'between:and:'-style message */
+		{
+                  HANDLE_KEYWORD_MESSAGE(&$$, $1, &$2);
+                }
 ;
 
+cascrecv:	simpleobj
+		| simpleobj keymsg /* 'between:and:'-style message */
+			{ /* A cascaded message goes to $1, not the result of
+                             applying the keyword message. */
+	                  HANDLE_KEYWORD_MESSAGE(&$$, $1, &$2);
+                          $$ = $1;
+	                }
+;
+
+
 /* Cascading ';' support: */
-msgobj:	fancyobj ';' TOK_ID /* unary message -- DLC implement this and below*/
-              {
-                TRY_UNARY_MESSAGE(&$$, $1, $3);
-              }
-	| fancyobj ';' keymsg
-              {
-                $$ = $1;
-                HANDLE_KEYWORD_MESSAGE(&$$, $1, &$3);
-              }
+carriedobj:	cascrecv ';' TOK_ID /* unary message */
+	              {
+                        $$.receiver = $1;
+	                TRY_UNARY_MESSAGE(&($$.result), $1, $3);
+	              }
+		| cascrecv ';' keymsg
+	              {
+                        $$.receiver = $1;
+	                HANDLE_KEYWORD_MESSAGE(&($$.result), $1, &$3);
+	              }
+		| carriedobj ';' keymsg
+	              {
+                        $$.receiver = $1.receiver;
+	                HANDLE_KEYWORD_MESSAGE(&($$.result), $1.receiver,
+                                               &$3);
+	              }
+		| carriedobj ';' TOK_ID /* unary message */
+	              {
+                        $$.receiver = $1.receiver;
+	                TRY_UNARY_MESSAGE(&($$.result), $1.receiver, $3);
+	              }
 ;
 
 simpleobj:	TOK_REAL
