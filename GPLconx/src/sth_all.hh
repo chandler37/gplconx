@@ -29,7 +29,6 @@
 #include <assert.h>
 
 #include "Starray.hh"
-#include "decls.hh"
 #include "sth_var.hh"
 #include "sth_answ.hh"
 #include "sth_msg.hh"
