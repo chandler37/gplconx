@@ -38,7 +38,9 @@ noinst_PROGRAMS = tgeomobj tdgeomob tCString tderive tparser
 noinst_LTLIBRARIES = @LIBCONXLA@ libconxu.la libcxxconx.la libcls.la
 EXTRA_LTLIBRARIES = libconx.la
 
-ttalk-sh: tparser
+## We want to say `ttalk-sh: tparser', but then `make maintainer-clean;
+## runme.sh; configure && make dist' will fail.  We just put ttalk-sh
+## last and that works fine.
 
 if WE_HAVE_SYS_INTERP
 TESTS = tgeomobj tdgeomob tCString tderive tparser ttalk-sh
@@ -54,7 +56,7 @@ EXTRA_TESTS = ttalk-sh
 EXTRA_DIST = tconxopt.ggo getopt.h parser.h ttalk-in ttalk-o ttalk-sh \
              Makefile.inc README
 
-BUILT_SOURCES = tconxopt.c tconxopt.h
+BUILT_SOURCES = tconxopt.c tconxopt.h parser.h parser.c scanner.c
 
 lcl_CPPFLAGS = -I$(srcdir)/lcl
 lcl_LDFLAGS =

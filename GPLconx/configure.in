@@ -19,7 +19,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT(src/conxv.c)
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(GPLconx, 0.148)
+AM_INIT_AUTOMAKE(GPLconx, 0.149)
 dnl Grep for `GPLconx_VERSION', you must change here and in .cvsignore and
 dnl in `bak.sh' if you have it.
 
