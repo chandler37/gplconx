@@ -38,22 +38,6 @@
 
 #define UNKNOWN_MENU_CHOICE "Unknown conx menu choice."
 
-ConxModlType tconx_togl_id2model(struct Togl *togl)
-/* Each Togl widget has an id, specified by the Tcl `-ident' option, that
-   we use to identify which model we are visualizing.
-*/
-{
-  const char *ident = Togl_Ident(togl);
-  if (!strcmp(ident, "puhp")) {
-    return CONX_POINCARE_UHP;
-  } else if (!strcmp(ident, "pd")) {
-    return CONX_POINCARE_DISK;
-  } else {
-    assert(!strcmp(ident, "kd"));
-    return CONX_KLEIN_DISK;
-  }
-}
-
 int tconx_tcl_data_entry(struct Togl *togl, int argc, char *argv[])
 /* `.modelpd.togl_wig data_entry GETF1 .3 .4', e.g., to enter focus 1 as
    (.3, .4).
