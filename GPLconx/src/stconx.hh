@@ -37,6 +37,7 @@
 #include "stline.hh"
 #include "stcircle.hh"
 #include "stparabo.hh"
+#include "sthypell.hh"
 #include "stcanvas.hh"
 
 #endif // GPLCONX_STCONX_CXX_H

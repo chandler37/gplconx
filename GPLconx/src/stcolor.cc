@@ -37,47 +37,30 @@ void CClsColor::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ansMachs->append(CConxClsAnsMach("new",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererNew,
-                                     "Returns a new Color object instance"));
-    ansMachs->append(CConxClsAnsMach("R:G:B:",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererRGB,
-                                     "Returns a new Color object instance set to a (red in [0.0, 1.0], green in [0.0, 1.0], blue in [0.0, 1.0]) RGB value"));
-    ansMachs->append(CConxClsAnsMach("H:S:V:",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererHSV,
-                                     "Returns a new Color object instance set to a (hue in [0.0, 360.0), saturation in [0.0, 1.0], value in [0.0, 1.0]) HSV value"));
+    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
+              "Returns a new Color object instance");
+    ST_METHOD(ansMachs, "R:G:B:", CLASS, ciAnswererRGB,
+              "Returns a new Color object instance set to a (red in [0.0, 1.0], green in [0.0, 1.0], blue in [0.0, 1.0]) RGB value");
+    ST_METHOD(ansMachs, "H:S:V:", CLASS, ciAnswererHSV,
+              "Returns a new Color object instance set to a (hue in [0.0, 360.0), saturation in [0.0, 1.0], value in [0.0, 1.0]) HSV value");
 
-    ansMachs->append(CConxClsAnsMach("R:G:B:",
-                                     CConxClsAnsMach::OBJECT,
-                                     oiAnswererRGB,
-                                     "Sets receiver to the given RGB value."));
-    ansMachs->append(CConxClsAnsMach("H:S:V:",
-                                     CConxClsAnsMach::OBJECT,
-                                     oiAnswererHSV,
-                                     "Sets receiver to the given HSV value."));
+    ST_METHOD(ansMachs, "R:G:B:", OBJECT, oiAnswererRGB,
+              "Sets receiver to the given RGB value.");
+    ST_METHOD(ansMachs, "H:S:V:", OBJECT, oiAnswererHSV,
+              "Sets receiver to the given HSV value.");
 
-    ansMachs->append(CConxClsAnsMach("H",
-                                     CConxClsAnsMach::OBJECT,
-                                     oiAnswererH,
-                                     "Returns the hue"));
-    ansMachs->append(CConxClsAnsMach("S", CConxClsAnsMach::OBJECT,
-                                     oiAnswererS,
-                                     "Returns the saturation"));
-    ansMachs->append(CConxClsAnsMach("V", CConxClsAnsMach::OBJECT,
-                                     oiAnswererV,
-                                     "Returns the HSV Value"));
-    ansMachs->append(CConxClsAnsMach("R", CConxClsAnsMach::OBJECT,
-                                     oiAnswererR,
-                                     "Returns the red component"));
-    ansMachs->append(CConxClsAnsMach("G", CConxClsAnsMach::OBJECT,
-                                     oiAnswererG,
-                                     "Returns the green component"));
-    ansMachs->append(CConxClsAnsMach("B", CConxClsAnsMach::OBJECT,
-                                     oiAnswererB,
-                                     "Returns the blue component"));
+    ST_METHOD(ansMachs, "H", OBJECT, oiAnswererH,
+              "Returns the hue");
+    ST_METHOD(ansMachs, "S", OBJECT, oiAnswererS,
+              "Returns the saturation");
+    ST_METHOD(ansMachs, "V", OBJECT, oiAnswererV,
+              "Returns the HSV Value");
+    ST_METHOD(ansMachs, "R", OBJECT, oiAnswererR,
+              "Returns the red component");
+    ST_METHOD(ansMachs, "G", OBJECT, oiAnswererG,
+              "Returns the green component");
+    ST_METHOD(ansMachs, "B", OBJECT, oiAnswererB,
+              "Returns the blue component");
   }
 }
 
@@ -160,6 +143,6 @@ CClsColor::ciMetaActionGet(CClsBase **result, CConxClsMessage &o,
                            CConxColor::Component comp) const
   // DLC make all actions (that should be) const
 {
-  RETURN_NEW_RESULT(result, new CClsFloat(getColor().get(comp)));
+  RETURN_FLOAT(result, getColor().get(comp));
 }
 

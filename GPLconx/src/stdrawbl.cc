@@ -185,10 +185,8 @@ void CClsDrawable::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ansMachs->append(CConxClsAnsMach("new",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererNew,
-                                     "Returns a new object instance of a drawable object, whose subclasses include points, lines, circles, parabolas, etc."));
+    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
+              "Returns a new object instance of a drawable object, whose subclasses include points, lines, circles, parabolas, etc.");
 
     ADD_ANS_GETTER("drawWithGarnish", DrawWithGarnish);
     ADD_ANS_GETTER("thickness", Thickness);

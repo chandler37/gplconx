@@ -49,7 +49,7 @@
 
 #include <iostream.h>
 
-#include "point.h"
+#include "point.hh"
 extern "C" {
 #include "viewer.h"
 }
@@ -59,6 +59,9 @@ extern "C" {
 class CConxLine;
 class CConxCanvas;
 class CConxPoint;
+
+// DLC Triangles, tangents, tractrix, perpendiculars, N-gons, midpoints,
+// a distinction between points and ideal points, a grid for the canvas, ...
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -387,11 +390,12 @@ public:
   CConxGeomObj::getDebuggingTag;
 #endif
   CConxHypEllipse() { init(); }
-  CConxHypEllipse(const CConxHypEllipse &A)
-    : CConxGeomObj(A)
+  CConxHypEllipse(const CConxPoint &f1, const CConxPoint &f2, double s)
   {
-    uninitializedCopy(A);
+    init(); setScalar(s); setFocus1(f1); setFocus2(f2);
   }
+  CConxHypEllipse(const CConxHypEllipse &A)
+    : CConxGeomObj(A) { uninitializedCopy(A); }
   void setScalar(double S) { isValid = FALSE; CConxGeomObj::setScalar(S); }
   CONX_USING CConxGeomObj::getScalar;
   void setFocus1(const CConxPoint &p) { isValid = FALSE; setA(p); }

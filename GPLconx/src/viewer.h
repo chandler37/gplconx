@@ -26,8 +26,12 @@
 #include "point.h"
 #include "globals.h"
 
+#ifndef M_E
+#define M_E 2.7182818284590452354 /* e, the base of the natural logarithm */
+#endif
 #ifndef M_PI
-#define M_PI 3.1415926535897932384626433
+#define M_PI 3.1415926535897932384626433 /* Pi, the circumference of a
+                                            circle with radius 1.0 */
 #endif
 
 /* From GNU <math.h>: */

@@ -304,6 +304,11 @@ void CConxClsManager::loadStartupClassInstances()
     assert(!r); \
     addReservedWord(bp->getClsName())
 
+#define LOAD_ALIAS_FOR_THAT_CLASS_INST(alias) \
+  r = makeAssignment(alias, bp); \
+  assert(!r); \
+  addReservedWord(alias)
+
   LOAD_CLASS_INSTANCE(CClsModelIdentifier);
   LOAD_CLASS_INSTANCE(CClsColor);
   LOAD_CLASS_INSTANCE(CClsCharacterArray);
@@ -317,6 +322,12 @@ void CConxClsManager::loadStartupClassInstances()
   LOAD_CLASS_INSTANCE(CClsLine);
   LOAD_CLASS_INSTANCE(CClsCircle);
   LOAD_CLASS_INSTANCE(CClsParabola);
+  LOAD_CLASS_INSTANCE(CClsHypEllipse);
+  // HypEllipse is hard to remember, so we'll set up two other names for this
+  // class:
+  LOAD_ALIAS_FOR_THAT_CLASS_INST("Hyperbola");
+  LOAD_ALIAS_FOR_THAT_CLASS_INST("Ellipse");
+
   // DLC NEWSTCLASS
   LOAD_CLASS_INSTANCE(CClsBase);
   LOAD_CLASS_INSTANCE(CClsFloat);

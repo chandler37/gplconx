@@ -114,7 +114,7 @@ ConxDirection conx_startpoint(Pt LB, double dw, double dh, ConxMetric *func,
   /* We have to have a king to dethrone.  We will arbitrarily choose
      0 (CXD_NW, but that's unimportant) to begin.
   */
-  dir = 0;
+  dir = (ConxDirection) 0;
   leastdistance = myabs(func_in_direction(LB, dir, dw, dh, func, fArg));
   bestdir = dir;
 
@@ -129,7 +129,9 @@ ConxDirection conx_startpoint(Pt LB, double dw, double dh, ConxMetric *func,
   }
 #endif
 
-  for (dir = 1; dir <= 7; dir++) {
+  for (dir = (ConxDirection) 1;
+       dir <= (ConxDirection) 7;
+       dir = (ConxDirection)(1 + (int) dir)) {
     HOLD_MINIMUM(&leastdistance,
                  myabs(func_in_direction(LB, dir, dw, dh, func, fArg)),
                  &bestdir, dir);

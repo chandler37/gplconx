@@ -540,7 +540,7 @@ void pdisp(int icount, int *jcount, ConxModlType modl)
     BRESENHAM(conxp_getEQstarted, conxp_eqdist);
     break;
   default:
-    displayswitch(icount, jcount, modl);
+    displayswitch((ConxMenuChoice)icount, jcount, modl);
     break;
   } /* switch */ 
 }
@@ -605,7 +605,7 @@ void kdisp(int icount, int *jcount, ConxModlType modl)
       BRESENHAM(conxk_getEQstarted, conxk_eqdist);
       break;
     default:
-      displayswitch(icount, jcount, modl);
+      displayswitch((ConxMenuChoice)icount, jcount, modl);
       break;
     } /* switch */ 
 
@@ -689,7 +689,7 @@ void conxpd_disp(int icount, int *jcount, ConxModlType modl)
       break;
  
     default:
-      displayswitch(icount, jcount, modl);
+      displayswitch((ConxMenuChoice)icount, jcount, modl);
       break;
     } /* switch */ 
 }
@@ -724,7 +724,7 @@ void conx_display(ConxModlType modl)
   while (icount<top[modl]) {
     conx_disp(modl, disp[++icount][modl], &jcount);
     LOGGG4(LOGG_FULL, "\nicount= %d disp[icount]= %s j= %d data[j]=%f\n", icount,
-           conx_menu_choice2string(disp[icount][modl]), jcount,
+           conx_menu_choice2string((ConxMenuChoice)disp[icount][modl]), jcount,
            data[jcount][modl]);
   } /* while */
 
@@ -782,9 +782,9 @@ int conx_mouse(ConxModlType mdl, ConxMouseChoice cmc, int x, int y,
    Returns 0 if no redisplay is needed, 1 if a redisplay is needed. DLC ???
 */
 {
-  int retval = 0;
   static Pt held;
-  Pt new;
+  int retval = 0;
+  Pt neww;
   int w, h;
   double uhh, crap;
 
@@ -838,15 +838,15 @@ int conx_mouse(ConxModlType mdl, ConxMouseChoice cmc, int x, int y,
   } else {
     /* The button has been released. */
     conx_screen2model(x, y, xmin[mdl], xmax[mdl], ymin[mdl], ymax[mdl],
-                      win_height, &new);
+                      win_height, &neww);
     switch (button_function) {
     case CONXCMD_MZOOM:
       disp[++top[mdl]][mdl]=CONXCMD_GETXXYY;
-      data[++dtop[mdl]][mdl]=lesser(new.x, held.x);
-      LOGGG3(LOGG_FULL, "%f %f %f 1 2 least\n", new.x, held.x, lesser(new.x, held.x));
-      data[++dtop[mdl]][mdl]=greater(new.x, held.x);
-      data[++dtop[mdl]][mdl]=lesser(new.y, held.y);
-      data[++dtop[mdl]][mdl]=greater(new.y, held.y);
+      data[++dtop[mdl]][mdl]=lesser(neww.x, held.x);
+      LOGGG3(LOGG_FULL, "%f %f %f 1 2 least\n", neww.x, held.x, lesser(neww.x, held.x));
+      data[++dtop[mdl]][mdl]=greater(neww.x, held.x);
+      data[++dtop[mdl]][mdl]=lesser(neww.y, held.y);
+      data[++dtop[mdl]][mdl]=greater(neww.y, held.y);
       xmin[mdl]=data[dtop[mdl]-3][mdl];
       xmax[mdl]=data[dtop[mdl]-2][mdl];
       ymin[mdl]=data[dtop[mdl]-1][mdl];
@@ -864,11 +864,11 @@ int conx_mouse(ConxModlType mdl, ConxMouseChoice cmc, int x, int y,
     case CONXCMD_MGETCD:
       disp[++top[mdl]][mdl]=CONXCMD_GETCD;
       if (mdl==CONX_POINCARE_DISK) {
-	data[++dtop[mdl]][mdl]=conxpd_distAB(new, held);
+	data[++dtop[mdl]][mdl]=conxpd_distAB(neww, held);
       } else if (mdl==CONX_KLEIN_DISK) {
-	data[++dtop[mdl]][mdl]=conxk_distAB(new, held);
+	data[++dtop[mdl]][mdl]=conxk_distAB(neww, held);
       } else {
-        data[++dtop[mdl]][mdl]=conxp_distAB(new, held);
+        data[++dtop[mdl]][mdl]=conxp_distAB(neww, held);
       }
       conicdistance=data[dtop[mdl]][mdl];
       break;
@@ -876,20 +876,20 @@ int conx_mouse(ConxModlType mdl, ConxMouseChoice cmc, int x, int y,
       disp[++top[mdl]][mdl]=CONXCMD_GETA;
       disp[++top[mdl]][mdl]=CONXCMD_GETR;
       if (mdl==CONX_POINCARE_DISK) {
-	conxpd_getCenterAndRadius(held.x, held.y, new.x, new.y, \
+	conxpd_getCenterAndRadius(held.x, held.y, neww.x, neww.y, \
           &data[++dtop[CONX_POINCARE_DISK]][CONX_POINCARE_DISK], &crap, &uhh);
 	data[++dtop[CONX_POINCARE_DISK]][CONX_POINCARE_DISK]=crap;
       } else if (mdl==CONX_KLEIN_DISK) {
-	if (myabs(crap=new.x-held.x)>VERTICALNESS) {
-	  data[++dtop[CONX_KLEIN_DISK]][CONX_KLEIN_DISK]=(new.y-held.y)/crap;
+	if (myabs(crap=neww.x-held.x)>VERTICALNESS) {
+	  data[++dtop[CONX_KLEIN_DISK]][CONX_KLEIN_DISK]=(neww.y-held.y)/crap;
 	  data[++dtop[CONX_KLEIN_DISK]][CONX_KLEIN_DISK]
-            = new.y - data[dtop[CONX_KLEIN_DISK]-1][CONX_KLEIN_DISK]*new.x;
+            = neww.y - data[dtop[CONX_KLEIN_DISK]-1][CONX_KLEIN_DISK]*neww.x;
         } else {
-	  data[++dtop[CONX_KLEIN_DISK]][CONX_KLEIN_DISK]=(new.x+held.x)/2;
+	  data[++dtop[CONX_KLEIN_DISK]][CONX_KLEIN_DISK]=(neww.x+held.x)/2;
 	  data[++dtop[CONX_KLEIN_DISK]][CONX_KLEIN_DISK]=KINFINITY;
         }
       } else {
-	conxp_geteq(new, held, &data[++dtop[CONX_KLEIN_DISK]][CONX_KLEIN_DISK],
+	conxp_geteq(neww, held, &data[++dtop[CONX_KLEIN_DISK]][CONX_KLEIN_DISK],
                     &crap);
 	data[++dtop[CONX_KLEIN_DISK]][CONX_KLEIN_DISK]=crap;
       }
@@ -917,12 +917,12 @@ int conx_mouse(ConxModlType mdl, ConxMouseChoice cmc, int x, int y,
       disp[++top[mdl]][mdl]=CONXCMD_GETF2;
       data[++dtop[mdl]][mdl]=held.x;
       data[++dtop[mdl]][mdl]=held.y;
-      data[++dtop[mdl]][mdl]=new.x;
-      data[++dtop[mdl]][mdl]=new.y;
+      data[++dtop[mdl]][mdl]=neww.x;
+      data[++dtop[mdl]][mdl]=neww.y;
       focus1[mdl].x=held.x;
       focus1[mdl].y=held.y;
-      focus2[mdl].x=new.x;
-      focus2[mdl].y=new.y;
+      focus2[mdl].x=neww.x;
+      focus2[mdl].y=neww.y;
       if (mdl==CONX_POINCARE_DISK) {
 	conxhm_pdtokAB(focus1[CONX_POINCARE_DISK], &focus1[CONX_KLEIN_DISK]);
 	conxhm_pdtokAB(focus2[CONX_POINCARE_DISK], &focus2[CONX_KLEIN_DISK]); 
@@ -951,7 +951,7 @@ int conx_mouse(ConxModlType mdl, ConxMouseChoice cmc, int x, int y,
     } /*switch */
     /*    glutPostRedisplay(); */
   } /*else*/
-  LOGGG4(LOGG_QUICK, "\nheld (%f, %f) new (%f, %f)\n", held.x, held.y, new.x, new.y);
+  LOGGG4(LOGG_QUICK, "\nheld (%f, %f) new (%f, %f)\n", held.x, held.y, neww.x, neww.y);
   if (autofoci) {
     LOGGG4(LOGG_QUICK, "\nf1 (%f, %f) f2 (%f, %f)\n", focus1[mdl].x, focus1[mdl].y,
            focus2[mdl].x, focus2[mdl].y);
@@ -1025,7 +1025,7 @@ int conx_menufunc(ConxMenuChoice a, ConxModlType modl, int win_height)
       case CONXCMD_FOCI:
         break;
       default:
-        displayswitch(temp, &jct, modl);
+        displayswitch((ConxMenuChoice)temp, &jct, modl);
         break;
       }
     }
@@ -1048,7 +1048,7 @@ int conx_menufunc(ConxMenuChoice a, ConxModlType modl, int win_height)
       
   case CONXCMD_GETLOGLEVEL:
     LOGGG1(LOGG_TEXINFO, "\n@setloglevel{%f}\n", data[dtop[modl]][modl]);
-    loglevel = ceil(data[dtop[modl]][modl]);
+    loglevel = (int) ceil(data[dtop[modl]][modl]);
     break;
   case CONXCMD_GETCD:
     conicdistance=data[dtop[modl]][modl];
@@ -1211,7 +1211,7 @@ int conx_menufunc(ConxMenuChoice a, ConxModlType modl, int win_height)
   LOGGG6(LOGG_QUICK, "\n... focus1=(%f, %f); %s;\n\t"
          "model=%s a= %d dtop= %d,", focus1[modl].x, focus1[modl].y,
          (top[modl] >= 0)
-         ? conx_menu_choice2string(disp[top[modl]][modl])
+         ? conx_menu_choice2string((ConxMenuChoice)disp[top[modl]][modl])
          : "<empty command stack>",
          conx_modelenum2short_string(modl), a, dtop[modl]);
   LOGGG1(LOGG_QUICK, " top= %d\n", top[modl]);

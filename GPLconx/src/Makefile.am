@@ -73,14 +73,15 @@ libcls_la_SOURCES = parser.y scanner.l cparse.cc clsmgr.cc mparse.cc \
 		    stobject.cc stsmalli.cc stnumber.cc gcobject.cc \
                     stboole.cc stundefo.cc stgarray.cc stfloat.cc \
                     stsystem.cc stmodlid.cc stcolor.cc stdrawbl.cc \
-		    stpoint.cc stline.cc stcircle.cc stparabo.cc stcanvas.cc
+		    stpoint.cc stline.cc stcircle.cc stparabo.cc stcanvas.cc \
+		    sthypell.cc
 
 tparser_SOURCES = tparser.cc tester.cc
 tparser_LDADD = libcls.la libcxxconx.la libconxu.la \
                 $(lcl_LDFLAGS) $(lcl_LIBS)
 
 EXTRA_tconx_SOURCES = getopt1.c getopt.c
-tconx_SOURCES = toglconx.c tclprocs.c tconxopt.c gl.c
+tconx_SOURCES = toglconx.c tclprocs.c tclgproc.c tconxopt.c gl.c
 tconx_LDADD = @GGOOBJS@ libconx.la libconxu.la \
               $(top_builddir)/Togl/libtogl.la \
               $(glu_LDFLAGS) $(glu_LIBS) \
@@ -96,8 +97,8 @@ libcxxconx_la_SOURCES = geomobj.cc hypmathx.cc CString.cc canvas.cc \
 ## libcxxconx.la needs to be linked with libconxu.la
 
 EXTRA_cxxconx_SOURCES = getopt1.c getopt.c
-cxxconx_SOURCES = toglobj.cc cxxconx.cc tclprocs.c tconxopt.c gl.c glcanvas.cc
-cxxconx_LDADD = @GGOOBJS@ libcls.la libcxxconx.la libconx.la libconxu.la \
+cxxconx_SOURCES = toglobj.cc cxxconx.cc tclgproc.c tconxopt.c glcanvas.cc
+cxxconx_LDADD = @GGOOBJS@ libcls.la libcxxconx.la libconxu.la \
                 $(top_builddir)/Togl/libtogl.la $(glu_LDFLAGS) $(glu_LIBS) \
                 $(gl_LDFLAGS) $(gl_LIBS) $(tk_LDFLAGS) $(tk_LIBS) \
                 $(tcl_LDFLAGS) $(tcl_LIBS) $(lcl_LDFLAGS) $(lcl_LIBS)
@@ -144,7 +145,8 @@ noinst_HEADERS = viewer.h point.h globals.h util.h conxtcl.h bresint.h \
                  stcharar.hh ststring.hh stsymbol.hh gcobject.hh stsmalli.hh \
                  stnumber.hh stboole.hh stundefo.hh stgarray.hh stfloat.hh \
                  stsystem.hh stmodlid.hh stcolor.hh stdrawbl.hh stpoint.hh \
-                 stline.hh stcircle.hh stparabo.hh stcanvas.hh
+                 stline.hh stcircle.hh stparabo.hh stcanvas.hh sthypell.hh \
+		 point.hh
 
 
 # How many lines of source code do we have?
@@ -153,7 +155,7 @@ noinst_HEADERS = viewer.h point.h globals.h util.h conxtcl.h bresint.h \
 # `make numln' will tell us.
 
 NL_SOURCE_FILES = $(srcdir)/toglconx.c $(srcdir)/glutconx.c \
-	$(srcdir)/tconxopt.ggo \
+	$(srcdir)/tconxopt.ggo $(srcdir)/tclgproc.c \
 	$(srcdir)/tclprocs.c $(srcdir)/tclprocs.h $(srcdir)/gl.c \
 	$(srcdir)/acosh.c $(srcdir)/conxv.c $(srcdir)/conxcln.c \
 	$(srcdir)/bres2.c $(srcdir)/lines.c $(srcdir)/tdgeomob.cc \
@@ -196,9 +198,11 @@ NL_SOURCE_FILES = $(srcdir)/toglconx.c $(srcdir)/glutconx.c \
 	$(srcdir)/stline.hh $(srcdir)/stline.cc \
 	$(srcdir)/stcircle.hh $(srcdir)/stcircle.cc \
 	$(srcdir)/stparabo.hh $(srcdir)/stparabo.cc \
+	$(srcdir)/sthypell.hh $(srcdir)/sthypell.cc \
 	$(srcdir)/stcanvas.hh $(srcdir)/stcanvas.cc \
 	$(srcdir)/stgarray.hh $(srcdir)/stgarray.cc \
 	$(srcdir)/gcobject.hh $(srcdir)/gcobject.cc \
+	$(srcdir)/point.hh \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.inc \
         $(top_srcdir)/Makefile.am $(top_srcdir)/configure.in \
 	$(srcdir)/Tcl/tconx_a.tcl $(srcdir)/Tcl/tconx_b.tcl \

@@ -31,7 +31,7 @@
 #include "stconx.hh"
 
 CConxOwnerArray<CConxClsAnsMach> *CClsBase::ansMachs = NULL;
-// DLC NEWSTCLASS
+// DLC NEWSTCLASS in the appropriate `.cc' file
 
 NF_INLINE
 const char *CClsBase::getClsNameByType(ClsType c)
@@ -71,6 +71,8 @@ const char *CClsBase::getClsNameByType(ClsType c)
     return CClsCircle::sGetClsName();
   case CLS_PARABOLA:
     return CClsParabola::sGetClsName();
+  case CLS_HYPELLIPSE:
+    return CClsHypEllipse::sGetClsName();
 // DLC NEWSTCLASS
   case CLS_SYMBOL:
     return CClsSymbol::sGetClsName();
@@ -93,76 +95,54 @@ void CClsBase::initializeAnsweringMachines()
 
     // DLC for efficiency, don't allow `Boolean true' and `Boolean false',
     // force copying `true' and `false'.
-    ansMachs->append(CConxClsAnsMach("makeReadOnly", CConxClsAnsMach::OBJECT,
-                                     oiAnswererMakeReadOnly,
-                                     "Makes the object instance read-only; if the object is a container, such as Array, Canvas, Drawable, Point, Line, etc., then the contents become read-only also.  This is irreversible and comes with some performance advantages.  Clone a read-only object to get a read-write equivalent"));
-    ansMachs->append(CConxClsAnsMach("isReadOnly", CConxClsAnsMach::OBJECT,
-                                     oiAnswererIsReadOnly,
-                                     "Returns a Boolean to indicate the receiver's read-only status"));
-    ansMachs->append(CConxClsAnsMach("superClass", CConxClsAnsMach::CLASS,
-                                     ciAnswererSuperClass,
-                                     "Returns the class from which the receiver is derived"));
-    ansMachs->append(CConxClsAnsMach("superClass", CConxClsAnsMach::OBJECT,
-                                     oiAnswererSuperClass,
-                                     "Returns the class from which the receiver is derived"));
-    ansMachs->append(CConxClsAnsMach("class", CConxClsAnsMach::CLASS,
-                                     ciAnswererClass,
-                                     "Returns the class of which the receiver is a class instance"));
-    ansMachs->append(CConxClsAnsMach("class", CConxClsAnsMach::OBJECT,
-                                     oiAnswererClass,
-                                     "Returns the class of which the receiver is an object instance"));
-    ansMachs->append(CConxClsAnsMach(PRINTSTRING, CConxClsAnsMach::OBJECT,
-                                     iAnswererPrintString,
-                                     "Returns a human-readable String object instance representation"));
-    ansMachs->append(CConxClsAnsMach(PRINTSTRING, CConxClsAnsMach::CLASS,
-                                     iAnswererPrintString,
-                                     "Returns a human-readable String object instance representation"));
-    ansMachs->append(CConxClsAnsMach("isClass", CConxClsAnsMach::CLASS,
-                                     iAnswererIsClass,
-                                     "Returns true if the receiver is a class instance rather than an object instance"));
-    ansMachs->append(CConxClsAnsMach("isClass", CConxClsAnsMach::OBJECT,
-                                     iAnswererIsClass,
-                                     "Returns true if the receiver is a class instance rather than an object instance"));
-    ansMachs->append(CConxClsAnsMach("cloneDeep", CConxClsAnsMach::OBJECT,
-                                     oiAnswererCloneDeep,
-                                     "Returns a copy of the receiver with, in the case or containers, all contents replaced by cloneDeep copies"));
-    ansMachs->append(CConxClsAnsMach("clone", CConxClsAnsMach::CLASS,
-                                     iAnswererClone,
-                                     "Returns an identical copy of the receiver (not the receiver itself) that shares any contents if the receiver is a container"));
-    ansMachs->append(CConxClsAnsMach("clone", CConxClsAnsMach::OBJECT,
-                                     iAnswererClone,
-                                     "Returns an identical copy of the receiver (not the receiver itself) that shares any contents if the receiver is a container"));
-    ansMachs->append(CConxClsAnsMach("exactlyEquals:",
-                                     CConxClsAnsMach::OBJECT,
-                                     oiAnswererExactlyEquals,
-                                     "Returns true iff the receiver is precisely the same object instance as the argument (iff the pointers are equal, for you C folk)"));
-    ansMachs->append(CConxClsAnsMach("set:", CConxClsAnsMach::OBJECT,
-                                     oiAnswererSet,
-                                     "Sets the receiver's value to a copy of the argument's value"));
-    ansMachs->append(CConxClsAnsMach("help", CConxClsAnsMach::OBJECT,
-                                     iAnswererHelp,
-                                     "Returns help on using the receiver"));
-    ansMachs->append(CConxClsAnsMach("help", CConxClsAnsMach::CLASS,
-                                     iAnswererHelp,
-                                     "Returns help on using the receiver"));
+    ST_METHOD(ansMachs, "makeReadOnly", OBJECT, oiAnswererMakeReadOnly,
+              "Makes the object instance read-only; if the object is a container, such as Array, Canvas, Drawable, Point, Line, etc., then the contents become read-only also.  This is irreversible and comes with some performance advantages.  Clone a read-only object to get a read-write equivalent");
+    ST_METHOD(ansMachs, "isReadOnly", OBJECT, oiAnswererIsReadOnly,
+              "Returns a Boolean to indicate the receiver's read-only status");
+    ST_METHOD(ansMachs, "superClass", CLASS, ciAnswererSuperClass,
+              "Returns the class from which the receiver is derived");
+    ST_METHOD(ansMachs, "superClass", OBJECT, oiAnswererSuperClass,
+              "Returns the class from which the receiver is derived");
+    ST_METHOD(ansMachs, "class", CLASS, ciAnswererClass,
+              "Returns the class of which the receiver is a class instance");
+    ST_METHOD(ansMachs, "class", OBJECT, oiAnswererClass,
+              "Returns the class of which the receiver is an object instance");
+    ST_METHOD(ansMachs, PRINTSTRING, OBJECT, iAnswererPrintString,
+              "Returns a human-readable String object instance representation");
+    ST_METHOD(ansMachs, PRINTSTRING, CLASS, iAnswererPrintString,
+              "Returns a human-readable String object instance representation");
+    ST_METHOD(ansMachs, "isClass", CLASS, iAnswererIsClass,
+              "Returns true if the receiver is a class instance rather than an object instance");
+    ST_METHOD(ansMachs, "isClass", OBJECT, iAnswererIsClass,
+      "Returns true if the receiver is a class instance rather than an object instance");
+    ST_METHOD(ansMachs, "cloneDeep", OBJECT, oiAnswererCloneDeep,
+              "Returns a copy of the receiver with, in the case or containers, all contents replaced by cloneDeep copies");
+    ST_METHOD(ansMachs, "clone", CLASS, iAnswererClone,
+              "Returns an identical copy of the receiver (not the receiver itself) that shares any contents if the receiver is a container");
+    ST_METHOD(ansMachs, "clone", OBJECT, iAnswererClone,
+              "Returns an identical copy of the receiver (not the receiver itself) that shares any contents if the receiver is a container");
+    ST_METHOD(ansMachs, "exactlyEquals:", OBJECT, oiAnswererExactlyEquals,
+              "Returns true iff the receiver is precisely the same object instance as the argument (iff the pointers are equal, for you C folk)");
+    ST_METHOD(ansMachs, "set:", OBJECT, oiAnswererSet,
+              "Sets the receiver's value to a copy of the argument's value");
+    ST_METHOD(ansMachs, "help", OBJECT, iAnswererHelp,
+              "Returns help on using the receiver");
+    ST_METHOD(ansMachs, "help", CLASS, iAnswererHelp,
+              "Returns help on using the receiver");
 
 
 // Handle `nil isNil' vs. `UndefinedObject isNil' with isClassInstance() test
 #define TEST_TYPE(msgString, clsType, answerer) \
- ansMachs->append(CConxClsAnsMach(msgString, CConxClsAnsMach::OBJECT, \
-                                  answerer, \
-                             "Returns true if the receiver " msgString)); \
- ansMachs->append(CConxClsAnsMach(msgString, CConxClsAnsMach::CLASS, \
-                                  answerer, \
-                                  "Returns true if the receiver " msgString))
+ ST_METHOD(ansMachs, msgString, OBJECT, answerer, \
+           "Returns true if the receiver " msgString); \
+ ST_METHOD(ansMachs, msgString, CLASS, answerer, \
+           "Returns true if the receiver " msgString)
 
 #define TEST_NOT_TYPE(msgString, clsType, answerer) \
- ansMachs->append(CConxClsAnsMach(msgString, CConxClsAnsMach::OBJECT, \
-                                  answerer, \
-                            "Returns true if the receiver is " msgString)); \
- ansMachs->append(CConxClsAnsMach(msgString, CConxClsAnsMach::CLASS, \
-                                  answerer, \
-                              "Returns true if the receiver is " msgString))
+ ST_METHOD(ansMachs, msgString, OBJECT, answerer, \
+           "Returns true if the receiver is " msgString); \
+ ST_METHOD(ansMachs, msgString, CLASS, answerer, \
+           "Returns true if the receiver is " msgString)
 
 #define HANDLE_CLASS_TYPE_TESTS(s, clsTyp, fn) \
     TEST_TYPE("is" s, clsTyp, iAnswererIs ## fn); \
@@ -191,6 +171,7 @@ void CClsBase::initializeAnsweringMachines()
     HANDLE_CLASS_TYPE_TESTS("Circle", CLS_CIRCLE, Circle);
     HANDLE_CLASS_TYPE_TESTS("Point", CLS_POINT, Point);
     HANDLE_CLASS_TYPE_TESTS("Parabola", CLS_PARABOLA, Parabola);
+    HANDLE_CLASS_TYPE_TESTS("HypEllipse", CLS_HYPELLIPSE, HypEllipse);
 // DLC NEWSTCLASS
   }
 }
@@ -419,7 +400,9 @@ NF_INLINE CConxString CClsBase::clsTypeToString(ClsType c)
     return CConxString("CLS_CIRCLE");
   case CLS_PARABOLA:
     return CConxString("CLS_PARABOLA");
-    // DLC NEWSTCLASS
+  case CLS_HYPELLIPSE:
+    return CConxString("CLS_HYPELLIPSE");
+// DLC NEWSTCLASS
   case CLS_SYMBOL:
     return CConxString("CLS_SYMBOL");
   case CLS_STRING:
@@ -475,6 +458,7 @@ TYPE_TESTS_IMPLS(Line, CLS_LINE);
 TYPE_TESTS_IMPLS(Circle, CLS_CIRCLE);
 TYPE_TESTS_IMPLS(Point, CLS_POINT);
 TYPE_TESTS_IMPLS(Parabola, CLS_PARABOLA);
+TYPE_TESTS_IMPLS(HypEllipse, CLS_HYPELLIPSE);
 // DLC NEWSTCLASS
 
 

@@ -239,7 +239,15 @@ class CClsBoolean;
 
 #define RETURN_BOOLE(val, result) \
    do { \
-     SET_RESULT(result, new CClsBoolean((val) ? TRUE : FALSE));  /* DLC GC thiswill cause a throw in removeUsers */ \
+     SET_RESULT(result, new CClsBoolean((val) ? TRUE : FALSE));  /* DLC GC this will cause a throw in removeUsers */ \
+     return CClsBase::OK_NEW_THING; \
+   } while (0)
+
+class CClsFloat;
+
+#define RETURN_FLOAT(result, fl) \
+   do { \
+     SET_RESULT(result, new CClsFloat(fl));  /* DLC GC this will cause a throw in removeUsers */ \
      return CClsBase::OK_NEW_THING; \
    } while (0)
 
@@ -254,18 +262,6 @@ int classType::staticFunctionName(CClsBase *receiver, \
   return (int) ((classType *)receiver)->correspondingMethodName(result, o); \
 }
 
-#define ADD_ANS_GETTER(mname, fn) \
-      ansMachs->append(CConxClsAnsMach(mname, \
-                                       CConxClsAnsMach::OBJECT, \
-                                       oiAnswerer ## fn, \
-                                       "Returns the " mname))
-
-#define ADD_ANS_SETTER(mname, fn) \
-      ansMachs->append(CConxClsAnsMach(mname, \
-                                       CConxClsAnsMach::OBJECT, \
-                                       oiAnswerer ## fn, \
-                                       "Sets the `" mname "' field; returns the receiver"))
-
 class CClsNumber;
 
 #define NEED_N_FLOATS(N, fargv, o, result) \
@@ -275,6 +271,29 @@ class CClsNumber;
     (fargv)[ai] = ((CClsNumber *)tMpArgv[ai])->getFloatValue(); \
   }
 
+#define ST_METHOD(am, stMethodName, classOrObject, functionName, comment) \
+        (am)->append(CConxClsAnsMach(stMethodName, \
+                                     CConxClsAnsMach:: ## classOrObject, \
+                                     functionName, \
+                                     comment))
+
+#define ADD_ANS_GETTER(mname, fn) \
+   ST_METHOD(ansMachs, mname, OBJECT, oiAnswerer ## fn, "Returns the " mname)
+
+#define ADD_ANS_SETTER(mname, fn) \
+   ST_METHOD(ansMachs, mname, OBJECT, oiAnswerer ## fn, \
+             "Sets the `" mname "' field; returns the receiver")
+
+// The following makes implementing actions easy, but may be hard to
+// unnecessarily hard to understand: DLC
+#define ACTION_WITH_NO_ARGS_IMPL(cls, constness, func, innerAction) \
+NF_INLINE CClsBase::ErrType \
+cls ## :: ## func(CClsBase **result, CConxClsMessage &o) constness \
+{ innerAction }
+
+// The following macros assume that the result pointer is named `result':
+#define RETURN_FLOAT_R(m) RETURN_FLOAT(result, m)
+#define RETURN_BOOLE_R(m) RETURN_BOOLE(result, m)
 
 
 #endif // GPLCONX_STMACROS_CXX_H

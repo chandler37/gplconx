@@ -26,7 +26,7 @@
 
 #include <assert.h>
 
-#include "point.h"
+#include "point.hh"
 #include "decls.hh"
 
 class ostream;

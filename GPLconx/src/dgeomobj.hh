@@ -70,10 +70,16 @@ class CConxArtist : VIRT public CConxObject,
 public:
   DEFAULT_PRINTON()
 public:
+  virtual CConxArtist *aClone() const
+  {
+    CConxArtist *j = new CConxArtist(*this);
+    if (j == NULL) OOM();
+    return j;
+  }
   CConxArtist() { }
   CConxArtist(const CConxArtist &o) : CConxObject(o) { }
   CConxArtist &operator=(const CConxArtist &o);
-  ~CConxArtist() { MMM("destructor"); }
+  ~CConxArtist() { MMM("destructor"); LLL("CConxArtist::Deleting " << this); }
   int operator==(const CConxArtist &o) { return 1; }
   int operator!=(const CConxArtist &o) { return !operator==(o); }
 
@@ -108,6 +114,12 @@ class CConxDwGeomObj : VIRT public CConxArtist {
 public: // types
   enum DrawingMethod { SAFEST, BRESENHAM, LONGWAY, BEST };
 public:
+  CConxArtist *aClone() const
+  {
+    CConxArtist *j = new CConxDwGeomObj(*this);
+    if (j == NULL) OOM();
+    return j;
+  }
   CConxDwGeomObj(CConxSimpleArtist *p);
   CConxDwGeomObj(const CConxSimpleArtist &p);
   CConxDwGeomObj() { init(); }

@@ -34,7 +34,6 @@
 #include "clsmgr.hh"
 
 CConxOwnerArray<CConxClsAnsMach> *CClsSystem::ansMachs = NULL;
-// DLC NEWSTCLASS
 
 
 // DLC Linux Class Library ForEach Documentation is weak.
@@ -86,22 +85,14 @@ void CClsSystem::initializeAnsweringMachines()
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
     // There is no "new", we don't allow object instances.
-    ansMachs->append(CConxClsAnsMach("exit",
-                                     CConxClsAnsMach::CLASS,
-                                     iAnswererExit,
-                                     "Exits the system"));
-    ansMachs->append(CConxClsAnsMach("helpMe",
-                                     CConxClsAnsMach::CLASS,
-                                     iAnswererHelpMe,
-                                     "Gets high-level help"));
-    ansMachs->append(CConxClsAnsMach("vars",
-                                     CConxClsAnsMach::CLASS,
-                                     iAnswererVars,
-                                     "Returns an Array of Symbols that are defined variables"));
-    ansMachs->append(CConxClsAnsMach("at:",
-                                     CConxClsAnsMach::CLASS,
-                                     iAnswererAt,
-                                     "Returns that to which the variable whose name is given as a Symbol argument points"));
+    ST_METHOD(ansMachs, "exit", CLASS, iAnswererExit,
+              "Exits the system");
+    ST_METHOD(ansMachs, "helpMe", CLASS, iAnswererHelpMe,
+              "Gets high-level help");
+    ST_METHOD(ansMachs, "vars", CLASS, iAnswererVars,
+              "Returns an Array of Symbols that are defined variables");
+    ST_METHOD(ansMachs, "at:", CLASS, iAnswererAt,
+              "Returns that to which the variable whose name is given as a Symbol argument points");
     // DLC "at:put:" "unset:"
   }
 }

@@ -155,6 +155,12 @@ public:
     }
     ownedObjects[sz++] = a;
   }
+  void append(const Type *a) throw(const char *)
+  // This array does not take ownership of *a, it copies *a.
+  {
+    Type *n = new Type(*a);
+    append(n);
+  }
   void append(const Type &s) throw(const char *)
   // A copy of s is put at the end of the array.
   {

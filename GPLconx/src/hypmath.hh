@@ -25,7 +25,8 @@
 #define GPLCONX_HYPMATH_CXX_H 1
 
 #include <assert.h>
-#include "point.h"
+
+#include "point.hh"
 extern "C" {
 #include "viewer.h"
 }

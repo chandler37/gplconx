@@ -29,7 +29,7 @@ typedef struct Pt {
 } Pt;
 
 /* These must be 0, 1, and 2: */
-typedef enum modeltype {
+typedef enum ConxModlType {
   CONX_POINCARE_UHP, CONX_KLEIN_DISK, CONX_POINCARE_DISK
 } ConxModlType;
 /* poincare Upper Half plane, Beltrami-Klein disk, or poincare disk */
@@ -37,7 +37,7 @@ typedef enum modeltype {
 #define CONX_NUM_MODELS 3
 
 /* Add to this and to conxcln.c's array at the same time. */
-typedef enum menuchoices {
+typedef enum ConxMenuChoice {
 CONXCMD_ALTLINE=                   135,
 CONXCMD_LINEF,
 CONXCMD_FOCI,

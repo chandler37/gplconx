@@ -40,29 +40,22 @@ void CClsBoolean::initializeAnsweringMachines()
 
     // DLC for efficiency, don't allow `Boolean true' and `Boolean false',
     // force copying `true' and `false'.
-    ansMachs->append(CConxClsAnsMach("help", CConxClsAnsMach::CLASS,
-                                     ciAnswererHelp,
-                                     "Returns help on this class's methods"));
-    ansMachs->append(CConxClsAnsMach("true", CConxClsAnsMach::CLASS,
-                                     ciAnswererTrue,
-                                     "Returns a new object instance that represents truth.  The system predefines such an instance and assigns it to the variable `true'; you will benefit from increased efficiency if you just use `true'."));
-    ansMachs->append(CConxClsAnsMach("false", CConxClsAnsMach::CLASS,
-                                     ciAnswererFalse,
-                                     "Returns a new object instance that represents falsehood.  The system predefines such an instance and assigns it to the variable `false'; you will benefit from increased efficiency if you just use `false'"));
+    ST_METHOD(ansMachs, "help", CLASS, ciAnswererHelp,
+              "Returns help on this class's methods");
+    ST_METHOD(ansMachs, "true", CLASS, ciAnswererTrue,
+              "Returns a new object instance that represents truth.  The system predefines such an instance and assigns it to the variable `true'; you will benefit from increased efficiency if you just use `true'.");
+    ST_METHOD(ansMachs, "false", CLASS, ciAnswererFalse,
+              "Returns a new object instance that represents falsehood.  The system predefines such an instance and assigns it to the variable `false'; you will benefit from increased efficiency if you just use `false'");
 
     // object instance methods:
-    ansMachs->append(CConxClsAnsMach("not", CConxClsAnsMach::OBJECT,
-                                     oiAnswererNot,
-                                     "Returns a Boolean object instance whose truth value is the opposite of the receiver"));
-    ansMachs->append(CConxClsAnsMach("and:", CConxClsAnsMach::OBJECT,
-                                     oiAnswererAnd,
-                                     "Returns true iff the reciever and the Boolean argument are both true"));
-    ansMachs->append(CConxClsAnsMach("or:", CConxClsAnsMach::OBJECT,
-                                     oiAnswererOr,
-                                     "Returns true iff either the reciever or the Boolean argument is true"));
-    ansMachs->append(CConxClsAnsMach("xor:", CConxClsAnsMach::OBJECT,
-                                     oiAnswererXOr,
-                                     "Returns true iff either the reciever or the Boolean argument is true but both are not"));
+    ST_METHOD(ansMachs, "not", OBJECT, oiAnswererNot,
+              "Returns a Boolean object instance whose truth value is the opposite of the receiver");
+    ST_METHOD(ansMachs, "and:", OBJECT, oiAnswererAnd,
+              "Returns true iff the reciever and the Boolean argument are both true");
+    ST_METHOD(ansMachs, "or:", OBJECT, oiAnswererOr,
+              "Returns true iff either the reciever or the Boolean argument is true");
+    ST_METHOD(ansMachs, "xor:", OBJECT, oiAnswererXOr,
+              "Returns true iff either the reciever or the Boolean argument is true but both are not");
   }
 }
 

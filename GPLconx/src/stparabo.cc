@@ -230,14 +230,10 @@ void CClsParabola::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ansMachs->append(CConxClsAnsMach("new",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererNew,
-                                     "Returns a new object instance of a parabola in Hyperbolic geometry" DRAWABLE_STR));
-    ansMachs->append(CConxClsAnsMach("focus:line:",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererFocusLine,
-                                     "Returns a new, set object instance of a parabola in Hyperbolic geometry" DRAWABLE_STR));
+    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
+              "Returns a new object instance of a parabola in Hyperbolic geometry" DRAWABLE_STR);
+    ST_METHOD(ansMachs, "focus:line:", CLASS, ciAnswererFocusLine,
+              "Returns a new, set object instance of a parabola in Hyperbolic geometry" DRAWABLE_STR);
     ADD_ANS_GETTER("focus", Focus);
     ADD_ANS_GETTER("line", Line);
     ADD_ANS_SETTER("focus:", FocusColon);

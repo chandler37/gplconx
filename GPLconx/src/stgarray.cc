@@ -37,54 +37,32 @@ void CClsArray::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ansMachs->append(CConxClsAnsMach("with:",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererWith,
-                                     "Returns a new Array object instance with one value"));
-    ansMachs->append(CConxClsAnsMach("with:with:",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererWithWith,
-                                     "Returns a new Array object instance with two values"));
-    ansMachs->append(CConxClsAnsMach("with:with:with:",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererWithWithWith,
-                                     "Returns a new Array object instance with three values"));
-    ansMachs->append(CConxClsAnsMach("with:with:with:with:",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererWithWithWithWith,
-                                     "Returns a new Array object instance with four values"));
-    ansMachs->append(CConxClsAnsMach("new",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererNew,
-                                     "Returns a new Array object instance (that grows)"));
-    ansMachs->append(CConxClsAnsMach("size",
-                                     CConxClsAnsMach::OBJECT,
-                                     oiAnswererSize,
-                                     "Returns the size of the receiver"));
-// DLC good help tip:    ansMachs->append(CConxClsAnsMach("set:",
-//                                      CConxClsAnsMach::OBJECT,
+    ST_METHOD(ansMachs, "with:", CLASS, ciAnswererWith,
+              "Returns a new Array object instance with one value");
+    ST_METHOD(ansMachs, "with:with:", CLASS, ciAnswererWithWith,
+              "Returns a new Array object instance with two values");
+    ST_METHOD(ansMachs, "with:with:with:", CLASS, ciAnswererWithWithWith,
+              "Returns a new Array object instance with three values");
+    ST_METHOD(ansMachs, "with:with:with:with:", CLASS, ciAnswererWithWithWithWith,
+              "Returns a new Array object instance with four values");
+    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
+              "Returns a new Array object instance (that grows)");
+    ST_METHOD(ansMachs, "size", OBJECT, oiAnswererSize,
+              "Returns the size of the receiver");
+// DLC good help tip:    ST_METHOD(ansMachs, "set:",
+//                                      OBJECT,
 //                                      oiAnswererSet,
-//                                      "Sets the receiver to point to the same things to which the Array object instance argument points"));
-    ansMachs->append(CConxClsAnsMach("at:",
-                                     CConxClsAnsMach::OBJECT,
-                                     oiAnswererAt,
-                                     "Returns the element at the position specified by the strictly positive integer argument"));
-    ansMachs->append(CConxClsAnsMach("at:put:",
-                                     CConxClsAnsMach::OBJECT,
-                                     oiAnswererAtPut,
-                                     "Sets the element at the position specified by the strictly positive integer argument to `at:' to the object that is the `put:' argument"));
-    ansMachs->append(CConxClsAnsMach("addFirst:",
-                                     CConxClsAnsMach::OBJECT,
-                                     oiAnswererAddFirst,
-                                     "Adds the argument to the front of the array, growing automatically"));
-    ansMachs->append(CConxClsAnsMach("addLast:",
-                                     CConxClsAnsMach::OBJECT,
-                                     oiAnswererAddLast,
-                                     "Adds the argument to the end of the array, growing automatically"));
-    ansMachs->append(CConxClsAnsMach("yourself",
-                                     CConxClsAnsMach::OBJECT,
-                                     oiAnswererYourself,
-                                     "Returns the array itself (i.e., the receiver), useful because #at:put: and #addFirst: return their arguments, not their receivers"));
+// "Sets the receiver to point to the same things to which the Array object instance argument points");
+    ST_METHOD(ansMachs, "at:", OBJECT, oiAnswererAt,
+              "Returns the element at the position specified by the strictly positive integer argument");
+    ST_METHOD(ansMachs, "at:put:", OBJECT, oiAnswererAtPut,
+              "Sets the element at the position specified by the strictly positive integer argument to `at:' to the object that is the `put:' argument");
+    ST_METHOD(ansMachs, "addFirst:", OBJECT, oiAnswererAddFirst,
+              "Adds the argument to the front of the array, growing automatically");
+    ST_METHOD(ansMachs, "addLast:", OBJECT, oiAnswererAddLast,
+              "Adds the argument to the end of the array, growing automatically");
+    ST_METHOD(ansMachs, "yourself", OBJECT, oiAnswererYourself,
+              "Returns the array itself (i.e., the receiver), useful because #at:put: and #addFirst: return their arguments, not their receivers");
 
   }
 }

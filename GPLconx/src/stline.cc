@@ -37,22 +37,14 @@ void CClsLine::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ansMachs->append(CConxClsAnsMach("new",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererNew,
-                                     "Returns a new object instance of a line in Hyperbolic geometry" DRAWABLE_STR));
-    ansMachs->append(CConxClsAnsMach("A:B:isSegment:",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererABIsSegment,
-                                     "Returns a new, set object instance of a 2-D line in Hyperbolic geometry" DRAWABLE_STR));
-    ansMachs->append(CConxClsAnsMach("random:",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererRandom,
-                                     "Returns a new 2-D line in Hyperbolic geometry with two ``random'' Points with Euclidean Klein Disk radius less than the argument (see help for `Point random:')"));
-    ansMachs->append(CConxClsAnsMach("random",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererRandom1,
-                                     "Returns a new 2-D line in Hyperbolic geometry with two ``random'' Points (see help for `Point random')"));
+    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
+              "Returns a new object instance of a line in Hyperbolic geometry" DRAWABLE_STR);
+    ST_METHOD(ansMachs, "A:B:isSegment:", CLASS, ciAnswererABIsSegment,
+              "Returns a new, set object instance of a 2-D line in Hyperbolic geometry" DRAWABLE_STR);
+    ST_METHOD(ansMachs, "random:", CLASS, ciAnswererRandom,
+              "Returns a new 2-D line in Hyperbolic geometry with two ``random'' Points with Euclidean Klein Disk radius less than the argument (see help for `Point random:')");
+    ST_METHOD(ansMachs, "random", CLASS, ciAnswererRandom1,
+              "Returns a new 2-D line in Hyperbolic geometry with two ``random'' Points (see help for `Point random')");
     ADD_ANS_GETTER("A", A);
     ADD_ANS_GETTER("B", B);
     ADD_ANS_GETTER("isSegment", IsSegment);

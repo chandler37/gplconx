@@ -114,7 +114,7 @@ int tldict(void)
   RET1(dict.hasKey(A));
   RET1(dict.hasKey(CConxString("B")));
   RET1(dict.get(A) == 4);
-  if (VERBOSE()) dict.debug();
+  if (LLL_ON()) dict.debug();
   return 0;
 }
 

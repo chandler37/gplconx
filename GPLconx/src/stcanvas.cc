@@ -68,14 +68,10 @@ void CClsCanvas::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ansMachs->append(CConxClsAnsMach("sync",
-                                     CConxClsAnsMach::OBJECT,
-                                     oiAnswererSync,
-                                     "Makes the elements on screen correspond to the contents of this array"));
-    ansMachs->append(CConxClsAnsMach("new",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererNew,
-                                     "Returns a new canvas that is not connected to a display"));
+    ST_METHOD(ansMachs, "sync", OBJECT, oiAnswererSync,
+              "Makes the elements on screen correspond to the contents of this array");
+    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
+              "Returns a new canvas that is not connected to a display");
   }
 }
 

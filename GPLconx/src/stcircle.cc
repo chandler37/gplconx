@@ -215,14 +215,10 @@ void CClsCircle::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ansMachs->append(CConxClsAnsMach("new",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererNew,
-                                     "Returns a new object instance of a circle in Hyperbolic geometry" DRAWABLE_STR));
-    ansMachs->append(CConxClsAnsMach("center:radius:",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererCenterRadius,
-                                     "Returns a new, set object instance of a circle in Hyperbolic geometry" DRAWABLE_STR));
+    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
+              "Returns a new object instance of a circle in Hyperbolic geometry" DRAWABLE_STR);
+    ST_METHOD(ansMachs, "center:radius:", CLASS, ciAnswererCenterRadius,
+              "Returns a new, set object instance of a circle in Hyperbolic geometry" DRAWABLE_STR);
     ADD_ANS_GETTER("center", Center);
     ADD_ANS_GETTER("radius", Radius);
     ADD_ANS_SETTER("center:", CenterColon);

@@ -43,10 +43,12 @@ extern "C" {
 #include "tconxopt.h"
 }
 
-#include "point.h"
+#include "point.hh"
 #include "CString.hh"
 #include "glcanvas.hh"
 #include "toglobj.hh"
+
+int loglevel = 0;
 
 enum {
   TCONX_EXIT_OK = 0,

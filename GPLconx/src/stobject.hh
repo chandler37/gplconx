@@ -20,6 +20,10 @@
 /*
   C++ Smalltalkish Object class -- the base class for all Smalltalkish
   classes.
+
+//  DLC consider an operator ::= that does a set, rather than changing
+    the pointer.  This makes `r := 0.4 ... r set: 0.3' become the
+    easier `r := 0.4 ... r ::= 0.3'
 */
 
 #ifndef GPLCONX_STOBJECT_CXX_H
@@ -64,6 +68,7 @@ public: // types
     CLS_LINE,
     CLS_CIRCLE,
     CLS_PARABOLA,
+    CLS_HYPELLIPSE,
     // DLC NEWSTCLASS
     CLS_ERROR,
     CLS_SYMBOL,             /* #symbol */
@@ -259,6 +264,7 @@ protected:
   TYPE_TESTS_DECLS(Circle, CLS_CIRCLE);
   TYPE_TESTS_DECLS(Point, CLS_POINT);
   TYPE_TESTS_DECLS(Parabola, CLS_PARABOLA);
+  TYPE_TESTS_DECLS(HypEllipse, CLS_HYPELLIPSE);
 // DLC NEWSTCLASS
 
 private:

@@ -168,7 +168,7 @@ CConxDwGeomObj &CConxDwGeomObj::operator=(const CConxDwGeomObj &o)
 NF_INLINE
 CConxDwGeomObj::~CConxDwGeomObj()
 {
-  MMM("destructor");
+  MMM("destructor"); LLL("Deleting " << this);
   /* No, don't delete the stored canvas. */
   clear();
 }

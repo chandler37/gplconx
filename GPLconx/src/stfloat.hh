@@ -59,6 +59,38 @@ protected:
                                  oiActionBetweenAnd, const);
   ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, ciAnswererRandomBetweenAnd,
                                  ciActionRandomBetweenAnd, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererPlus,
+                                 oiActionPlus, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererMinus,
+                                 oiActionMinus, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererNegation,
+                                 oiActionNegation, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererReciprocal,
+                                 oiActionReciprocal, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererSine,
+                                 oiActionSine, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererCosine,
+                                 oiActionCosine, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererTangent,
+                                 oiActionTangent, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererTimes,
+                                 oiActionTimes, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererDividedBy,
+                                 oiActionDividedBy, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, ciAnswererPi,
+                                 ciActionPi, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, ciAnswererE,
+                                 ciActionE, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererExp,
+                                 oiActionExp, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererLog10,
+                                 oiActionLog10, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererLn,
+                                 oiActionLn, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererPower,
+                                 oiActionPower, const);
+  // DLC put these in number!
+
 private:
   static void initializeAnsweringMachines();
 

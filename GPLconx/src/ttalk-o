@@ -225,6 +225,8 @@ Class methods:
 	notPoint -- Returns true if the receiver is notPoint
 	isParabola -- Returns true if the receiver isParabola
 	notParabola -- Returns true if the receiver is notParabola
+	isHypEllipse -- Returns true if the receiver isHypEllipse
+	notHypEllipse -- Returns true if the receiver is notHypEllipse
 
 
 Instance methods:
@@ -275,6 +277,8 @@ Instance methods:
 	notPoint -- Returns true if the receiver is notPoint
 	isParabola -- Returns true if the receiver isParabola
 	notParabola -- Returns true if the receiver is notParabola
+	isHypEllipse -- Returns true if the receiver isHypEllipse
+	notHypEllipse -- Returns true if the receiver is notHypEllipse
 '
 $ >>> Point(x: 0.36, y: -0.1, model: uhp) -- Drawable -- Color(RGB=[0.1, 0.9, 0.512]), garnishing on, thickness 3, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
 $ >>> true
@@ -399,11 +403,26 @@ Object comment:
 Class methods:
 
 	randomBetween:and: -- Returns a random number in the given interval
+	Pi -- Returns a new object instance, Pi, the circumference of a circle with radius 1
+	e -- Returns a new object instance, e, the base of the natural logarithm
 
 
 Instance methods:
 	between:and: -- Returns true iff the inclusive range from the first argument to the second argument contains the receiver
 	set: -- Sets the receiver's value to the argument's floating-point value, coercing if possible (from a SmallInt, e.g.)
+	exp -- Returns e to the receiver's power, the anti-natural-logarithm
+	ln -- Returns the natural logarithm of the receiver
+	log10 -- Returns the common (base 10) logarithm of the receiver
+	sin -- Returns the sine of the receiver
+	cos -- Returns the cosine of the receiver
+	tan -- Returns the tangent of the receiver
+	plus: -- Returns the sum of the receiver and argument
+	minus: -- Returns difference between the receiver and argument
+	times: -- Returns the product of the receiver and argument
+	dividedBy: -- Returns the receiver divided by the argument
+	power: -- Returns the receiver to the power of the argument
+	negation -- Returns the negation of the receiver
+	reciprocal -- Returns the reciprocal of the receiver
 '
 $ >>> '#Object subclass:  #Number
 
@@ -500,4 +519,10 @@ $ >>> true
 $ >>> 0
 $ >>> false
 $ >>> Point(x: -0, y: -0, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> -3.3
+$ >>> 0.30303
+$ >>> 10
+$ >>> 10.1
+$ >>> 0
+$ >>> 0
 $ 

@@ -37,16 +37,12 @@ void CClsSmallInt::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ansMachs->append(CConxClsAnsMach("between:and:",
-                                     CConxClsAnsMach::OBJECT,
-                                     oiAnswererBetweenAnd,
-                                     "Returns true iff the inclusive range "
+    ST_METHOD(ansMachs, "between:and:", OBJECT, oiAnswererBetweenAnd,
+              "Returns true iff the inclusive range "
                                      "from the first argument to the second"
-                                     " argument contains the receiver"));
-    ansMachs->append(CConxClsAnsMach("new",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererNew,
-                                     "Returns a new SmallInt object instance"));
+                                     " argument contains the receiver");
+    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
+              "Returns a new SmallInt object instance");
   }
 }
 

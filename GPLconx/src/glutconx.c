@@ -141,15 +141,16 @@ void setupmousemenu(void) {
 void menufunc(int a)
 {
   if (a != CONXCMD_CONX_NOT_A_CHOICE_2 && a != CONXCMD_CONX_NOT_A_CHOICE_3) {
-    int mf, modl, i, num_inputs;
-    num_inputs = conx_num_inputs(a);
-    modl = glutGetWindow() - 1;
+    int mf, i, num_inputs;
+    ConxModlType modl;
+    num_inputs = conx_num_inputs((ConxMenuChoice) a);
+    modl = (ConxModlType) glutGetWindow() - 1;
 
-    conxv_do_prompt(a, modl); /* DLC only if num_inputs is positive */
+    conxv_do_prompt((ConxMenuChoice)a, modl); /* DLC only if num_inputs is positive */
     for (i = 0; i < num_inputs; i++) {
       indata(modl);
     }
-    mf = conx_menufunc(a, modl, glutGet(GLUT_WINDOW_HEIGHT));
+    mf = conx_menufunc((ConxMenuChoice)a, modl, glutGet(GLUT_WINDOW_HEIGHT));
 #ifdef DLC_1
     if (mf & CONXMF_DISPLAY) {
       glutPostRedisplay();
@@ -266,8 +267,7 @@ void mkptAll(void)
 
 void myReshape(int w, int h)
 {
-  int a;
-  a=glutGetWindow()-1;
+  ConxModlType a = (ConxModlType) (glutGetWindow()-1);
   LOGGG3(LOGG_TEXINFO, "\n@myReshape{window %s, width %d, height %d",
          conx_modelenum2short_string(a), w, h);
   if (w < h) h = w; else w = h;

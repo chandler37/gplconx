@@ -101,7 +101,9 @@ void CConxCanvas::append(const CConxArtist *m) throw(const char *)
   MMM("void append(const CConxArtist *m) throw(const char *)");
   if (m == NULL) throw "why a NULL arg?";
   LLL("Appending to the canvas " << (*m) << " @" << m);
-  artists.append(m);
+  CConxArtist *nn = m->aClone();
+  if (nn == NULL) OOM();
+  artists.append(nn);
 }
 
 NF_INLINE
@@ -114,11 +116,11 @@ void CConxCanvas::masterDraw()
     setDrawingColor(CConxNamedColor(CConxNamedColor::WHITE));
     drawCircle(0.0, 0.0, 1.0);
   }
-  size_t i, sz = artists.size();
+  size_t i, sz = numArtists();
   for (i = 0; i < sz; i++) {
-    const CConxArtist *a = artists.get(i);
-    LLL("Now rendering " << a << ": " << flush << (*a));
-    a->drawOn(*this);
+    const CConxArtist &a = artists.get(i);
+    LLL("Now rendering " << flush << a);
+    a.drawOn(*this);
   }
   flushQueue();
 }
@@ -137,7 +139,7 @@ PF_INLINE
 ostream &CConxCanvas::printOn(ostream &o) const
 {
   o << "<CConxCanvas object of " << modelToString(getModel())
-    << " model, currently with " << artists.size() << " Drawables in it.>";
+    << " model, currently with " << numArtists() << " Drawables in it.>";
   return o;
 }
 

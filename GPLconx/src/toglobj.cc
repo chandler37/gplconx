@@ -40,12 +40,12 @@
 extern "C" {
 #include "viewer.h"
 #include "util.h"
-#include "point.h"
 #include "tclprocs.h"
 #include "gl.h"
 #include "conxtcl.h"
 }
 
+#include "point.hh"
 #include "glcanvas.hh"
 #include "toglobj.hh"
 #include "stmparse.hh"
@@ -161,7 +161,9 @@ void CConxToglObj::displayCallBack(struct Togl *togl)
   LOGGG1(LOGG_FULL, "\n@display_callback %s\n", Togl_Ident(togl));
 
   CConxGLCanvas *cnvs = getCanvasByType(mt);
+  LLL("before cnvs->masterDraw() for type " << mt);
   cnvs->masterDraw();
+  LLL("after cnvs->masterDraw() for type " << mt);
 
 #ifdef TCONX_DOUBLE_BUFFER
   Togl_SwapBuffers(togl);
@@ -274,14 +276,6 @@ int CConxToglObj::firstInit(Tcl_Interp *interp)
   {
     char mutabl[] = "mouse2model";    /* To avoid warnings */
     Togl_CreateCommand(mutabl, CConxToglObj::mouseHandler);
-  }
-  {
-    char mutabl[] = "data_entry";    /* To avoid warnings */
-    Togl_CreateCommand(mutabl, tconx_tcl_data_entry);
-  }
-  {
-    char mutabl[] = "query";    /* To avoid warnings */
-    Togl_CreateCommand(mutabl, tconx_tcl_query);
   }
   {
     char mutabl[] = "yap";    /* To avoid warnings */

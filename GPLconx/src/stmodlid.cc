@@ -148,14 +148,10 @@ void CClsModelIdentifier::initializeAnsweringMachines()
 
     // DLC for efficiency, don't allow `Boolean true' and `Boolean false',
     // force copying `true' and `false'.
-    ansMachs->append(CConxClsAnsMach("new:",
-                                     CConxClsAnsMach::CLASS,
-                                     ciAnswererNew,
-                                     "Returns a new object instance that represents the Beltrami-Klein disk, Poincare Disk, Poincare Upper Halp Plane, or an unknown model of hyperbolic geometry, depending on the String or Symbol object instance argument.  Note that `kd', `pd', and `uhp' are reserved variables that are already provided for you, and it is more efficient to use them"));
-    ansMachs->append(CConxClsAnsMach("set:",
-                                     CConxClsAnsMach::OBJECT,
-                                     ciAnswererSet,
-                                     "Sets the value of the receiver to the Symbol or String argument"));
+    ST_METHOD(ansMachs, "new:", CLASS, ciAnswererNew,
+              "Returns a new object instance that represents the Beltrami-Klein disk, Poincare Disk, Poincare Upper Halp Plane, or an unknown model of hyperbolic geometry, depending on the String or Symbol object instance argument.  Note that `kd', `pd', and `uhp' are reserved variables that are already provided for you, and it is more efficient to use them");
+    ST_METHOD(ansMachs, "set:", OBJECT, ciAnswererSet,
+              "Sets the value of the receiver to the Symbol or String argument");
   }
 }
 

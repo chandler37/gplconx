@@ -435,8 +435,12 @@ proc tconx_st_init { } {
     set circle [tconx_circle1_name]
     set r [tconx_conicdistance_name]
     set line1 [tconx_line1_name]
-    if 0 {
-        # DLC
+
+    # Replace these with "clone" or "cloneDeep" if you don't want all
+    # models to start out alike.
+    set pdcClone ""
+    set uhpcClone ""
+
     tconx_parse_smalltalkish "$f1 := Point x: .5 y: .75 model: uhp ...\
                               $f2 := Point x: .2 y: .75 model: uhp ...\
                               $f1 color R: 1 G: 0 B: 0 ...\
@@ -456,55 +460,22 @@ proc tconx_st_init { } {
                               P := Point ...\
                               L := Line ...\
                               PA := Parabola ...\
-                              pdc addFirst: (kdc addFirst: $f1) ...\
-                              pdc addLast: (kdc addLast: $f2) ...\
-                              pdc addLast: (kdc addLast: $circle) ...\
-                              pdc addLast: (kdc addLast: $line1) ...\
-                              pdc addLast: (kdc addLast: $pa1) ...\
-                              pdc addLast: (kdc addLast: $pa1 line) ...\
+                              pdc addFirst: (kdc addFirst: $f1) $pdcClone ...\
+                              pdc addLast: (kdc addLast: $f2) $pdcClone ...\
+                              pdc addLast: (kdc addLast: $circle) $pdcClone ...\
+                              pdc addLast: (kdc addLast: $line1) $pdcClone ...\
+                              pdc addLast: (kdc addLast: $pa1) $pdcClone ...\
+                              pdc addLast: (kdc addLast: $pa1 line) $pdcClone ...\
                               kdc sync ...\
                               pdc sync ...\
-                              uhpc addFirst: $f1 cloneDeep ...\
-                              uhpc addLast: $f2 cloneDeep ...\
-                              uhpc addLast: $circle cloneDeep ...\
-                              uhpc addLast: $line1 cloneDeep ...\
+                              uhpc addFirst: $f1 $uhpcClone ...\
+                              uhpc addLast: $f2 $uhpcClone ...\
+                              uhpc addLast: $circle $uhpcClone ...\
+                              uhpc addLast: $line1 $uhpcClone ...\
+                              uhpc addLast: $pa1 $uhpcClone ...\
+                              uhpc addLast: $pa1 line $uhpcClone ...\
                               uhpc sync ...\
 "
-  } else {
-    tconx_parse_smalltalkish "$f1 := Point x: .5 y: .75 model: uhp ...\
-                              $f2 := Point x: .2 y: .75 model: uhp ...\
-                              $f1 color R: 1 G: 0 B: 0 ...\
-                              $f2 color R: .7 G: .4 B: 0 ...\
-                              $line1 := Line A: $f1 B: $f2 isSegment: false ...\
-                              $line1 color H: 200 S: .5 V: .4 ...\
-                              pointThickness := 6.0 ...\
-                              $f1 thickness: pointThickness ...\
-                              $f2 thickness: pointThickness ...\
-                              $r := 1.0 ...\
-                              $circle := Circle center: $f1 radius: $r ...\
-                              $circle color H: 50 S: .65 V: .9 ...\
-                              $pa1 := Parabola focus: $f1 line: Line random ...\
-                              $pa1 color H: 260 S: .45 V: .67 ...\
-                              $pa1 line color: $line1 color ...\
-                              C := Circle ...\
-                              P := Point ...\
-                              L := Line ...\
-                              PA := Parabola ...\
-                              pdc addFirst: (kdc addFirst: $f1) ...\
-                              pdc addLast: (kdc addLast: $f2) ...\
-                              pdc addLast: (kdc addLast: $circle) ...\
-                              kdc addLast: $line1 ...\
-                              kdc addLast: $pa1 ...\
-                              kdc addLast: $pa1 line ...\
-                              kdc sync ...\
-                              pdc sync ...\
-                              uhpc addFirst: $f1 cloneDeep ...\
-                              uhpc addLast: $f2 cloneDeep ...\
-                              uhpc addLast: $circle cloneDeep ...\
-                              uhpc addLast: $line1 cloneDeep ...\
-                              uhpc sync ...\
-"
-    }
 }
 
 proc tconx_DLC_new_parabola { } {

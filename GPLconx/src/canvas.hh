@@ -24,8 +24,7 @@
 #ifndef GPLCONX_HGMCANVAS_CXX_H
 #define GPLCONX_HGMCANVAS_CXX_H 1
 
-#include "point.h"
-
+#include "point.hh"
 #include "printon.hh"
 #include "CArray.hh"
 #include "dgeomobj.hh"
@@ -141,7 +140,11 @@ private: // operations
 
 private: // attributes
   ConxModlType modl;
-  CConxSimpleArray<const CConxArtist *> artists;
+  CConxPrintableOwnerArray<CConxArtist> artists;
+  // If we kept just the pointers in a simple array, then
+  // calling `kdc addFirst: (p := Point new) .. kdc sync .. pdc addFirst: (kdc at: 1) .. pdc sync'
+  // would cause invalidateSavedArtist() in CClsPoint to be called, so the
+  // kdc would have a dangling reference.
 }; // class CConxCanvas
 
 

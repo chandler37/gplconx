@@ -285,3 +285,9 @@ Point random isPoint
 (Point random: 0.0) x
 (Line random: 0.0) isPoint
 (Line random: 0.0) A
+3.3 negation
+3.3 reciprocal
+.1 reciprocal
+.1 plus: .1 reciprocal
+.1 minus: .1
+0.0 sin
