@@ -1,0 +1,19 @@
+Grep for `DLC' to find things to do.
+
+Tcl/Tk GUI code is in `Tcl/'.
+
+st*.hh and st*.cc are Smalltalkish classes implemented in C++.
+
+*.c and *.h are C functions.
+
+*.cc and *.hh are C++ classes.
+
+Run gconx, tconx, cxxconx, and `tparser 1 2 3' to see what's happening here.
+
+ttalk* enable testing of the Smalltalkish language.
+
+Most of the mathematical magic is found in geomobj* and hypmath*, and most of
+the viz/math magic is in dgeomobj* and *canvas* and lines* and gl*.
+
+DLC cxxconx dies, but link with -lefence or use `export MALLOC_CHECK_=2'
+and cxxconx does not die!

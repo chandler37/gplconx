@@ -18,25 +18,30 @@
 */
 
 /*
-  C++ classes that represent Smalltalk classes and objects that are specific
-  to GPLconx.
+  Implementation of C++ classes in `stsymbol.hh'.
 */
 
-#ifndef GPLCONX_STCONX_CXX_H
-#define GPLCONX_STCONX_CXX_H 1
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#include <iostream.h>
-#include <assert.h>
+#include "stsymbol.hh"
 
-#include "stcommon.hh"
 
-#include "stmodlid.hh"
-#include "stcolor.hh"
-#include "stdrawbl.hh"
-#include "stpoint.hh"
-#include "stline.hh"
-#include "stcircle.hh"
-#include "stparabo.hh"
-#include "stcanvas.hh"
+NF_INLINE
+CConxString CClsSymbol::printString() const
+{
+  if (isClassInstance())
+    return getClsName();
+  else {
+    return CConxString("#") + getValue();
+  }
+}
 
-#endif // GPLCONX_STCONX_CXX_H
+NF_INLINE
+CClsSymbol &CClsSymbol::operator=(const CClsSymbol &o)
+{
+  (void) CClsCharacterArray::operator=(o);
+  return *this;
+}
+

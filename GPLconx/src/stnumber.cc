@@ -18,25 +18,47 @@
 */
 
 /*
-  C++ classes that represent Smalltalk classes and objects that are specific
-  to GPLconx.
+  Implementation of C++ classes in `stnumber.hh'.
 */
 
-#ifndef GPLCONX_STCONX_CXX_H
-#define GPLCONX_STCONX_CXX_H 1
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#include <iostream.h>
-#include <assert.h>
+#include "stnumber.hh"
 
-#include "stcommon.hh"
+CConxOwnerArray<CConxClsAnsMach> *CClsNumber::ansMachs = NULL;
 
-#include "stmodlid.hh"
-#include "stcolor.hh"
-#include "stdrawbl.hh"
-#include "stpoint.hh"
-#include "stline.hh"
-#include "stcircle.hh"
-#include "stparabo.hh"
-#include "stcanvas.hh"
+NF_INLINE
+void CClsNumber::initializeAnsweringMachines()
+{
+  if (ansMachs == NULL) {
+    ansMachs = new Answerers();
+    if (ansMachs == NULL) OOM();
+  }
+}
 
-#endif // GPLCONX_STCONX_CXX_H
+NF_INLINE
+double CClsNumber::getFloatValue() const
+{
+  abort(); // we can't get an object instance
+  return 0.0;
+}
+
+NF_INLINE
+CClsNumber &CClsNumber::operator=(const CClsNumber &o)
+{
+  (void) CClsBase::operator=(o);
+  return *this;
+}
+
+NF_INLINE
+CConxString CClsNumber::printString() const
+{
+  if (isClassInstance())
+    return getClsName();
+  else {
+    return CConxString("an ") + getClsName();
+  }
+}
+

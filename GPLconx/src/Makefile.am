@@ -50,7 +50,7 @@ endif
 EXTRA_TESTS = ttalk-sh
 
 EXTRA_DIST = tconxopt.ggo getopt.h parser.h ttalk-in ttalk-o ttalk-sh \
-             Makefile.inc
+             Makefile.inc README
 
 BUILT_SOURCES = tconxopt.c tconxopt.h
 
@@ -68,7 +68,12 @@ libconxu_la_LIBADD = @LTLIBOBJS@
 libconx_la_SOURCES = conxv.c lines.c
 
 libcls_la_SOURCES = parser.y scanner.l cparse.cc clsmgr.cc mparse.cc \
-                    stcommon.cc stconx.cc sthelper.cc stmparse.cc
+                    sthelper.cc stmparse.cc \
+		    sterror.cc stcharar.cc ststring.cc stsymbol.cc \
+		    stobject.cc stsmalli.cc stnumber.cc gcobject.cc \
+                    stboole.cc stundefo.cc stgarray.cc stfloat.cc \
+                    stsystem.cc stmodlid.cc stcolor.cc stdrawbl.cc \
+		    stpoint.cc stline.cc stcircle.cc stparabo.cc stcanvas.cc
 
 tparser_SOURCES = tparser.cc tester.cc
 tparser_LDADD = libcls.la libcxxconx.la libconxu.la \
@@ -135,7 +140,11 @@ noinst_HEADERS = viewer.h point.h globals.h util.h conxtcl.h bresint.h \
                  canvas.hh color.hh glcanvas.hh dgeomobj.hh cparse.hh \
                  parsearg.h clsmgr.hh CObject.hh tester.hh Starray.hh \
                  CArray.hh mparse.hh stcommon.hh stconx.hh sthelper.hh \
-                 cmparse.hh stmparse.hh
+                 cmparse.hh stmparse.hh stmacros.hh sterror.hh stobject.hh \
+                 stcharar.hh ststring.hh stsymbol.hh gcobject.hh stsmalli.hh \
+                 stnumber.hh stboole.hh stundefo.hh stgarray.hh stfloat.hh \
+                 stsystem.hh stmodlid.hh stcolor.hh stdrawbl.hh stpoint.hh \
+                 stline.hh stcircle.hh stparabo.hh stcanvas.hh
 
 
 # How many lines of source code do we have?
@@ -166,14 +175,34 @@ NL_SOURCE_FILES = $(srcdir)/toglconx.c $(srcdir)/glutconx.c \
 	$(srcdir)/tester.hh $(srcdir)/tester.cc $(srcdir)/CObject.cc \
 	$(srcdir)/mparse.hh $(srcdir)/mparse.cc \
 	$(srcdir)/stmparse.hh $(srcdir)/stmparse.cc \
-	$(srcdir)/stcommon.hh $(srcdir)/stcommon.cc \
+	$(srcdir)/stcommon.hh \
 	$(srcdir)/sthelper.hh $(srcdir)/sthelper.cc \
-	$(srcdir)/stconx.hh $(srcdir)/stconx.cc \
-	$(srcdir)/cmparse.hh \
+	$(srcdir)/stconx.hh $(srcdir)/stmacros.hh \
+	$(srcdir)/cmparse.hh $(srcdir)/stobject.hh $(srcdir)/stobject.cc \
+	$(srcdir)/sterror.hh $(srcdir)/sterror.cc \
+	$(srcdir)/stcharar.hh $(srcdir)/stcharar.cc \
+	$(srcdir)/ststring.hh $(srcdir)/ststring.cc \
+	$(srcdir)/stsymbol.hh $(srcdir)/stsymbol.cc \
+	$(srcdir)/stsmalli.hh $(srcdir)/stsmalli.cc \
+	$(srcdir)/stnumber.hh $(srcdir)/stnumber.cc \
+	$(srcdir)/stboole.hh $(srcdir)/stboole.cc \
+	$(srcdir)/stundefo.hh $(srcdir)/stundefo.cc \
+	$(srcdir)/stfloat.hh $(srcdir)/stfloat.cc \
+	$(srcdir)/stsystem.hh $(srcdir)/stsystem.cc \
+	$(srcdir)/stmodlid.hh $(srcdir)/stmodlid.cc \
+	$(srcdir)/stcolor.hh $(srcdir)/stcolor.cc \
+	$(srcdir)/stdrawbl.hh $(srcdir)/stdrawbl.cc \
+	$(srcdir)/stpoint.hh $(srcdir)/stpoint.cc \
+	$(srcdir)/stline.hh $(srcdir)/stline.cc \
+	$(srcdir)/stcircle.hh $(srcdir)/stcircle.cc \
+	$(srcdir)/stparabo.hh $(srcdir)/stparabo.cc \
+	$(srcdir)/stcanvas.hh $(srcdir)/stcanvas.cc \
+	$(srcdir)/stgarray.hh $(srcdir)/stgarray.cc \
+	$(srcdir)/gcobject.hh $(srcdir)/gcobject.cc \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.inc \
         $(top_srcdir)/Makefile.am $(top_srcdir)/configure.in \
 	$(srcdir)/Tcl/tconx_a.tcl $(srcdir)/Tcl/tconx_b.tcl \
-        $(srcdir)/Tcl/tconx.tcl \
+        $(srcdir)/Tcl/tconx.tcl $(srcdir)/Tcl/tconx_c.tcl \
 	$(srcdir)/Tcl/tconx_d.tcl $(srcdir)/Tcl/tconx_l.tcl \
 	$(srcdir)/Tcl/tconx_m.tcl $(srcdir)/Tcl/tconx_s.tcl \
 	$(srcdir)/Tcl/tconx_w.tcl $(srcdir)/Tcl/tconx_h.tcl \
