@@ -54,6 +54,7 @@ public:
   CConxClsKeyedArg &getNthArg(size_t n) throw(const char *);
   const CConxClsKeyedArg &getNthArg(size_t n) const throw(const char *);
   Boole isMessageNamed(const CConxString &s) const;
+  CConxString getUnknownMessageComplaint() const;
 
 private: // operations
   void uninitializedCopy(const CConxClsMessage &o);
@@ -65,6 +66,5 @@ private: // attributes
   MsgType msgType;
 }; // class CConxClsMessage
 
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxClsMessage);
 
 #endif // GPLCONX_STH_MSG_CXX_H

@@ -20,6 +20,10 @@
 #ifndef GPLCONX_GL_H
 #define GPLCONX_GL_H 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "point.h"
 
 typedef long ConxDispList; /* Negative values mean "no display list" */
@@ -63,5 +67,9 @@ void conx_gl_draw_arc(double x, double y, double r, double theta_1,
 /* Draws a complete circle. */
 #define conx_gl_draw_circle(x, y, r, tstp, dl) \
     conx_gl_draw_arc((x), (y), (r), 0.0, 2.0*M_PI, (tstp), NULL, (dl))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* GPLCONX_GL_H */

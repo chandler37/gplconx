@@ -75,7 +75,5 @@ private: // attributes
 }; // class CConxMetaParser
 
 
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxMetaParser);
-
 #endif // GPLCONX_MPARSE_CXX_H
 

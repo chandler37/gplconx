@@ -36,6 +36,7 @@ class CClsCanvas : VIRT public CClsArray {
   DEFAULT_SEND_MESSAGE(CClsArray)
   ANSMACH_ANSWERS(CClsArray)
   STCLONE(CClsCanvas)
+  DEFAULT_ST_EQUALS(CClsArray, CClsCanvas)
 public:
   CClsCanvas() { init(); }
   CClsCanvas(CConxCanvas *f) { init(); setValue(f); }
@@ -50,8 +51,11 @@ public:
   CConxCanvas *getValue() { return cv; }
   void setValue(CConxCanvas *v) { cv = v; } // Forget the old one completely.
   CConxString printString() const;
-  int operator==(const CClsCanvas &o) { return 0; } // DLC
-  int operator!=(const CClsCanvas &o) { return !operator==(o); }
+  int operator==(const CClsCanvas &o) const
+  {
+    return isClassInstance() == o.isClassInstance();
+  }
+  int operator!=(const CClsCanvas &o) const { return !operator==(o); }
   void clear() { cv->clear(); }
   
 

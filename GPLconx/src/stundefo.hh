@@ -34,6 +34,7 @@ class CClsUndefinedObject : VIRT public CClsBase {
   CLSNAME("UndefinedObject", "I have a very popular instance, `nil', that you will encounter when you have a variable that is not set.")
   CLSTYPE(CClsBase, CLS_UNDEFINED_OBJECT)
   STCLONE2(CClsUndefinedObject)
+  DEFAULT_ST_EQUALS(CClsBase, CClsUndefinedObject)
 public:
   CClsUndefinedObject() { MMM("CClsUndefinedObject"); }
   CClsUndefinedObject(const CClsUndefinedObject &o)
@@ -43,8 +44,8 @@ public:
 
   // Uses CClsBase::sendMessage
   CConxString printString() const;
-  int operator==(const CClsUndefinedObject &o);
-  int operator!=(const CClsUndefinedObject &o) { return !operator==(o); }
+  int operator==(const CClsUndefinedObject &o) const;
+  int operator!=(const CClsUndefinedObject &o) const { return !operator==(o); }
 }; // class CClsUndefinedObject
 
 

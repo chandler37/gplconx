@@ -36,6 +36,7 @@ class CClsStringLiteral : VIRT public CClsCharacterArray {
   CLSNAME("String", "I am a string of characters.")
   CLSTYPE(CClsCharacterArray, CLS_STRING)
   STCLONE2(CClsStringLiteral)
+  DEFAULT_ST_EQUALS(CClsCharacterArray, CClsStringLiteral)
 public:
   CClsStringLiteral() { }
   CClsStringLiteral(const CConxString &s) : CClsCharacterArray(s) { }
@@ -44,11 +45,11 @@ public:
   // test that CClsCharacterArray::sendMessage() is called.
   CConxString printString() const;
 
-  int operator==(const CClsStringLiteral &o)
+  int operator==(const CClsStringLiteral &o) const
   {
     return CClsCharacterArray::operator==(o);
   }
-  int operator!=(const CClsStringLiteral &o) { return !operator==(o); }
+  int operator!=(const CClsStringLiteral &o) const { return !operator==(o); }
 }; // class CClsStringLiteral
 
 

@@ -38,6 +38,7 @@ public:
   DEFAULT_SEND_MESSAGE(CClsBase)
   ANSMACH_ANSWERS(CClsBase)
   STCLONE2(CClsColor)
+  DEFAULT_ST_EQUALS(CClsBase, CClsColor)
 public:
   CClsColor() { }
   CClsColor(const CConxColor &c) { color = c; }
@@ -45,8 +46,12 @@ public:
   ~CClsColor() { MMM("destructor"); }
   CClsColor &operator=(const CClsColor &o);
   CConxString printString() const;
-  int operator==(const CClsColor &o) { return getColor().equals(o.getColor()); }
-  int operator!=(const CClsColor &o) { return !operator==(o); }
+  int operator==(const CClsColor &o) const
+  {
+    return (isClassInstance() == o.isClassInstance())
+      && (isClassInstance() || getColor().equals(o.getColor()));
+  }
+  int operator!=(const CClsColor &o) const { return !operator==(o); }
   const CConxNamedColor &getColor() const { return color; }
   void setColor(const CConxColor &o) { color = o; }
 

@@ -100,5 +100,3 @@ int CConxClsKeyedArg::operator==(const CConxClsKeyedArg &o) const
 {
   return keyword == o.keyword && obj == o.obj;
 }
-
-OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxClsKeyedArg)

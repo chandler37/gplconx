@@ -20,6 +20,10 @@
 #ifndef GPLCONX_TCLPROCS_H
 #define GPLCONX_TCLPROCS_H 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "point.h"
 
 struct Togl;
@@ -28,5 +32,9 @@ ConxModlType tconx_togl_id2model(struct Togl *);
 int tconx_tcl_mouse(struct Togl *togl, int argc, char *argv[]);
 int tconx_tcl_data_entry(struct Togl *togl, int argc, char *argv[]);
 int tconx_tcl_query(struct Togl *togl, int argc, char *argv[]);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* GPLCONX_TCLPROCS_H */

@@ -26,6 +26,10 @@
 #ifndef CONXV_UTIL_H
 #define CONXV_UTIL_H 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -138,5 +142,9 @@ int conx_prefix_streq(const char *whole, const char *maybe, size_t n,
     { (void) fprintf(stderr, "\n\n\nConx: Fatal Error `%s'\n", st); abort(); }
 
 int conx_file_exists(const char *fn);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CONXV_UTIL_H */

@@ -166,3 +166,18 @@ void CConxClsMessage::uninitializedCopy(const CConxClsMessage &o)
   unaryMsg = o.unaryMsg;
 }
 
+NF_INLINE
+CConxString CConxClsMessage::getUnknownMessageComplaint() const
+{
+  CConxString msg = "unknown ";
+  if (isKeywordMessage()) {
+    msg += "keyword message #";
+    msg += getKeywordMessage().getKeywordMessageName();
+  } else {
+    assert(isUnaryMessage());
+    msg += "unary message #";
+    msg += getUnaryMessage();
+  }
+  return msg;
+}
+

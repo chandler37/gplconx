@@ -39,6 +39,7 @@ class CClsPoint : VIRT public CClsDrawable {
   DEFAULT_SEND_MESSAGE(CClsDrawable)
   ANSMACH_ANSWERS(CClsDrawable)
   STCLONE(CClsPoint)
+  DEFAULT_ST_EQUALS(CClsDrawable, CClsPoint)
 public:
   CClsPoint() { init(); ensureValidity(); }
   CClsPoint(CClsNumber *x, CClsNumber *y, CClsModelIdentifier *m);
@@ -71,8 +72,8 @@ public:
   void setReadOnly(Boole readOnly);
   const CConxArtist *getArtist() const;
   CConxDwGeomObj getDwValue() const throw(CClsError *);
-  int operator==(const CClsPoint &o);
-  int operator!=(const CClsPoint &o) { return !operator==(o); }
+  int operator==(const CClsPoint &o) const;
+  int operator!=(const CClsPoint &o) const { return !operator==(o); }
   void clear();
   void makeReadOnly();
 
@@ -105,6 +106,9 @@ protected:
                                  oiActionBetweenAnd, const);
 private:
   static void initializeAnsweringMachines();
+
+protected:
+  Boole dependsOn(const CClsBase *p) const;
 
 
 private: // attributes

@@ -185,11 +185,13 @@ static void local_yyprint(FILE *f, int toktype, YYSTYPE v);
 %}
 
 %token <id> TOK_SYMBOL TOK_ID TOK_ID_COLON TOK_STRING_LITERAL TOK_ERROR
+%token <id> TOK_BINARY_OP
 %token TOK_STMT_END
 %token <r> TOK_REAL
 %token <l> TOK_LONG
 %right TOK_ASSIGN
-%type <otherthing> keywordarg obj simpleobj fancyobj msgobj cascrecv
+%left TOK_BINARY_OP
+%type <otherthing> keywordarg obj simpleobj fancyobj msgobj cascrecv binaryobj
 %type <cascmsg> carriedobj
 %type <otherthing> partofline line
 %type <kmsg> keymsg
@@ -292,7 +294,7 @@ keymsg:	TOK_ID_COLON keywordarg
                }
 ;
 
-keywordarg:	simpleobj
+keywordarg:	binaryobj
                      {
                        $$ = $1; /* No, it can't be `ID keymsg', e.g. --
                                    that makes 'a b: c d: e' ambiguous.   */
@@ -338,16 +340,16 @@ obj:	assignments fancyobj
                 }
 ;
 
-msgobj:	simpleobj
-	| simpleobj keymsg /* 'between:and:'-style message */
+msgobj:	binaryobj
+	| binaryobj keymsg /* 'between:and:'-style message */
 		{
                   HANDLE_KEYWORD_MESSAGE(&$$, $1, &$2);
                   HANDLE_ERROR($$);
                 }
 ;
 
-cascrecv:	simpleobj
-		| simpleobj keymsg /* 'between:and:'-style message */
+cascrecv:	binaryobj
+		| binaryobj keymsg /* 'between:and:'-style message */
 			{ /* A cascaded message goes to $1, not the result of
                              applying the keyword message. */
 	                  HANDLE_KEYWORD_MESSAGE(&$$, $1, &$2);
@@ -423,6 +425,15 @@ simpleobj:	'(' obj ')' /* to override the usual unary-first precedence */
                         { $$ = $2; }
 ;
 
+binaryobj:	simpleobj
+		| binaryobj TOK_BINARY_OP simpleobj {
+                     KeywordMessage tmp;
+                     conxP_new_keyword_message(&tmp);
+                     conxP_add_to_keyword_message(&tmp, $2, $3);
+                     conxP_send_and_delete_keyword_message(&$$, $1, &tmp);
+                  }
+;
+
 /* DLC TODO a help method for each object and class. */
 
 /* DLC allow nil? */
@@ -453,9 +464,13 @@ void conxP_yyprint (FILE *f, int r, void *v)
   } else if (r == TOK_STRING_LITERAL) {
     (void) fprintf(f, " '%s'", value->id);
   } else if (r == TOK_REAL) {
-    (void) fprintf(f, " %g", value->r);
+    (void) fprintf(f, " %e", value->r);
   } else if (r == TOK_ASSIGN) {
     (void) fprintf(f, " :=");
+  } else if (r == TOK_BINARY_OP) {
+    (void) fprintf(f, " %s", value->id);
+  } else if (r == TOK_LONG) {
+    (void) fprintf(f, " %ld", value->l);
   } else if (r == TOK_ERROR) {
     (void) fprintf(f, " <Flex encountered an error, `%s'.>", value->id);
   } else {
@@ -467,8 +482,10 @@ void conxP_yyprint (FILE *f, int r, void *v)
     } else {
       if (r == TOK_STMT_END)
         (void) fprintf(f, " \\n");
-      else
+      else {
         (void) fprintf(f, " %d", r);
+        /* Did you add a new token and not update this function? */
+      }
     }
   }
 }

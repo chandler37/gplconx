@@ -43,8 +43,8 @@ public:
   CClsNumber &operator=(const CClsNumber &o);
 
   CConxString printString() const;
-  int operator==(const CClsNumber &o) { return 0; }
-  int operator!=(const CClsNumber &o) { return !operator==(o); }
+  int operator==(const CClsNumber &o) const;
+  int operator!=(const CClsNumber &o) const { return !operator==(o); }
   
   virtual double getFloatValue() const;
   virtual ErrType asFloat(CClsBase **result);
@@ -52,6 +52,13 @@ public:
                                  oiActionAsFloat, /* non-const, could modify
                                                      if we're already a
                                                      CClsFloat */);
+
+protected:
+  Boole equals(const CClsBase *p) const
+  {
+    // We want 3.0 = 3 and 3 = 3.0 and 3 = 3 and 3.0 = 3.0
+    return (p->isType(sGetType()) && operator==(*(const CClsNumber *)p));
+  }
 
 private:
   static void initializeAnsweringMachines();

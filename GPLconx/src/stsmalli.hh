@@ -36,6 +36,7 @@ class CClsSmallInt : VIRT public CClsNumber {
   DEFAULT_SEND_MESSAGE(CClsNumber)
   ANSMACH_ANSWERS(CClsNumber)
   STCLONE2(CClsSmallInt)
+  //  equals() in Number will do very nicely.
 public:
   CClsSmallInt() { d = 37; }
   CClsSmallInt(long od) { setValue(od); }
@@ -46,8 +47,11 @@ public:
   CConxString printString() const;
   void setValue(long od);
   long getValue() const;
-  int operator==(const CClsSmallInt &o) { return isClassInstance() == o.isClassInstance() && d == o.d; }
-  int operator!=(const CClsSmallInt &o) { return !operator==(o); }
+  int operator==(const CClsSmallInt &o) const
+  {
+    return isClassInstance() == o.isClassInstance() && d == o.d;
+  }
+  int operator!=(const CClsSmallInt &o) const { return !operator==(o); }
 
 protected:
   virtual ErrType asFloat(CClsBase **result);

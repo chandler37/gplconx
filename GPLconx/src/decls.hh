@@ -76,8 +76,6 @@ extern "C" {
 #define BUGGY_INLINE // DLC what don't I understand?? You should be able to replace this with inline, but just try it!
 #define CF_INLINE // don't inline constructors and destructors.
 #define PF_INLINE // don't inline printOn implementations.
-#define OOLTLTI_INLINE // don't inline overloaded `operator<<(ostream...)'
-#define OOLTLT_INLINE // `extern inline'
 
 // VIRT should be `virtual', because C++'s idea of a virtual base class is
 // my idea of a base class.  However, it is not needed because we don't
@@ -117,7 +115,5 @@ private:
 #define MMM1(tmpMMsg) LLL1(CCONX_COUT_METHOD(tmpMMsg))
 
 #define OOM() CXXFATAL("OUT OF MEMORY\n")
-
-#include <CObject.hh>
 
 #endif // GPLCONX_DECLS_CXX_H

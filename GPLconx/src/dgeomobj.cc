@@ -304,5 +304,3 @@ void CConxDwGeomObj::uninitializedCopy(const CConxDwGeomObj &o)
   sc = NULL;
   // Why share this too? We only keep this during a call to drawOn!
 }
-
-OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxArtist)

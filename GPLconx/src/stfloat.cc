@@ -39,7 +39,7 @@ clock(void);
 #include "sterror.hh"
 #include "stboole.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsFloat::ansMachs = NULL;
+Answerers *CClsFloat::ansMachs = NULL;
 
 Boole CClsFloat::rngIsSeeded = FALSE;
 
@@ -106,27 +106,27 @@ void CClsFloat::initializeAnsweringMachines()
                "Returns the cosine of the receiver");
     ST_CMETHOD(ansMachs, "tan", "math", OBJECT, oiAnswererTangent,
                "Returns the tangent of the receiver");
-    ST_CMETHOD(ansMachs, "plus:", "math", OBJECT, oiAnswererPlus,
+    ST_CMETHOD(ansMachs, "+:", "math", OBJECT, oiAnswererPlus,
                "Returns the sum of the receiver and argument");
-    ST_CMETHOD(ansMachs, "minus:", "math", OBJECT, oiAnswererMinus,
+    ST_CMETHOD(ansMachs, "-:", "math", OBJECT, oiAnswererMinus,
                "Returns difference between the receiver and argument");
-    ST_CMETHOD(ansMachs, "times:", "math", OBJECT, oiAnswererTimes,
+    ST_CMETHOD(ansMachs, "*:", "math", OBJECT, oiAnswererTimes,
                "Returns the product of the receiver and argument");
-    ST_CMETHOD(ansMachs, "dividedBy:", "math", OBJECT, oiAnswererDividedBy,
+    ST_CMETHOD(ansMachs, "/:", "math", OBJECT, oiAnswererDividedBy,
                "Returns the receiver divided by the argument");
-    ST_CMETHOD(ansMachs, "power:", "math", OBJECT, oiAnswererPower,
-               "Returns the receiver to the power of the argument");
-    ST_CMETHOD(ansMachs, "negation", "math", OBJECT, oiAnswererNegation,
+    ST_CMETHOD(ansMachs, "raisedTo:", "math", OBJECT, oiAnswererRaisedTo,
+               "Returns the receiver raised to the power of the argument");
+    ST_CMETHOD(ansMachs, "negated", "math", OBJECT, oiAnswererNegation,
                "Returns the negation of the receiver");
     ST_CMETHOD(ansMachs, "reciprocal", "math", OBJECT, oiAnswererReciprocal,
                "Returns the reciprocal of the receiver");
-    ST_CMETHOD(ansMachs, "gt:", "comparison", OBJECT, oiAnswererGT,
+    ST_CMETHOD(ansMachs, ">:", "comparison", OBJECT, oiAnswererGT,
                "Returns true if the receiver is greater than the argument");
-    ST_CMETHOD(ansMachs, "lt:", "comparison", OBJECT, oiAnswererLT,
+    ST_CMETHOD(ansMachs, "<:", "comparison", OBJECT, oiAnswererLT,
                "Returns true if the receiver is less than the argument");
-    ST_CMETHOD(ansMachs, "gte:", "comparison", OBJECT, oiAnswererGTE,
+    ST_CMETHOD(ansMachs, ">=:", "comparison", OBJECT, oiAnswererGTE,
                "Returns true if the receiver is greater than or equal to the argument");
-    ST_CMETHOD(ansMachs, "lte:", "comparison", OBJECT, oiAnswererLTE,
+    ST_CMETHOD(ansMachs, "<=:", "comparison", OBJECT, oiAnswererLTE,
                "Returns true if the receiver is less than or equal to the argument");
     ST_CMETHOD(ansMachs, "sqrt", "math", OBJECT, oiAnswererSqrt,
                "Returns the square root of the receiver");
@@ -200,7 +200,7 @@ CClsFloat::oiActionDividedBy(CClsBase **result, CConxClsMessage &o) const
 
 NF_INLINE
 CClsBase::ErrType 
-CClsFloat::oiActionPower(CClsBase **result, CConxClsMessage &o) const
+CClsFloat::oiActionRaisedTo(CClsBase **result, CConxClsMessage &o) const
 {
   NEED_N_FLOATS(1, fargv, o, result);
   RETURN_FLOAT(result, pow(getValue(), fargv[0]));

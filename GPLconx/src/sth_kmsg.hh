@@ -70,6 +70,4 @@ private:
   CConxPrintableOwnerArray<CConxClsKeyedArg> parts;
 }; // class CConxClsKeywordMessage
 
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxClsKeywordMessage);
-
 #endif // GPLCONX_STH_KMSG_CXX_H

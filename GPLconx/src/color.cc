@@ -27,9 +27,7 @@
 
 #include <iostream.h>
 
-extern "C" {
 #include "viewer.h"
-}
 #include "canvas.hh"
 
 
@@ -426,5 +424,3 @@ CConxColor::CConxColor(const CConxColor &o)
 {
   uninitializedCopy(o);
 }
-
-OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxColor)

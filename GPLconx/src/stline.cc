@@ -29,7 +29,7 @@
 #include "sterror.hh"
 #include "stfloat.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsLine::ansMachs = NULL;
+Answerers *CClsLine::ansMachs = NULL;
 
 NF_INLINE
 void CClsLine::initializeAnsweringMachines()
@@ -37,14 +37,18 @@ void CClsLine::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
-              "Returns a new object instance of a line in Hyperbolic geometry" DRAWABLE_STR);
-    ST_METHOD(ansMachs, "A:B:isSegment:", CLASS, ciAnswererABIsSegment,
-              "Returns a new, set object instance of a 2-D line in Hyperbolic geometry" DRAWABLE_STR);
-    ST_METHOD(ansMachs, "random:", CLASS, ciAnswererRandom,
-              "Returns a new 2-D line in Hyperbolic geometry with two ``random'' Points with Euclidean Klein Disk radius less than the argument (see help for `Point random:')");
-    ST_METHOD(ansMachs, "random", CLASS, ciAnswererRandom1,
-              "Returns a new 2-D line in Hyperbolic geometry with two ``random'' Points (see help for `Point random')");
+    ST_CMETHOD(ansMachs, "new", "instance creation",
+               CLASS, ciAnswererNew,
+               "Returns a new object instance of a line in Hyperbolic geometry" DRAWABLE_STR);
+    ST_CMETHOD(ansMachs, "A:B:isSegment:", "instance creation",
+               CLASS, ciAnswererABIsSegment,
+               "Returns a new, set object instance of a 2-D line in Hyperbolic geometry" DRAWABLE_STR);
+    ST_CMETHOD(ansMachs, "random:", "instance creation",
+               CLASS, ciAnswererRandom,
+               "Returns a new 2-D line in Hyperbolic geometry with two ``random'' Points with Euclidean Klein Disk radius less than the argument (see help for `Point random:')");
+    ST_CMETHOD(ansMachs, "random", "instance creation",
+               CLASS, ciAnswererRandom1,
+               "Returns a new 2-D line in Hyperbolic geometry with two ``random'' Points (see help for `Point random')");
     ADD_ANS_GETTER("A", A);
     ADD_ANS_GETTER("B", B);
     ADD_ANS_GETTER("isSegment", IsSegment);
@@ -182,9 +186,11 @@ CConxDwGeomObj CClsLine::getDwValue() const throw(CClsError *)
 }
 
 NF_INLINE
-int CClsLine::operator==(const CClsLine &o)
+int CClsLine::operator==(const CClsLine &o) const
 {
-  return (getValue() == o.getValue() && getDwValue() == o.getDwValue());
+  return (isClassInstance() == o.isClassInstance())
+    && (isClassInstance()
+        || (getValue() == o.getValue() && getDwValue() == o.getDwValue()));
 }
 
 NF_INLINE
@@ -256,5 +262,13 @@ CClsLine::ciActionRandom1(CClsBase **result, CConxClsMessage &o) const
   RETURN_NEW_RESULT(result, new CClsLine(new CClsPoint(1.0),
                                          new CClsPoint(1.0),
                                          new CClsBoolean(FALSE)));
+}
+
+NF_INLINE
+Boole CClsLine::dependsOn(const CClsBase *p) const
+{
+  if (p == isSeg || p == P[0] || p == P[1])
+    return TRUE;
+  return CClsDrawable::dependsOn(p);
 }
 

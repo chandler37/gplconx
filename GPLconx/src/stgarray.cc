@@ -29,7 +29,7 @@
 #include "sterror.hh"
 #include "stsmalli.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsArray::ansMachs = NULL;
+Answerers *CClsArray::ansMachs = NULL;
 
 NF_INLINE
 void CClsArray::initializeAnsweringMachines()
@@ -37,32 +37,44 @@ void CClsArray::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ST_METHOD(ansMachs, "with:", CLASS, ciAnswererWith,
-              "Returns a new Array object instance with one value");
-    ST_METHOD(ansMachs, "with:with:", CLASS, ciAnswererWithWith,
-              "Returns a new Array object instance with two values");
-    ST_METHOD(ansMachs, "with:with:with:", CLASS, ciAnswererWithWithWith,
-              "Returns a new Array object instance with three values");
-    ST_METHOD(ansMachs, "with:with:with:with:", CLASS, ciAnswererWithWithWithWith,
-              "Returns a new Array object instance with four values");
-    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
-              "Returns a new Array object instance (that grows)");
-    ST_METHOD(ansMachs, "size", OBJECT, oiAnswererSize,
-              "Returns the size of the receiver");
+    ST_CMETHOD(ansMachs, "with:", "instance creation",
+               CLASS, ciAnswererWith,
+               "Returns a new Array object instance with one value");
+    ST_CMETHOD(ansMachs, "with:with:", "instance creation",
+               CLASS, ciAnswererWithWith,
+               "Returns a new Array object instance with two values");
+    ST_CMETHOD(ansMachs, "with:with:with:", "instance creation",
+               CLASS, ciAnswererWithWithWith,
+               "Returns a new Array object instance with three values");
+    ST_CMETHOD(ansMachs, "with:with:with:with:", "instance creation",
+               CLASS, ciAnswererWithWithWithWith,
+               "Returns a new Array object instance with four values");
+    ST_CMETHOD(ansMachs, "new", "instance creation",
+               CLASS, ciAnswererNew,
+               "Returns a new Array object instance (that grows)");
+    ST_CMETHOD(ansMachs, "size", "getting",
+               OBJECT, oiAnswererSize,
+               "Returns the size of the receiver");
 // DLC good help tip:    ST_METHOD(ansMachs, "set:",
 //                                      OBJECT,
 //                                      oiAnswererSet,
 // "Sets the receiver to point to the same things to which the Array object instance argument points");
-    ST_METHOD(ansMachs, "at:", OBJECT, oiAnswererAt,
-              "Returns the element at the position specified by the strictly positive integer argument");
-    ST_METHOD(ansMachs, "at:put:", OBJECT, oiAnswererAtPut,
-              "Sets the element at the position specified by the strictly positive integer argument to `at:' to the object that is the `put:' argument");
-    ST_METHOD(ansMachs, "addFirst:", OBJECT, oiAnswererAddFirst,
-              "Adds the argument to the front of the array, growing automatically");
-    ST_METHOD(ansMachs, "addLast:", OBJECT, oiAnswererAddLast,
-              "Adds the argument to the end of the array, growing automatically");
-    ST_METHOD(ansMachs, "yourself", OBJECT, oiAnswererYourself,
-              "Returns the array itself (i.e., the receiver), useful because #at:put: and #addFirst: return their arguments, not their receivers");
+    ST_CMETHOD(ansMachs, "at:", "getting",
+               OBJECT, oiAnswererAt,
+               "Returns the element at the position specified by the strictly positive integer argument");
+    ST_CMETHOD(ansMachs, "at:put:", "setting",
+               OBJECT, oiAnswererAtPut,
+               "Sets the element at the position specified by the strictly positive integer argument to `at:' to the object that is the `put:' argument");
+    ST_CMETHOD(ansMachs, "addFirst:", "setting",
+               OBJECT, oiAnswererAddFirst,
+               "Adds the argument to the front of the array, growing automatically");
+    ST_CMETHOD(ansMachs, "addLast:", "setting",
+               OBJECT, oiAnswererAddLast,
+               "Adds the argument to the end of the array, growing automatically");
+    ST_CMETHOD(ansMachs, "yourself", "getting",
+               OBJECT, oiAnswererYourself,
+               "Returns the array itself (i.e., the receiver), useful because #at:put: and #addFirst: return their arguments, not their receivers");
+    // DLC move to object
 
   }
 }
@@ -284,3 +296,13 @@ CClsBase *CClsArray::stCloneDeep() const
   v->incrementAllUsersCounts();
   return v;
 }
+
+NF_INLINE
+Boole CClsArray::dependsOn(const CClsBase *p) const
+{
+  for (size_t i = 0; i < contents.size(); i++) {
+    if (contents.get(i) == p) return TRUE;
+  }
+  return CClsBase::dependsOn(p);
+}
+

@@ -37,6 +37,7 @@ class CClsBoolean : VIRT public CClsBase {
   DEFAULT_SEND_MESSAGE(CClsBase)
   ANSMACH_ANSWERS(CClsBase)
   STCLONE2(CClsBoolean)
+  DEFAULT_ST_EQUALS(CClsBase, CClsBoolean)
 public:
   CClsBoolean() { d = TRUE; }
   CClsBoolean(Boole od) { setValue(od); }
@@ -47,8 +48,8 @@ public:
   void setValue(Boole od) { d = od; }
   Boole getValue() const { return d; }
   // DLC operator== should be true only for the same instance type {class, object} fix this for all ClsCls
-  int operator==(const CClsBoolean &o);
-  int operator!=(const CClsBoolean &o) { return !operator==(o); }
+  int operator==(const CClsBoolean &o) const;
+  int operator!=(const CClsBoolean &o) const { return !operator==(o); }
 
 protected:
   ANSWERER_FOR_ACTION_DEFN_BELOW(CClsBoolean, ciAnswererTrue,
@@ -63,8 +64,6 @@ protected:
                                  oiActionOr, const);
   ANSWERER_FOR_ACTION_DEFN_BELOW(CClsBoolean, oiAnswererXOr,
                                  oiActionXOr, const);
-  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsBoolean, ciAnswererHelp,
-                                 ciActionHelp, const);
 private:
   static void initializeAnsweringMachines();
 

@@ -18,7 +18,7 @@
 */
 
 /*
-  Tests the C++ classes in `geomobj.hh'.
+  Tests the C++ classes in `h_all.hh'.
 */
 
 
@@ -31,7 +31,7 @@
 #include <iostream.h>
 #include <strstream.h>
 
-#include "geomobj.hh"
+#include "h_all.hh"
 #include "color.hh"
 #include "CString.hh"
 
@@ -200,11 +200,11 @@ int tpoint(void)
        << all << " and now all again " << p1 << endl << ends;
   char *s = ostr.str();
 #ifndef NO_IFFY_TESTS
-  RET1(CConxString("first all [puhp(0.5, 1.44338), kd(0.3, 0.4), pd(0.16077, 0.214359)] then kd kd(0.3, 0.4) and now pd pd(0.16077, 0.214359) and now puhp puhp(0.5, 1.44338) and now all again [puhp(0.5, 1.44338), kd(0.3, 0.4), pd(0.16077, 0.214359)]\n") == s);
-#endif
   if (VERBOSE()) {
     cout << s;
   }
+  RET1(CConxString("first all [puhp(0.5, 1.44338), kd(0.3, 0.4), pd(0.16077, 0.214359)] then kd kd(0.3, 0.4) and now pd pd(0.16077, 0.214359) and now puhp puhp(0.5, 1.44338) and now all again [puhp(0.5, 1.44338), kd(0.3, 0.4), pd(0.16077, 0.214359)]\n") == s);
+#endif
   delete [] s;
   
   // DLC fill this in.

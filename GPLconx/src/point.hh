@@ -25,10 +25,9 @@
 #define GPLCONX_STPOINTHH_CXX_H 1
 
 #include <iostream.h>
+
 #include "point.h"
-extern "C" {
 #include "viewer.h"
-}
 
 ostream &operator<<(ostream &o, ConxModlType m);
 ostream &operator<<(ostream &o, ConxMenuChoice m);

@@ -77,13 +77,13 @@ libconx_la_SOURCES = conxv.c lines.c
 
 libcls_la_SOURCES = parser.y scanner.l cparse.cc clsmgr.cc mparse.cc \
                     sth_var.cc sth_answ.cc sth_msg.cc \
-                    sth_kmsg.cc sth_karg.cc sth_assn.cc stmparse.cc \
+                    sth_kmsg.cc sth_karg.cc sth_assn.cc sth_mpar.cc \
 		    sterror.cc stcharar.cc ststring.cc stsymbol.cc \
 		    stobject.cc stsmalli.cc stnumber.cc gcobject.cc \
                     stboole.cc stundefo.cc stgarray.cc stfloat.cc \
                     stsystem.cc stmodlid.cc stcolor.cc stdrawbl.cc \
 		    stpoint.cc stline.cc stcircle.cc stparabo.cc stcanvas.cc \
-		    sthypell.cc
+		    sthypell.cc steqdist.cc
 
 tparser_SOURCES = tparser.cc tester.cc
 tparser_LDADD = libcls.la libcxxconx.la libconxu.la \
@@ -100,20 +100,22 @@ tconx_LDADD = @GGOOBJS@ libconx.la libconxu.la \
 tconx_DEPENDENCIES = @GGOOBJS@ libconx.la libconxu.la \
                      $(top_builddir)/Togl/libtogl.la
 
-libcxxconx_la_SOURCES = geomobj.cc hypmathx.cc CString.cc canvas.cc \
-                        color.cc printon.cc dgeomobj.cc \
-                        CObject.cc CArray.cc
+libcxxconx_la_SOURCES = CString.cc canvas.cc \
+			color.cc printon.cc dgeomobj.cc \
+			CObject.cc h_point.cc h_simple.cc \
+			h_line.cc h_parabo.cc h_eqdist.cc h_twopts.cc \
+			h_geomob.cc h_circle.cc h_hypell.cc
 ## libcxxconx.la needs to be linked with libconxu.la
 
 EXTRA_cxxconx_SOURCES = getopt1.c getopt.c
 cxxconx_SOURCES = toglobj.cc cxxconx.cc tclgproc.c tconxopt.c glcanvas.cc
 cxxconx_LDADD = @GGOOBJS@ libcls.la libcxxconx.la libconxu.la \
-                $(top_builddir)/Togl/libtogl.la $(glu_LDFLAGS) $(glu_LIBS) \
-                $(gl_LDFLAGS) $(gl_LIBS) $(tk_LDFLAGS) $(tk_LIBS) \
-                $(tcl_LDFLAGS) $(tcl_LIBS) $(lcl_LDFLAGS) $(lcl_LIBS)
+		$(top_builddir)/Togl/libtogl.la $(glu_LDFLAGS) $(glu_LIBS) \
+		$(gl_LDFLAGS) $(gl_LIBS) $(tk_LDFLAGS) $(tk_LIBS) \
+		$(tcl_LDFLAGS) $(tcl_LIBS) $(lcl_LDFLAGS) $(lcl_LIBS)
 
 cxxconx_DEPENDENCIES = @GGOOBJS@ libconx.la libconxu.la \
-                       $(top_builddir)/Togl/libtogl.la
+		       $(top_builddir)/Togl/libtogl.la
 
 tderive_SOURCES = tderive.cc tester.cc
 tderive_LDADD =
@@ -132,7 +134,7 @@ glut_CPPFLAGS = @GLUTINCDIR@
 
 gconx_SOURCES = glutconx.c gl.c
 gconx_LDADD = libconx.la libconxu.la $(glut_LDFLAGS) $(glut_LIBS) \
-                $(glu_LDFLAGS) $(glu_LIBS) $(gl_LDFLAGS) $(gl_LIBS)
+		$(glu_LDFLAGS) $(glu_LIBS) $(gl_LDFLAGS) $(gl_LIBS)
 
 # Dependency so that we can do a `./configure; cd src; make tconx cxxconx':
 $(top_srcdir)/Togl/libtogl.la:
@@ -148,19 +150,22 @@ tconxopt.c tconxopt.h: $(srcdir)/tconxopt.ggo
 
 
 noinst_HEADERS = viewer.h point.h globals.h util.h conxtcl.h bresint.h \
-                 tclprocs.h tconxopt.h gl.h CString.hh toglobj.hh \
-                 geomobj.hh hypmath.hh printon.hh cassert.h decls.hh \
-                 canvas.hh color.hh glcanvas.hh dgeomobj.hh cparse.hh \
-                 parsearg.h clsmgr.hh CObject.hh tester.hh Starray.hh \
-                 CArray.hh mparse.hh stcommon.hh stconx.hh sthelper.hh \
-	         sth_var.hh sth_answ.hh sth_msg.hh sth_kmsg.hh \
-	         sth_assn.hh sth_karg.hh \
-                 cmparse.hh stmparse.hh stmacros.hh sterror.hh stobject.hh \
-                 stcharar.hh ststring.hh stsymbol.hh gcobject.hh stsmalli.hh \
-                 stnumber.hh stboole.hh stundefo.hh stgarray.hh stfloat.hh \
-                 stsystem.hh stmodlid.hh stcolor.hh stdrawbl.hh stpoint.hh \
-                 stline.hh stcircle.hh stparabo.hh stcanvas.hh sthypell.hh \
-		 point.hh
+		 tclprocs.h tconxopt.h gl.h CString.hh toglobj.hh \
+		 h_all.hh hypmath.hh printon.hh cassert.h decls.hh \
+		 canvas.hh color.hh glcanvas.hh dgeomobj.hh cparse.hh \
+		 parsearg.h clsmgr.hh CObject.hh tester.hh Starray.hh \
+		 CArray.hh mparse.hh stcommon.hh stconx.hh sth_all.hh \
+		 sth_var.hh sth_answ.hh sth_msg.hh sth_kmsg.hh \
+		 sth_assn.hh sth_karg.hh \
+		 cmparse.hh sth_mpar.hh sth_macr.hh sterror.hh stobject.hh \
+		 stcharar.hh ststring.hh stsymbol.hh gcobject.hh stsmalli.hh \
+		 stnumber.hh stboole.hh stundefo.hh stgarray.hh stfloat.hh \
+		 stsystem.hh stmodlid.hh stcolor.hh stdrawbl.hh stpoint.hh \
+		 stline.hh stcircle.hh stparabo.hh stcanvas.hh sthypell.hh \
+		 steqdist.hh point.hh h_point.hh h_simple.hh \
+		 h_line.hh h_parabo.hh h_eqdist.hh h_twopts.hh \
+		 h_geomob.hh h_circle.hh h_hypell.hh CSArray.hh CPArray.hh \
+		 COArray.hh
 
 
 # How many lines of source code do we have?
@@ -174,14 +179,15 @@ NL_SOURCE_FILES = $(srcdir)/toglconx.c $(srcdir)/glutconx.c \
 	$(srcdir)/acosh.c $(srcdir)/conxv.c $(srcdir)/conxcln.c \
 	$(srcdir)/bres2.c $(srcdir)/lines.c $(srcdir)/tdgeomob.cc \
 	$(srcdir)/cxxconx.cc $(srcdir)/toglobj.cc $(srcdir)/tgeomobj.cc \
-	$(srcdir)/geomobj.cc $(srcdir)/hypmathx.cc $(srcdir)/toglobj.hh \
-	$(srcdir)/geomobj.hh $(srcdir)/hypmath.hh $(srcdir)/printon.hh \
+	$(srcdir)/toglobj.hh \
+	$(srcdir)/h_all.hh $(srcdir)/hypmath.hh $(srcdir)/printon.hh \
 	$(srcdir)/CString.hh $(srcdir)/tCString.cc $(srcdir)/CString.cc \
-        $(srcdir)/CArray.cc $(srcdir)/Starray.hh $(srcdir)/CArray.hh \
+	$(srcdir)/Starray.hh $(srcdir)/CArray.hh \
+	$(srcdir)/CSArray.hh $(srcdir)/COArray.hh $(srcdir)/CPArray.hh \
 	$(srcdir)/longwaysv.c $(srcdir)/hypmath.c $(srcdir)/util.c \
 	$(srcdir)/viewer.h $(srcdir)/point.h $(srcdir)/globals.h \
 	$(srcdir)/util.h $(srcdir)/conxtcl.h $(srcdir)/bresint.h \
-        $(srcdir)/cassert.h $(srcdir)/decls.hh $(srcdir)/canvas.cc \
+	$(srcdir)/cassert.h $(srcdir)/decls.hh $(srcdir)/canvas.cc \
 	$(srcdir)/canvas.hh $(srcdir)/color.hh $(srcdir)/color.cc \
 	$(srcdir)/glcanvas.hh $(srcdir)/glcanvas.cc $(srcdir)/printon.cc \
 	$(srcdir)/dgeomobj.hh $(srcdir)/dgeomobj.cc $(srcdir)/tderive.cc \
@@ -190,16 +196,16 @@ NL_SOURCE_FILES = $(srcdir)/toglconx.c $(srcdir)/glutconx.c \
 	$(srcdir)/clsmgr.hh $(srcdir)/parsearg.h $(srcdir)/CObject.hh \
 	$(srcdir)/tester.hh $(srcdir)/tester.cc $(srcdir)/CObject.cc \
 	$(srcdir)/mparse.hh $(srcdir)/mparse.cc \
-	$(srcdir)/stmparse.hh $(srcdir)/stmparse.cc \
+	$(srcdir)/sth_mpar.hh $(srcdir)/sth_mpar.cc \
 	$(srcdir)/stcommon.hh \
-	$(srcdir)/sthelper.hh \
+	$(srcdir)/sth_all.hh \
 	$(srcdir)/sth_var.hh $(srcdir)/sth_var.cc \
 	$(srcdir)/sth_answ.hh $(srcdir)/sth_answ.cc \
 	$(srcdir)/sth_msg.hh $(srcdir)/sth_msg.cc \
 	$(srcdir)/sth_kmsg.hh $(srcdir)/sth_kmsg.cc \
 	$(srcdir)/sth_assn.hh $(srcdir)/sth_assn.cc \
 	$(srcdir)/sth_karg.hh $(srcdir)/sth_karg.cc \
-	$(srcdir)/stconx.hh $(srcdir)/stmacros.hh \
+	$(srcdir)/stconx.hh $(srcdir)/sth_macr.hh \
 	$(srcdir)/cmparse.hh $(srcdir)/stobject.hh $(srcdir)/stobject.cc \
 	$(srcdir)/sterror.hh $(srcdir)/sterror.cc \
 	$(srcdir)/stcharar.hh $(srcdir)/stcharar.cc \
@@ -219,22 +225,32 @@ NL_SOURCE_FILES = $(srcdir)/toglconx.c $(srcdir)/glutconx.c \
 	$(srcdir)/stcircle.hh $(srcdir)/stcircle.cc \
 	$(srcdir)/stparabo.hh $(srcdir)/stparabo.cc \
 	$(srcdir)/sthypell.hh $(srcdir)/sthypell.cc \
+	$(srcdir)/steqdist.hh $(srcdir)/steqdist.cc \
 	$(srcdir)/stcanvas.hh $(srcdir)/stcanvas.cc \
 	$(srcdir)/stgarray.hh $(srcdir)/stgarray.cc \
 	$(srcdir)/gcobject.hh $(srcdir)/gcobject.cc \
+	$(srcdir)/h_point.hh $(srcdir)/h_point.cc \
+	$(srcdir)/h_simple.hh $(srcdir)/h_simple.cc \
+	$(srcdir)/h_line.hh $(srcdir)/h_line.cc \
+	$(srcdir)/h_parabo.hh $(srcdir)/h_parabo.cc \
+	$(srcdir)/h_eqdist.hh $(srcdir)/h_eqdist.cc \
+	$(srcdir)/h_twopts.hh $(srcdir)/h_twopts.cc \
+	$(srcdir)/h_circle.hh $(srcdir)/h_circle.cc \
+	$(srcdir)/h_geomob.hh $(srcdir)/h_geomob.cc \
+	$(srcdir)/h_hypell.hh $(srcdir)/h_hypell.cc \
 	$(srcdir)/point.hh \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.inc \
-        $(top_srcdir)/Makefile.am $(top_srcdir)/configure.in \
+	$(top_srcdir)/Makefile.am $(top_srcdir)/configure.in \
 	$(srcdir)/Tcl/tconx_a.tcl $(srcdir)/Tcl/tconx_b.tcl \
-        $(srcdir)/Tcl/tconx.tcl $(srcdir)/Tcl/tconx_c.tcl \
+	$(srcdir)/Tcl/tconx.tcl $(srcdir)/Tcl/tconx_c.tcl \
 	$(srcdir)/Tcl/tconx_d.tcl $(srcdir)/Tcl/tconx_l.tcl \
 	$(srcdir)/Tcl/tconx_m.tcl $(srcdir)/Tcl/tconx_s.tcl \
 	$(srcdir)/Tcl/tconx_w.tcl $(srcdir)/Tcl/tconx_h.tcl \
-        $(srcdir)/Tcl/tconx_u.tcl \
+	$(srcdir)/Tcl/tconx_u.tcl \
 	$(srcdir)/Tcl/tconx_p.tcl $(srcdir)/Tcl/text.ui \
-        $(srcdir)/Tcl/tconx_t.tcl \
+	$(srcdir)/Tcl/tconx_t.tcl \
 	$(srcdir)/Tcl/tconxt.ui $(srcdir)/Tcl/simple.ui \
-        $(srcdir)/Tcl/slider.ui
+	$(srcdir)/Tcl/slider.ui
 
 numln:
 	@MTMPA=`wc -l $(NL_SOURCE_FILES) | tail -1 | awk '{print $$1}'`; MTMPB=`echo $(NL_SOURCE_FILES) | wc -w`; echo There are `echo $$MTMPA $$MTMPB 19 \* - p | dc` lines of code not counting the 19-line GPL boilerplate in each source file and not counting documentation
@@ -247,4 +263,5 @@ s:
 	@echo $(NL_SOURCE_FILES)
 
 MAINTAINERCLEANFILES = y.output parser.c parser.h
-CLEANFILES = gconx cxxconx tconx
+CLEANFILES = gconx cxxconx tconx tgeomobj tdgeomob tCString tderive tparser \
+	     libconxu.la libcxxconx.la libcls.la libconx.la

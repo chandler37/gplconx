@@ -37,6 +37,7 @@ class CClsCircle : VIRT public CClsDrawable {
   DEFAULT_SEND_MESSAGE(CClsDrawable)
   ANSMACH_ANSWERS(CClsDrawable)
   STCLONE(CClsCircle)
+  DEFAULT_ST_EQUALS(CClsDrawable, CClsCircle)
 public:
   CClsCircle() { init(); ensureValidity(); }
   CClsCircle(CClsPoint *Center, CClsNumber *Radius);
@@ -60,8 +61,8 @@ public:
   CConxCircle getValue() const throw(CClsError *);
   const CConxArtist *getArtist() const;
   CConxDwGeomObj getDwValue() const throw(CClsError *);
-  int operator==(const CClsCircle &o);
-  int operator!=(const CClsCircle &o) { return !operator==(o); }
+  int operator==(const CClsCircle &o) const;
+  int operator!=(const CClsCircle &o) const { return !operator==(o); }
   void clear();
   void makeReadOnly();
 
@@ -83,6 +84,9 @@ protected:
                                  ciActionCenterRadius, const);
 private:
   static void initializeAnsweringMachines();
+
+protected:
+  Boole dependsOn(const CClsBase *p) const;
 
 
 private: // attributes

@@ -36,6 +36,7 @@ class CClsArray : VIRT public CClsBase {
   DEFAULT_SEND_MESSAGE(CClsBase)
   ANSMACH_ANSWERS(CClsBase)
   STCLONE(CClsArray)
+  DEFAULT_ST_EQUALS(CClsBase, CClsArray)
 public:
   CClsArray() : contents() { init(); }
   CClsArray(const CClsArray &o);
@@ -56,13 +57,19 @@ protected: // because checking for NULL pointers would be required.
 public:
   ~CClsArray() { clear(); }
 
-  int operator==(const CClsArray &o) { return contents == o.contents
-                                         && requiredType == o.requiredType; }
-  int operator!=(const CClsArray &o) { return !operator==(o); }
+  int operator==(const CClsArray &o) const
+  {
+    return (isClassInstance() == o.isClassInstance())
+      && (isClassInstance()
+          || (contents == o.contents && requiredType == o.requiredType));
+  }
+  int operator!=(const CClsArray &o) const { return !operator==(o); }
 
   size_t numElements() const { return contents.size(); }
   CConxString printString() const;
   void append(CClsBase *n);
+  CClsBase *get(size_t n) const throw(const char *) { return getSimpleArray().get(n); }
+  
 
 protected:
   void setRequiredType(ClsType t) { requiredType = t; }
@@ -101,6 +108,9 @@ protected:
   NEW_OI_ANSWERER(CClsArray);
 private:
   static void initializeAnsweringMachines();
+
+protected:
+  Boole dependsOn(const CClsBase *p) const;
 
 private: // attributes
   ClsType requiredType;

@@ -48,7 +48,4 @@ private:
   CConxStringArray vars;
 }; // class CConxClsAssignmentList
 
-
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxClsAssignmentList);
-
 #endif // GPLCONX_STH_ASSN_CXX_H

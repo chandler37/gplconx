@@ -315,5 +315,3 @@ int CConxGLCanvas::bresKeepGoing(Pt middle, Pt oldmiddle, void *t)
               > ARBITRARILYSMALL)
           );
 }
-
-OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxGLCanvas)

@@ -30,7 +30,6 @@
 #include <assert.h>
 
 #include "printon.hh"
-#include "decls.hh"
 
 //////////////////////////////////////////////////////////////////////////////
 // A general replacement for char *:
@@ -139,7 +138,5 @@ int operator==(const char *s, const CConxString &a);
 int operator!=(const char *s, const CConxString &a);
 CConxString operator+(const char *s, const CConxString &a);
 CConxString operator*(size_t n, const CConxString &a);
-
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxString);
 
 #endif // GPLCONX_CSTRING_CXX_H

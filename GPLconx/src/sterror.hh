@@ -35,6 +35,7 @@ class CClsError : VIRT public CClsBase {
           "I am an error, like those you get when you type something in wrong.")
   CLSTYPE(CClsBase, CLS_ERROR)
   STCLONE2(CClsError)
+  DEFAULT_ST_EQUALS(CClsBase, CClsError)
 public:
   CClsError() : errstr("unspecified error") { }
   CClsError(const CConxString &s);
@@ -44,8 +45,12 @@ public:
   CConxString printString() const;
   void setValue(const CConxString &s) { errstr = s; }
   const CConxString &getValue() const { return errstr; }
-  int operator==(const CClsError &o) { return errstr == o.errstr; }
-  int operator!=(const CClsError &o) { return !operator==(o); }
+  int operator==(const CClsError &o) const
+  {
+    return (isClassInstance() == o.isClassInstance())
+      && (isClassInstance() || (errstr == o.errstr));
+  }
+  int operator!=(const CClsError &o) const { return !operator==(o); }
 
 private: // attributes
   CConxString errstr;

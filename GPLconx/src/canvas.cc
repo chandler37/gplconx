@@ -241,5 +241,3 @@ void CConxCanvas::uninitializedCopy(const CConxCanvas &o)
   artists = o.artists;
 }
 
-
-OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxDumbCanvas)

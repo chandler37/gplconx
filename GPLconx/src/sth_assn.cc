@@ -66,5 +66,3 @@ ostream &CConxClsAssignmentList::printOn(ostream &o) const
   o << ">";
   return o;
 }
-
-OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxClsAssignmentList)

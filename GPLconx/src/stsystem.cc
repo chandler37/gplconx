@@ -33,7 +33,7 @@
 #include "ststring.hh"
 #include "clsmgr.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsSystem::ansMachs = NULL;
+Answerers *CClsSystem::ansMachs = NULL;
 
 
 // DLC Linux Class Library ForEach Documentation is weak.
@@ -85,14 +85,14 @@ void CClsSystem::initializeAnsweringMachines()
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
     // There is no "new", we don't allow object instances.
-    ST_METHOD(ansMachs, "exit", CLASS, iAnswererExit,
-              "Exits the system");
-    ST_METHOD(ansMachs, "helpMe", CLASS, iAnswererHelpMe,
-              "Gets high-level help");
-    ST_METHOD(ansMachs, "vars", CLASS, iAnswererVars,
-              "Returns an Array of Symbols that are defined variables");
-    ST_METHOD(ansMachs, "at:", CLASS, iAnswererAt,
-              "Returns that to which the variable whose name is given as a Symbol argument points");
+    ST_CMETHOD(ansMachs, "exit", "user land", CLASS, iAnswererExit,
+               "Exits the system");
+    ST_CMETHOD(ansMachs, "helpMe", "help", CLASS, iAnswererHelpMe,
+               "Gets high-level help");
+    ST_CMETHOD(ansMachs, "vars", "Smalltalkish", CLASS, iAnswererVars,
+               "Returns an Array of Symbols that are defined variables");
+    ST_CMETHOD(ansMachs, "at:", "Smalltalkish", CLASS, iAnswererAt,
+               "Returns that to which the variable whose name is given as a Symbol argument points");
     // DLC "at:put:" "unset:"
   }
 }
@@ -109,7 +109,7 @@ NF_INLINE
 CClsBase::ErrType 
 CClsSystem::iActionHelpMe(CClsBase **result, CConxClsMessage &o)
 {
-  RETURN_NEW_RESULT(result, new CClsStringLiteral("This is the Smalltalk-80-ish system that " PACKAGE " uses to give you incredible expressive power (um, one day...).  The system's documentation is in the Texinfo document that you'll find bundled with the source, which is freely available since " PACKAGE " is GPL'ed.  To get up to speed more quickly, download and check out GNU Smalltalk, which is full-featured and better-documented.\nAnother good source of help is by typing `Object help', or `System help', or `2 help', or `0.3 help', e.g.  This gives you information about the class of the receiver, such as which methods work.  There are no binary methods in this system, and you cannot extend it unless you alter the C++ source code.")); // DLC point to sourceforge.
+  RETURN_NEW_RESULT(result, new CClsStringLiteral("This is the Smalltalk-80-ish system that " PACKAGE " uses to give you incredible expressive power (um, one day...).  The system's documentation is in the Texinfo document that you'll find bundled with the source, which is freely available since " PACKAGE " is GPL'ed.  To get up to speed more quickly, download and check out GNU Smalltalk, which is full-featured and better-documented.\nAnother good source of help is by typing `Object help', or `System help', or `2 help', or `0.3 help', e.g.  This gives you information about the class of the receiver, such as which methods work.  There are unary, binary, and keyword methods in this system, but you cannot extend it unless you alter the C++ source code.\n\nCheck out http://gplconx.sourceforge.net for more info,\nand get on one of the mailing lists so that you don't miss out on\nfuture improvements.  E-mail any comments to me, David Chandler,\nat `dchandler@users.sourceforge.net'."));
 
   // DLC print strings with formatting! Let tab cause tabbing that far and then another tab for indenting.
 }

@@ -28,7 +28,6 @@
 #include "printon.hh"
 #include "CArray.hh"
 #include "dgeomobj.hh"
-#include "decls.hh"
 #include "color.hh"
 
 class CConxDumbCanvas
@@ -147,7 +146,5 @@ private: // attributes
   // kdc would have a dangling reference.
 }; // class CConxCanvas
 
-
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxDumbCanvas);
 
 #endif // GPLCONX_HGMCANVAS_CXX_H

@@ -59,6 +59,7 @@ class CClsError;
 class CClsSymbol;
 class CClsString;
 class CClsPoint;
+class CClsEqDistCurve;
 // DLC NEWSTCLASS
 
 
@@ -94,6 +95,7 @@ public: // types
     CLS_CIRCLE,
     CLS_PARABOLA,
     CLS_HYPELLIPSE,
+    CLS_EQDISTCURVE,
     // DLC NEWSTCLASS
     CLS_ERROR,
     CLS_SYMBOL,             /* #symbol */
@@ -112,8 +114,8 @@ public:
   CClsBase &operator=(const CClsBase &o);
 
   ostream &printOn(ostream &o) const;
-  int operator==(const CClsBase &o);
-  int operator!=(const CClsBase &o) { return !operator==(o); }
+  int operator==(const CClsBase &o) const;
+  int operator!=(const CClsBase &o) const { return !operator==(o); }
 
   // In Smalltalk, we have class instances and object instances.  When you
   // call "String new", you get an object instance "''", but when you call
@@ -134,6 +136,31 @@ public: // virtual functions
   // Hence, the arity of "new:" is 3, the arity of "new" is 1, the arity of
   // "x:y:model:" is 5, etc.
 
+
+  // Returns TRUE if this object is a container containing p.  Returns
+  // FALSE for p == NULL or p == this.  You should ask your superclass also.
+  virtual Boole dependsOn(const CClsBase *p) const { return FALSE; }
+
+  /* Smalltalk binary = operator */
+  virtual Boole equals(const CClsBase *p) const
+  {
+    if (p == NULL) throw "ugly in Object's equals";
+    return ((isClassInstance() == p->isClassInstance())
+            && (getType() == p->getType()));
+    // read-onlyness does not matter.
+  }
+#define DEFAULT_ST_EQUALS(super, thisType) \
+protected: \
+  Boole equals(const CClsBase *p) const \
+  { \
+    return ((super::equals(p)) \
+            && (isType(p->getType()) && operator==(*(const thisType *)p))); \
+  } \
+private:
+
+  // For non-containers, the following will do:
+#define DEFAULT_DEPENDSON(superCls) \
+  Boole dependsOn(const CClsBase *p) const { return superCls::dependsOn(p); }
 
   virtual Boole answers(const CConxString &msg) const;
 
@@ -219,9 +246,21 @@ public: // static functions
   static CConxString clsTypeToString(ClsType c);
 
 protected:
+  ANSWERER_AND_ACTION_DECL(CClsBase, oiAnswererDependsOn, oiActionDependsOn,
+                           const);
+  ANSWERER_AND_ACTION_DECL(CClsBase, iAnswererEquals, iActionEquals,
+                           const);
+  ANSWERER_AND_ACTION_DECL(CClsBase, iAnswererNotEquals, iActionNotEquals,
+                           const);
   ANSWERER_AND_ACTION_DECL(CClsBase, iAnswererHelp, iActionHelp,
                            /* const, actually */);
   ANSWERER_AND_ACTION_DECL(CClsBase, oiAnswererSet, oiActionSet,
+                           /* non-const */);
+  ANSWERER_AND_ACTION_DECL(CClsBase, iAnswererRespondsTo, iActionRespondsTo,
+                           const);
+  ANSWERER_AND_ACTION_DECL(CClsBase, iAnswererInvoke, iActionInvoke,
+                           /* non-const */);
+  ANSWERER_AND_ACTION_DECL(CClsBase, iAnswererInvokeA, iActionInvokeA,
                            /* non-const */);
   ANSWERER_AND_ACTION_DECL(CClsBase, ciAnswererClass, ciActionClass, const);
   ANSWERER_AND_ACTION_DECL(CClsBase, oiAnswererClass, oiActionClass, const);
@@ -239,8 +278,10 @@ protected:
   ANSWERER_AND_ACTION_DECL(CClsBase, iAnswererClone, iActionClone, const);
   ANSWERER_AND_ACTION_DECL(CClsBase, oiAnswererCloneDeep, oiActionCloneDeep,
                            const);
-  ANSWERER_AND_ACTION_DECL(CClsBase, oiAnswererExactlyEquals,
-                           oiActionExactlyEquals, const);
+  ANSWERER_AND_ACTION_DECL(CClsBase, iAnswererExactlyEquals,
+                           iActionExactlyEquals, const);
+  ANSWERER_AND_ACTION_DECL(CClsBase, iAnswererNotExactlyEquals,
+                           iActionNotExactlyEquals, const);
 
 #define TEST_TYPE_IMPL(action, clsType) \
   inline \
@@ -290,6 +331,7 @@ protected:
   TYPE_TESTS_DECLS(Point, CLS_POINT);
   TYPE_TESTS_DECLS(Parabola, CLS_PARABOLA);
   TYPE_TESTS_DECLS(HypEllipse, CLS_HYPELLIPSE);
+  TYPE_TESTS_DECLS(EqDistCurve, CLS_EQDISTCURVE);
 // DLC NEWSTCLASS
 
 private:
@@ -308,9 +350,5 @@ private:
   Boole isObjectInstance, isModifiable;
   static Answerers *ansMachs;
 }; // class CClsBase
-
-
-// Any derived class is also covered by this:
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CClsBase);
 
 #endif // GPLCONX_STOBJECT_CXX_H

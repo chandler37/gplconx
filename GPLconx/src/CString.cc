@@ -28,9 +28,7 @@
 #include <iostream.h>
 #include <stdio.h>
 
-extern "C" {
 #include "util.h"
-}
 
 #include "CString.hh"
 
@@ -152,6 +150,7 @@ Boole CConxString::equals(const char *s, Boole case_sensitive = TRUE) const
 {
   const char *ts = getString();
   if (s == NULL) return (ts == NULL);
+  if (ts == NULL) return (s == NULL);
   return ((case_sensitive) ? (!strcmp(s, ts)) : (!strcasecmp(s, ts)));
 }
 
@@ -432,5 +431,3 @@ CConxString CConxString::substring(size_t start, size_t length) const
   data[start+length] = tmp;        // data is really not mutable.
   return substr;
 }
-
-OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxString)

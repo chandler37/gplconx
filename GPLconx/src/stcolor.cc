@@ -29,7 +29,7 @@
 #include "stfloat.hh"
 #include "sterror.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsColor::ansMachs = NULL;
+Answerers *CClsColor::ansMachs = NULL;
 
 NF_INLINE
 void CClsColor::initializeAnsweringMachines()
@@ -37,30 +37,35 @@ void CClsColor::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
-              "Returns a new Color object instance");
-    ST_METHOD(ansMachs, "R:G:B:", CLASS, ciAnswererRGB,
-              "Returns a new Color object instance set to a (red in [0.0, 1.0], green in [0.0, 1.0], blue in [0.0, 1.0]) RGB value");
-    ST_METHOD(ansMachs, "H:S:V:", CLASS, ciAnswererHSV,
-              "Returns a new Color object instance set to a (hue in [0.0, 360.0), saturation in [0.0, 1.0], value in [0.0, 1.0]) HSV value");
+    ST_CMETHOD(ansMachs, "new", "instance creation",
+               CLASS, ciAnswererNew,
+               "Returns a new Color object instance");
+    ST_CMETHOD(ansMachs, "R:G:B:", "instance creation",
+               CLASS, ciAnswererRGB,
+               "Returns a new Color object instance set to a (red in [0.0, 1.0], green in [0.0, 1.0], blue in [0.0, 1.0]) RGB value");
+    ST_CMETHOD(ansMachs, "H:S:V:", "instance creation",
+               CLASS, ciAnswererHSV,
+               "Returns a new Color object instance set to a (hue in [0.0, 360.0), saturation in [0.0, 1.0], value in [0.0, 1.0]) HSV value");
 
-    ST_METHOD(ansMachs, "R:G:B:", OBJECT, oiAnswererRGB,
-              "Sets receiver to the given RGB value.");
-    ST_METHOD(ansMachs, "H:S:V:", OBJECT, oiAnswererHSV,
-              "Sets receiver to the given HSV value.");
+    ST_CMETHOD(ansMachs, "R:G:B:", "setting",
+               OBJECT, oiAnswererRGB,
+               "Sets receiver to the given RGB value.");
+    ST_CMETHOD(ansMachs, "H:S:V:", "setting",
+               OBJECT, oiAnswererHSV,
+               "Sets receiver to the given HSV value.");
 
-    ST_METHOD(ansMachs, "H", OBJECT, oiAnswererH,
-              "Returns the hue");
-    ST_METHOD(ansMachs, "S", OBJECT, oiAnswererS,
-              "Returns the saturation");
-    ST_METHOD(ansMachs, "V", OBJECT, oiAnswererV,
-              "Returns the HSV Value");
-    ST_METHOD(ansMachs, "R", OBJECT, oiAnswererR,
-              "Returns the red component");
-    ST_METHOD(ansMachs, "G", OBJECT, oiAnswererG,
-              "Returns the green component");
-    ST_METHOD(ansMachs, "B", OBJECT, oiAnswererB,
-              "Returns the blue component");
+    ST_CMETHOD(ansMachs, "H", "getting", OBJECT, oiAnswererH,
+               "Returns the hue");
+    ST_CMETHOD(ansMachs, "S", "getting", OBJECT, oiAnswererS,
+               "Returns the saturation");
+    ST_CMETHOD(ansMachs, "V", "getting", OBJECT, oiAnswererV,
+               "Returns the HSV Value");
+    ST_CMETHOD(ansMachs, "R", "getting", OBJECT, oiAnswererR,
+               "Returns the red component");
+    ST_CMETHOD(ansMachs, "G", "getting", OBJECT, oiAnswererG,
+               "Returns the green component");
+    ST_CMETHOD(ansMachs, "B", "getting", OBJECT, oiAnswererB,
+               "Returns the blue component");
   }
 }
 

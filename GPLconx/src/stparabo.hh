@@ -37,6 +37,7 @@ class CClsParabola : VIRT public CClsDrawable {
   DEFAULT_SEND_MESSAGE(CClsDrawable)
   ANSMACH_ANSWERS(CClsDrawable)
   STCLONE(CClsParabola)
+  DEFAULT_ST_EQUALS(CClsDrawable, CClsParabola)
 public:
   CClsParabola() { init(); ensureValidity(); }
   CClsParabola(CClsPoint *Focus, CClsLine *Line);
@@ -58,8 +59,8 @@ public:
   CConxParabola getValue() const throw(CClsError *);
   const CConxArtist *getArtist() const;
   CConxDwGeomObj getDwValue() const throw(CClsError *);
-  int operator==(const CClsParabola &o);
-  int operator!=(const CClsParabola &o) { return !operator==(o); }
+  int operator==(const CClsParabola &o) const;
+  int operator!=(const CClsParabola &o) const { return !operator==(o); }
   void clear();
   void makeReadOnly();
 
@@ -81,6 +82,9 @@ protected:
                                  ciActionFocusLine, const);
 private:
   static void initializeAnsweringMachines();
+
+protected:
+  Boole dependsOn(const CClsBase *p) const;
 
 
 private: // attributes

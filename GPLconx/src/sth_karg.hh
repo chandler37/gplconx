@@ -58,7 +58,4 @@ private:
   CClsBase *obj;
 }; // class CConxClsKeyedArg
 
-
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxClsKeyedArg);
-
 #endif // GPLCONX_STH_KARG_CXX_H

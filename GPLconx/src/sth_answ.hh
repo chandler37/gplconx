@@ -83,15 +83,14 @@ private:
 }; // class CConxClsAnsMach
 
 
-typedef CConxOwnerArray<CConxClsAnsMach> Answerers;
+typedef CConxPrintableOwnerArray<CConxClsAnsMach> Answerers;
 
 CConxString getClassInstanceHelpMessage(const Answerers &a);
 CConxString getObjectInstanceHelpMessage(const Answerers &a);
 CConxString getClassHelpMessage(const CClsBase &c);
 CConxString getCompleteHelpMessage(const CClsBase &c, const Answerers &a);
-
-
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxClsAnsMach);
+Boole AnswerersRespondsTo(const Answerers &a, const CConxString &method,
+                          Boole forClassInstances);
 
 //////////////////////////////////////////////////////////////////////////////
 // Implementation

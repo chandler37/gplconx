@@ -29,7 +29,7 @@
 #include "ststring.hh"
 #include "sterror.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsBoolean::ansMachs = NULL;
+Answerers *CClsBoolean::ansMachs = NULL;
 
 NF_INLINE
 void CClsBoolean::initializeAnsweringMachines()
@@ -40,22 +40,26 @@ void CClsBoolean::initializeAnsweringMachines()
 
     // DLC for efficiency, don't allow `Boolean true' and `Boolean false',
     // force copying `true' and `false'.
-    ST_METHOD(ansMachs, "help", CLASS, ciAnswererHelp,
-              "Returns help on this class's methods");
-    ST_METHOD(ansMachs, "true", CLASS, ciAnswererTrue,
-              "Returns a new object instance that represents truth.  The system predefines such an instance and assigns it to the variable `true'; you will benefit from increased efficiency if you just use `true'.");
-    ST_METHOD(ansMachs, "false", CLASS, ciAnswererFalse,
-              "Returns a new object instance that represents falsehood.  The system predefines such an instance and assigns it to the variable `false'; you will benefit from increased efficiency if you just use `false'");
+    ST_CMETHOD(ansMachs, "true", "instance creation",
+               CLASS, ciAnswererTrue,
+               "Returns a new object instance that represents truth.  The system predefines such an instance and assigns it to the variable `true'; you will benefit from increased efficiency if you just use `true'.");
+    ST_CMETHOD(ansMachs, "false", "instance creation",
+               CLASS, ciAnswererFalse,
+               "Returns a new object instance that represents falsehood.  The system predefines such an instance and assigns it to the variable `false'; you will benefit from increased efficiency if you just use `false'");
 
     // object instance methods:
-    ST_METHOD(ansMachs, "not", OBJECT, oiAnswererNot,
-              "Returns a Boolean object instance whose truth value is the opposite of the receiver");
-    ST_METHOD(ansMachs, "and:", OBJECT, oiAnswererAnd,
-              "Returns true iff the reciever and the Boolean argument are both true");
-    ST_METHOD(ansMachs, "or:", OBJECT, oiAnswererOr,
-              "Returns true iff either the reciever or the Boolean argument is true");
-    ST_METHOD(ansMachs, "xor:", OBJECT, oiAnswererXOr,
-              "Returns true iff either the reciever or the Boolean argument is true but both are not");
+    ST_CMETHOD(ansMachs, "not", "Boolean arithmetic",
+               OBJECT, oiAnswererNot,
+               "Returns a Boolean object instance whose truth value is the opposite of the receiver");
+    ST_CMETHOD(ansMachs, "&:", "Boolean arithmetic",
+               OBJECT, oiAnswererAnd,
+               "Returns true iff the reciever and the Boolean argument are both true");
+    ST_CMETHOD(ansMachs, "|:", "Boolean arithmetic",
+               OBJECT, oiAnswererOr,
+               "Returns true iff either the reciever or the Boolean argument is true");
+    ST_CMETHOD(ansMachs, "xor:", "Boolean arithmetic",
+               OBJECT, oiAnswererXOr,
+               "Returns true iff either the reciever or the Boolean argument is true but both are not");
   }
 }
 
@@ -111,10 +115,10 @@ CClsBoolean &CClsBoolean::operator=(const CClsBoolean &o)
 }
 
 NF_INLINE
-int CClsBoolean::operator==(const CClsBoolean &o)
+int CClsBoolean::operator==(const CClsBoolean &o) const
 {
-  if (isClassInstance() != o.isClassInstance()) return 0;
-  return d == o.d;
+  return (isClassInstance() == o.isClassInstance())
+    && (isClassInstance() || (d == o.d));
 }
 
 NF_INLINE
@@ -136,14 +140,5 @@ CClsBase::ErrType
 CClsBoolean::oiActionNot(CClsBase **result, CConxClsMessage &o) const
 {
   RETURN_NEW_RESULT(result, new CClsBoolean(!getValue()));
-}
-
-NF_INLINE
-CClsBase::ErrType 
-CClsBoolean::ciActionHelp(CClsBase **result, CConxClsMessage &o) const
-{
-  RETURN_NEW_RESULT(result,
-                    new CClsStringLiteral(getCompleteHelpMessage(*this,
-                                                                 *ansMachs)));
 }
 

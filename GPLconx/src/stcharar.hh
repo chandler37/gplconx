@@ -37,6 +37,7 @@ class CClsCharacterArray : VIRT public CClsBase {
   DEFAULT_SEND_MESSAGE(CClsBase)
   ANSMACH_ANSWERS(CClsBase)
   STCLONE2(CClsCharacterArray)
+  DEFAULT_ST_EQUALS(CClsBase, CClsCharacterArray)
 public:
   CClsCharacterArray() : string() { }
   CClsCharacterArray(const CConxString &s) : string(s) { }
@@ -46,8 +47,12 @@ public:
 
   virtual void setValue(const CConxString &str) { string = str; }
   const CConxString &getValue() const { return string; }
-  int operator==(const CClsCharacterArray &o) { return string == o.string; }
-  int operator!=(const CClsCharacterArray &o) { return !operator==(o); }
+  int operator==(const CClsCharacterArray &o) const
+  {
+    return (isClassInstance() == o.isClassInstance())
+      && (isClassInstance() || (string == o.string));
+  }
+  int operator!=(const CClsCharacterArray &o) const { return !operator==(o); }
 
 protected:
   ANSWERER_FOR_ACTION_DEFN_BELOW(CClsCharacterArray, oiAnswererSet,

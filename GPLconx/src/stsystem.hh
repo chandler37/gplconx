@@ -38,6 +38,7 @@ class CClsSystem : VIRT public CClsBase {
   DEFAULT_SEND_MESSAGE(CClsBase)
   ANSMACH_ANSWERS(CClsBase)
   STCLONE2(CClsSystem)
+  DEFAULT_ST_EQUALS(CClsBase, CClsSystem)
 public:
   CClsSystem() { cm = NULL; }
   CClsSystem(CConxClsManager *CM) { cm = NULL; setClsMgr(CM); }
@@ -45,8 +46,8 @@ public:
   CClsSystem &operator=(const CClsSystem &o);
 
   CConxString printString() const;
-  int operator==(const CClsSystem &o) { return 0; }
-  int operator!=(const CClsSystem &o) { return !operator==(o); }
+  int operator==(const CClsSystem &o) const { return CClsBase::operator==(o); }
+  int operator!=(const CClsSystem &o) const { return !operator==(o); }
 
   // DLC Nothing prevents us from setting a point's value to something out-of-range and then drawing it in the Klein disk.
 

@@ -28,7 +28,7 @@
 #include "stnumber.hh"
 #include "sterror.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsNumber::ansMachs = NULL;
+Answerers *CClsNumber::ansMachs = NULL;
 
 NF_INLINE
 void CClsNumber::initializeAnsweringMachines()
@@ -36,9 +36,9 @@ void CClsNumber::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ST_METHOD(ansMachs, "asFloat", OBJECT,
-              oiAnswererAsFloat,
-              "Returns a Float object instance version of the receiver");
+    ST_CMETHOD(ansMachs, "asFloat", "coercion", OBJECT,
+               oiAnswererAsFloat,
+               "Returns a Float object instance version of the receiver");
   }
 }
 
@@ -77,4 +77,15 @@ NF_INLINE
 CClsBase::ErrType CClsNumber::asFloat(CClsBase **result)
 {
   REQUIRE_METHOD_IN_SUBCLASS();
+}
+
+NF_INLINE
+int CClsNumber::operator==(const CClsNumber &o) const
+{
+    LLL("int operator==(const CClsNumber &o) const");
+    LLL("result is " << ((isClassInstance() == o.isClassInstance())
+                         && (isClassInstance()
+                             || (getFloatValue() == o.getFloatValue()))));
+    return (isClassInstance() == o.isClassInstance())
+      && (isClassInstance() || (getFloatValue() == o.getFloatValue()));
 }

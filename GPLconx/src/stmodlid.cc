@@ -28,7 +28,7 @@
 #include "stmodlid.hh"
 #include "sterror.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsModelIdentifier::ansMachs = NULL;
+Answerers *CClsModelIdentifier::ansMachs = NULL;
 
 NF_INLINE
 CClsModelIdentifier::Model CClsModelIdentifier::model() const
@@ -148,10 +148,11 @@ void CClsModelIdentifier::initializeAnsweringMachines()
 
     // DLC for efficiency, don't allow `Boolean true' and `Boolean false',
     // force copying `true' and `false'.
-    ST_METHOD(ansMachs, "new:", CLASS, ciAnswererNew,
-              "Returns a new object instance that represents the Beltrami-Klein disk, Poincare Disk, Poincare Upper Halp Plane, or an unknown model of hyperbolic geometry, depending on the String or Symbol object instance argument.  Note that `kd', `pd', and `uhp' are reserved variables that are already provided for you, and it is more efficient to use them");
-    ST_METHOD(ansMachs, "set:", OBJECT, ciAnswererSet,
-              "Sets the value of the receiver to the Symbol or String argument");
+    ST_CMETHOD(ansMachs, "new:", "instance creation", CLASS, ciAnswererNew,
+               "Returns a new object instance that represents the Beltrami-Klein disk, Poincare Disk, Poincare Upper Halp Plane, or an unknown model of hyperbolic geometry, depending on the String or Symbol object instance argument.  Note that `kd', `pd', and `uhp' are reserved variables that are already provided for you, and it is more efficient to use them");
+    ST_CMETHOD(ansMachs, "set:", "superclass method implementation",
+               OBJECT, ciAnswererSet,
+               "Sets the value of the receiver to the Symbol or String argument");
   }
 }
 

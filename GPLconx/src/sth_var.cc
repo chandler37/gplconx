@@ -63,5 +63,3 @@ ostream &CConxClsVariable::printOn(ostream &o) const
   o << "<CConxClsVariable " << getVariableName() << ">";
   return o;
 }
-
-OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxClsVariable)

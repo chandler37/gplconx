@@ -29,7 +29,7 @@
 #include "stsmalli.hh"
 #include "sterror.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsCharacterArray::ansMachs = NULL;
+Answerers *CClsCharacterArray::ansMachs = NULL;
 
 
 NF_INLINE CClsBase::ErrType
@@ -46,10 +46,10 @@ void CClsCharacterArray::initializeAnsweringMachines()
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
     // DLC "length", e.g.
-    ST_METHOD(ansMachs, "set:", OBJECT, oiAnswererSet,
-              "Sets the receiver's value to that of the object passed in if their types agree");
-    ST_METHOD(ansMachs, "length", OBJECT, oiAnswererLength,
-              "Returns the receiver's length, which does not include the '#' character");
+    ST_CMETHOD(ansMachs, "set:", "setting", OBJECT, oiAnswererSet,
+               "Sets the receiver's value to that of the object passed in if their types agree");
+    ST_CMETHOD(ansMachs, "length", "description", OBJECT, oiAnswererLength,
+               "Returns the receiver's length, which does not include the '#' character");
 
   }
 }

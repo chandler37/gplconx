@@ -36,12 +36,10 @@
 
 #include <Togl/togl.h>
 
-extern "C" {
 #include "viewer.h"
 #include "util.h"
 #include "tclprocs.h"
 #include "tconxopt.h"
-}
 
 #include "point.hh"
 #include "CString.hh"
@@ -106,7 +104,7 @@ int main(int argc, char **argv)
   }
 
   if (garg.debug_given) {
-    loglevel = 801;
+    loglevel = 101;
     CConxToglObj::setDebugMode(TRUE);
   } else {
     CConxToglObj::setDebugMode(FALSE);

@@ -37,18 +37,16 @@
 
 #include <Togl/togl.h>
 
-extern "C" {
 #include "viewer.h"
 #include "util.h"
 #include "tclprocs.h"
 #include "gl.h"
 #include "conxtcl.h"
-}
 
 #include "point.hh"
 #include "glcanvas.hh"
 #include "toglobj.hh"
-#include "stmparse.hh"
+#include "sth_mpar.hh"
 
 // DLC make it so that we don't have to link with lines.c and conxv.c
 

@@ -24,7 +24,7 @@
 #ifndef GPLCONX_TOGLOBJ_H
 #define GPLCONX_TOGLOBJ_H 1
 
-#include "decls.hh"
+#include "CObject.hh"
 
 struct Togl;
 struct Tcl_Interp;

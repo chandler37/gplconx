@@ -9,11 +9,17 @@ back end.
 
 st*.hh and st*.cc are Smalltalkish classes implemented in C++.
 
+h_*.hh and h_*.cc are Hyperbolic Geometry objects, e.g. circles and lines.
+
+C*.hh are data types of general use.
+
 *.c and *.h are C functions.
 
 *.cc and *.hh are C++ classes.
 
 Run gconx, tconx, cxxconx, and `tparser 1 2 3' to see what's happening here.
+gconx and tconx are outdated and are only built with special options to
+configure.
 
 ttalk* enable testing of the Smalltalkish language.
 

@@ -37,6 +37,7 @@ class CClsFloat : VIRT public CClsNumber {
   DEFAULT_SEND_MESSAGE(CClsNumber)
   ANSMACH_ANSWERS(CClsNumber)
   STCLONE2(CClsFloat)
+  //  equals() in Number will do very nicely.
 public:
   CClsFloat() { d = 37.0; }
   CClsFloat(double od) { setValue(od); }
@@ -47,8 +48,11 @@ public:
   CConxString printString() const;
   void setValue(double od);
   double getValue() const;
-  int operator==(const CClsFloat &o) { return isClassInstance() == o.isClassInstance() && d == o.d; }
-  int operator!=(const CClsFloat &o) { return !operator==(o); }
+  int operator==(const CClsFloat &o) const
+  {
+    return isClassInstance() == o.isClassInstance() && d == o.d;
+  }
+  int operator!=(const CClsFloat &o) const { return !operator==(o); }
 
   static double getRandom(double low, double high);
 
@@ -90,8 +94,8 @@ protected:
                                  oiActionLog10, const);
   ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererLn,
                                  oiActionLn, const);
-  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererPower,
-                                 oiActionPower, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererRaisedTo,
+                                 oiActionRaisedTo, const);
   ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererGT,
                                  oiActionGT, const);
   ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererLT,

@@ -31,6 +31,11 @@
 #include "util.h"
 extern int conx_count_line;
 /* DLC delete static int llerror(const char *errmsg); */
+#define RETURN_BINARYOP(k) \
+    yylval.id[0] = k; yylval.id[1] = '\0'; return TOK_BINARY_OP
+#define RETURN_YYTEXT_BINARYOP() \
+    (void) strcpy(yylval.id, yytext); yylval.id[yyleng] = '\0'; \
+    return TOK_BINARY_OP
 #define LLERROR(msg) assert(strlen(msg) < MAX_ID_LENGTH); strcpy(yylval.id, (msg)); return TOK_ERROR
 int yylex (void) ;
 %}
@@ -40,6 +45,7 @@ int yylex (void) ;
  */
 
 ID ([[:alpha:]][[:alnum:]]*)
+BINARYOP ([\+\-*/\\%@,&|<>=~])
 
 %%
 
@@ -52,7 +58,8 @@ ID ([[:alpha:]][[:alnum:]]*)
                   return TOK_ID_COLON;
                 }
 
-#{ID}		{ if (yyleng-1 >= MAX_ID_LENGTH) {
+#({ID}|:|_|$|{BINARYOP})+	{
+                  if (yyleng-1 >= MAX_ID_LENGTH) {
                     /* error */
                     LLERROR("#Literal is too long.");
                   }
@@ -77,6 +84,19 @@ ID ([[:alpha:]][[:alnum:]]*)
                   return TOK_STRING_LITERAL;
                 }
 
+[\+-]?(([0-9]+\.[0-9]+([eE][\+-]?[0-9]+)?)|([0-9]+[eE][\+-]?[0-9]+)) {
+  /* 3.1 3.1e-13 0.1e+10 4e9 +1.3e+009 -3.3 -2e+013
+        but not .3 or 3. or +.3 or +3. since that would make '.' a poor
+        statement separator.
+   */
+  int err = conx_str2d(yytext, &yylval.r);
+  if (err) {
+    assert(err < 0);
+    LLERROR("The floating-point value won't fit.");
+  }
+  return TOK_REAL;
+}
+
 [\+-]?([0-9]+) {
                  int err = conx_str2l(yytext, &yylval.l);
                  if (err) {
@@ -86,19 +106,9 @@ ID ([[:alpha:]][[:alnum:]]*)
                  return TOK_LONG;
                }
 
-[\+-]?(([0-9]*\.[0-9]+([eE][\+-]?[0-9]+)?)|([0-9]+((\.[0-9]+)|(\.[0-9]*([eE][\+-]?[0-9]+)?)))) {
-  /* 3.1 3.1e-13 .1e+10 1e9 1.3 4 .4 */
-  int err = conx_str2d(yytext, &yylval.r);
-  if (err) {
-    assert(err < 0);
-    LLERROR("The floating-point value won't fit.");
-  }
-  return TOK_REAL;
-}
-
-
 :=		{ return TOK_ASSIGN; }
-,		{ return ','; }
+((==)|(>=)|(<=)|(~=)|(~~))	{ RETURN_YYTEXT_BINARYOP(); }
+{BINARYOP}	{ RETURN_BINARYOP(yytext[0]); }
 \(		{ return '('; }
 \)		{ return ')'; }
 \.		{ return '.'; }

@@ -128,5 +128,3 @@ void CConxMetaParser::initializeClsMgr(CConxClsManager *m)
   assert(m != NULL);
   m->firstInit();  // it doesn't hurt to call firstInit() repeatedly.
 }
-
-OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxMetaParser)

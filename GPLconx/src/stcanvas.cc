@@ -29,7 +29,7 @@
 #include "stdrawbl.hh"
 #include "sterror.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsCanvas::ansMachs = NULL;
+Answerers *CClsCanvas::ansMachs = NULL;
 
 NF_INLINE
 void CClsCanvas::uninitializedCopy(const CClsCanvas &o)
@@ -68,10 +68,11 @@ void CClsCanvas::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ST_METHOD(ansMachs, "sync", OBJECT, oiAnswererSync,
-              "Makes the elements on screen correspond to the contents of this array");
-    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
-              "Returns a new canvas that is not connected to a display");
+    ST_CMETHOD(ansMachs, "sync", "core",
+               OBJECT, oiAnswererSync,
+               "Makes the elements on screen correspond to the contents of this array");
+    ST_CMETHOD(ansMachs, "new", "instance creation", CLASS, ciAnswererNew,
+               "Returns a new canvas that is not connected to a display");
   }
 }
 

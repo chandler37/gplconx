@@ -24,6 +24,10 @@
 #ifndef CONX_TCL_MACROS_H
 #define CONX_TCL_MACROS_H 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <tcl.h>
 
 #include "util.h"
@@ -57,5 +61,9 @@
         Tcl_SetResult(interp, help_message, TCL_VOLATILE); \
         return TCL_ERROR; \
       } while (0)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CONX_TCL_MACROS_H */

@@ -93,6 +93,4 @@ private: // attributes
 }; // class CConxGLCanvas
 
 
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxGLCanvas);
-
 #endif // GPLCONX_GLCANVAS_CXX_H

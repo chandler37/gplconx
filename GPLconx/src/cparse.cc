@@ -27,7 +27,7 @@
 
 #include <assert.h>
 
-#include "sthelper.hh"
+#include "sth_all.hh"
 #include "CString.hh"
 #include "clsmgr.hh"
 #include "cparse.hh"

@@ -29,7 +29,7 @@
 #include "sterror.hh"
 #include "stfloat.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsDrawable::ansMachs = NULL;
+Answerers *CClsDrawable::ansMachs = NULL;
 
 CF_INLINE
 CClsDrawable::CClsDrawable()
@@ -185,8 +185,8 @@ void CClsDrawable::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
-              "Returns a new object instance of a drawable object, whose subclasses include points, lines, circles, parabolas, etc.");
+    ST_CMETHOD(ansMachs, "new", "instance creation", CLASS, ciAnswererNew,
+               "Returns a new object instance of a drawable object, whose subclasses include points, lines, circles, parabolas, etc.  Use drawingMethod #longway for the safe method and anything else for the Bresenham method.");
 
     ADD_ANS_GETTER("drawWithGarnish", DrawWithGarnish);
     ADD_ANS_GETTER("thickness", Thickness);
@@ -215,3 +215,18 @@ void CClsDrawable::uninitializedCopy(const CClsDrawable &o)
   setValue(o.getValue());
 }
 
+NF_INLINE
+Boole CClsDrawable::dependsOn(const CClsBase *p) const
+{
+  if (p == color || p == withGarnish || p == drawingMethod
+      || p == thickness || p == lwtol)
+    return TRUE;
+  return CClsBase::dependsOn(p);
+}
+
+NF_INLINE
+int CClsDrawable::operator==(const CClsDrawable &o) const
+{
+  return (isClassInstance() == o.isClassInstance())
+    && (isClassInstance() || (getValue() == o.getValue()));
+}

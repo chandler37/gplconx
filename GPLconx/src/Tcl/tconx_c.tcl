@@ -441,20 +441,20 @@ proc tconx_st_init { } {
     set pdcClone "" ;# DLC config file entry
     set uhpcClone "" ;# DLC config file entry
 
-    tconx_parse_smalltalkish "$f1 := Point x: .5 y: .75 model: uhp ...\
-                              $f2 := Point x: .2 y: .75 model: uhp ...\
+    tconx_parse_smalltalkish "$f1 := Point x: 0.5 y: 0.75 model: uhp ...\
+                              $f2 := Point x: 0.2 y: 0.75 model: uhp ...\
                               $f1 color R: 1 G: 0 B: 0 ...\
-                              $f2 color R: .7 G: .4 B: 0 ...\
+                              $f2 color R: 0.7 G: 0.4 B: 0 ...\
                               $line1 := Line A: $f1 B: $f2 isSegment: false ...\
-                              $line1 color H: 200 S: .5 V: .4 ...\
+                              $line1 color H: 200 S: 0.5 V: 0.4 ...\
                               pointThickness := 6.0 ...\
                               $f1 thickness: pointThickness ...\
                               $f2 thickness: pointThickness ...\
                               $r := 1.0 ...\
                               $circle := Circle center: $f1 radius: $r ...\
-                              $circle color H: 50 S: .65 V: .9 ...\
+                              $circle color H: 50 S: 0.65 V: 0.9 ...\
                               $pa1 := Parabola focus: $f1 line: Line random ...\
-                              $pa1 color H: 260 S: .45 V: .67 ...\
+                              $pa1 color H: 260 S: 0.45 V: 0.67 ...\
                               $pa1 line color: $line1 color ...\
                               C := Circle ...\
                               P := Point ...\

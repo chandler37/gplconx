@@ -28,12 +28,8 @@
 
 #include "CString.hh"
 #include "CArray.hh"
-#include "decls.hh"
 
 typedef CConxPrintableOwnerArray<CConxString> CConxStringArray;
-
-ostream &operator<<(ostream &o,
-                    const CConxPrintableOwnerArray<CConxString> &a);
 
 #endif // GPLCONX_STARRAY_CXX_H
 

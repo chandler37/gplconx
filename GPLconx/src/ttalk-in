@@ -1,22 +1,22 @@
 nil := 3.3
 nil isNil
 nil notNil
-.3e-1 isFloat
+0.3e-1 isFloat
 Float isFloat
-.3e-1 notFloat
+0.3e-1 notFloat
 Float notFloat
 q
 true
 false
-false or: true. false or: true
+false | true. false | true
 false xor: true not
 false xor: Boolean true
 Boolean false xor: Boolean false
 Boolean true xor: true
-true and: false
-true and: true
-false and: true
-false and: false
+true & false
+true & true
+false & true
+false & false
 false xor: false not
 true := 3.3
 f1 := 3.3
@@ -35,8 +35,8 @@ L2 := L1
 ans
 L2 := Point x: 3.3 y: 4.7 model: (ModelIdentifier new: 'poincare upper ')
 L1 distanceFromPoint: L2
-p1 := Point x: .3 y: .3 m: (MI new: 'k')
-p2 := Point x: -.3 y: -.3 m: kd
+p1 := Point x: 0.3 y: 0.3 m: (MI new: 'k')
+p2 := Point x: -0.3 y: -0.3 m: kd
 p3 := Point x: 0 y:  m: (MI new: 'k')
 p3 := Point x: 0 y: 0 m: (MI new: 'k')
 3.3 bewte
@@ -58,7 +58,7 @@ uhp unknownUnaryMessg
 ans isParseError
 uhp unknownUnaryMessg
 ans isModelIdentifier
-c1 := Color R: .3 G: .5 B: .7
+c1 := Color R: 0.3 G: 0.5 B: 0.7
 c1 R
 c1 G
 c1 B
@@ -66,7 +66,7 @@ c1 H
 c1 S
 c1 V
 c2 := Color H: 210 S: 0.571429 V: 0.7
-c2 R: .4 G: .5 B: .1
+c2 R: 0.4 G: 0.5 B: 0.1
 c2
 c2 class
 Float superClass
@@ -117,7 +117,7 @@ uhp set: (ModelIdentifier new: #kd)
 #hi set: #j
 #hi set: 'hie'
 2.2 between: 2 and: 3
-2.2 between: 2. and: 3
+2.2 between: 2.0 and: 3
 2.
 2. #hi
 2.. #hi
@@ -131,7 +131,7 @@ d at: 4 put: 'wow'
 d := Drawable new
 d color
 d drawingMethod
-d color set: (Color R: .1 G: .3 B: .44)
+d color set: (Color R: 0.1 G: 0.3 B: 0.44)
 d
 d thickness
 d thickness set: 2.5
@@ -139,12 +139,12 @@ d
 d longwayMethodTolerance
 d
 d := Drawable new
-d longwayMethodTolerance set: .001
+d longwayMethodTolerance set: 0.001
 d
 p := Point new
 p x
 p y
-p y set: .39
+p y set: 0.39
 p
 p m
 p model
@@ -152,14 +152,14 @@ p model set: #kd
 p
 p x 
 p y
-p y set: -.1
+p y set: -0.1
 p model set: #uhp
 p
 'that was truncated as it should have been'
 ((Array with: System) at: 1) helpMe
 Boolean help
 Object help
-p thickness set: 3 . p color R: .1 G: .9 B: .512 . p
+p thickness set: 3. p color R: 0.1 G: 0.9 B: 0.512. p
 true isReadOnly
 false isReadOnly
 Boolean true isReadOnly
@@ -168,30 +168,30 @@ Boolean false makeReadOnly isReadOnly
 3.3 isReadOnly
 3.3 makeReadOnly isReadOnly
 3.3 isReadOnly
-nil exactlyEquals: nil
-3.3 exactlyEquals: 3.3
-(L := 3.3) exactlyEquals: L
-p1 := Point x: .3 y: .301 m: kd
-p2 := Point x: (x := .3) y: .301 m: kd
-x set: .4
+nil == nil
+3.3 == 3.3
+(L := 3.3) == L
+p1 := Point x: 0.3 y: 0.301 m: kd
+p2 := Point x: (x := 0.3) y: 0.301 m: kd
+x set: 0.4
 p2
 x makeReadOnly
 p2 x
-p3 := Point x: (x2 := .21) y: (y2 := .22) model: pd
-y2 set: .225
+p3 := Point x: (x2 := 0.21) y: (y2 := 0.22) model: pd
+y2 set: 0.225
 p3
 a1 := Array with: p1 with: p3
-x2 set: .212
+x2 set: 0.212
 p3
 a1 makeReadOnly
-x2 set: .213
+x2 set: 0.213
 p2 set: p1
 p1 set: Point new
 p2 x
-p1 x set: .4
-p2 x set: .4
+p1 x set: 0.4
+p2 x set: 0.4
 p2 set: p1 clone
-p2 x set: .4
+p2 x set: 0.4
 p2 isReadOnly
 p2 x isReadOnly
 p1 x set: 4.34
@@ -215,7 +215,7 @@ a3 := a1 cloneDeep
 a3
 pt1 := Point new
 pt2 := pt1 clone
-pt2 x set: .39
+pt2 x set: 0.39
 pt2
 pt1
 Array new at: 1 put: 2.2
@@ -242,19 +242,19 @@ a := Array new
 (a addFirst: #number2; at: 2 put: #plum; yourself) addFirst: #justice
 a
 p := Point new
-p x: .3
+p x: 0.3
 p
 p x
-a := Array with: .3 with: .4
-a addFirst: .2
-a addLast: .5
+a := Array with: 0.3 with: 0.4
+a addFirst: 0.2
+a addLast: 0.5
 a
 a at: 4
 a at: 6
 a at: 1
 d := Drawable new
 d thickness: 1.3
-d longwayMethodTolerance: .005
+d longwayMethodTolerance: 0.005
 d color: Color new
 d drawingMethod: (l := #longway)
 l
@@ -284,9 +284,81 @@ Point random isPoint
 (Point random: 0.0) isPoint
 (Line random: 0.0) isPoint
 (Line random: 0.0) isLine
-3.3 negation
+3.3 negated
 3.3 reciprocal
-.1 reciprocal
-.1 plus: .1 reciprocal
-.1 minus: .1
+0.1 reciprocal
+0.1 + 0.1 reciprocal
+0.1 - 0.1
 0.0 sin
+Float respondsTo: #Pi
+Float respondsTo: #Pi:
+Float respondsTo: #PI
+3.3 respondsTo: #Pi
+3.3 respondsTo: #sin
+3.3 respondsTo: #between:and:
+Float invoke: #Pi
+Float invoke: #PI
+Float invoke: #invoke
+#between:and: numberKeywords
+#betweenand: numberKeywords
+#betweenand numberKeywords
+#:: numberKeywords
+#a:b: nthKeyword: 1
+#a:b: nthKeyword: 2
+#a:b: nthKeyword: 3
+#a:: nthKeyword: 2
+#
+Float invoke: #between:and: passing: (Array with: 1.03 with: 4.03)
+3.3 invoke: #between:and: passing: (Array with: 1.03 with: 4.03)
+3.3 invoke: #between:and: passing: (Array with: 1.03 with: #a403)
+3.3 invoke: #between:and: passing: (Array with: 1.03 with: 0.5)
+a := Array with: (m := 3.3)
+a dependsOn: m
+a dependsOn: 3.3
+#dave
+Array with: 3.1 with: 3.1e-13 with: 0.1e+10 with: 4e9
+Array with: +1.3e+009 with: -3.3 with:-2e+013
+#aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa := 3.3
+2.0 + 3.0
+2.0 + 3.0 + 4.0
+2.0 + 3.0 + 4.0 raisedTo: 2
+9.0 raisedTo: 0.5 + 1.5
+3.3 >= 3.3
+3.3 ~~ 3.3
+3.3 == 3.3
+3.3 = 3.3
+3.3 ~~ 3.3
+3.3 >= 3.3
+3.3 > 3.3
+3.3 < 4.3
+3.3 <= 3.2
+3.3 <= 3.3
+3.3 <= 3.4
+r := 3.3
+s := r
+r == s
+r ~~ s
+r ~~ s
+2.0 < 2.1 not
+(2.0 < 2.1) not
+2.0 + 3.0 * 4.0
+(2.0 + 3.0) * 4.0
+4.0 / 2.0
+Point = Point
+Drawable
+Drawable = Point
+Point = Point new
+Point new = Point new
+Point new ~= Point new
+Point ~= Point
+String = Symbol
+String = String
+Symbol = String
+'hi' = 'hi'
+'hi' = 'hi '
+#hi = #hi
+#hi = 'hi'
+3.0 = 3
+3 = 3.0
+3 = 2.9

@@ -28,12 +28,9 @@
 #include <math.h>
 
 #include "printon.hh"
-#include "decls.hh"
 
 // For myequals():
-extern "C" {
 #include "viewer.h"
-}
 
 //////////////////////////////////////////////////////////////////////////////
 // An RGB (red, green, blue) or HSV (hue, saturation, value) color.
@@ -121,7 +118,5 @@ public:
   void setColorByName(ColorName cn);
 }; // class CConxNamedColor
 
-
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxColor);
 
 #endif // GPLCONX_COLOR_CXX_H

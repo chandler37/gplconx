@@ -25,7 +25,6 @@
 #define GPLCONX_GC_CXX_H 1
 
 #include "printon.hh"
-#include "decls.hh"
 
 //////////////////////////////////////////////////////////////////////////////
 // An object with a reference count, useful for garbage collection (GC)

@@ -59,7 +59,6 @@ private: // attributes
   CClsBase *pointee;
 }; // class CConxClsVariable
 
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxClsVariable);
 
 //////////////////////////////////////////////////////////////////////////////
 // Implementation

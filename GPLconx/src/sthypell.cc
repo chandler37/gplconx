@@ -29,7 +29,7 @@
 #include "stfloat.hh"
 #include "sterror.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsHypEllipse::ansMachs = NULL;
+Answerers *CClsHypEllipse::ansMachs = NULL;
 
 #define FOREACH_MEMBER_G(obj, var) \
   for (size_t var = 0; var < (obj).numMembers(); var++)
@@ -193,9 +193,11 @@ CConxDwGeomObj CClsHypEllipse::getDwValue() const throw(CClsError *)
 }
 
 NF_INLINE
-int CClsHypEllipse::operator==(const CClsHypEllipse &o)
+int CClsHypEllipse::operator==(const CClsHypEllipse &o) const
 {
-  return (getValue() == o.getValue() && getDwValue() == o.getDwValue());
+  return (isClassInstance() == o.isClassInstance())
+    && (isClassInstance()
+        || (getValue() == o.getValue() && getDwValue() == o.getDwValue()));
 }
 
 NF_INLINE
@@ -282,10 +284,12 @@ void CClsHypEllipse::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
-              "Returns a new object instance of a hyperbola/ellipse in Hyperbolic geometry" DRAWABLE_STR);
-    ST_METHOD(ansMachs, "f1:f2:K:", CLASS, ciAnswererF1F2K,
-              "Returns a new, set object instance of a hyperbola/ellipse in Hyperbolic geometry" DRAWABLE_STR);
+    ST_CMETHOD(ansMachs, "new", "instance creation",
+               CLASS, ciAnswererNew,
+               "Returns a new object instance of a hyperbola/ellipse in Hyperbolic geometry" DRAWABLE_STR);
+    ST_CMETHOD(ansMachs, "f1:f2:K:", "instance creation",
+               CLASS, ciAnswererF1F2K,
+               "Returns a new, set object instance of a hyperbola/ellipse in Hyperbolic geometry" DRAWABLE_STR);
     ADD_ANS_GETTER("f1", Focus1);
     ADD_ANS_GETTER("f2", Focus2);
     ADD_ANS_GETTER("K", K);
@@ -338,3 +342,12 @@ void CClsHypEllipse::setNthMemberPointer(size_t i, CClsBase *mm)
   default: throw "never!!!!";
   }
 }
+
+NF_INLINE
+Boole CClsHypEllipse::dependsOn(const CClsBase *p) const
+{
+  if (p == focus1 || p == focus2 || p == conicDistance)
+    return TRUE;
+  return CClsDrawable::dependsOn(p);
+}
+

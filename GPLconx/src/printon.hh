@@ -18,26 +18,31 @@
 */
 
 /*
-  C++ Printable classes (Java ``Interfaces'' would be more appropriate).
+  C++ Printable and PrintableByModel classes (Java ``Interfaces'' would be
+  more appropriate) and supporting operators and manipulators.
 */
 
 #ifndef GPLCONX_PRINTON_CXX_H
 #define GPLCONX_PRINTON_CXX_H 1
 
 #include <assert.h>
+#include <iostream.h>
 
 #include "point.hh"
-#include "decls.hh"
-
-class ostream;
+#include "CObject.hh"
 
 //////////////////////////////////////////////////////////////////////////////
 // This class would be a Java Interface; any class that subclasses this
 // class must fill in the printOn method.
 class /* interface */ CConxPrintable {
 public: // pure virtual functions
-  virtual ostream &printOn(ostream &) const = 0;
-};
+  virtual ostream &printOn(ostream &o) const
+  {
+    o << "<object that is a subclass of CConxPrintable>";
+    return o;
+  }
+}; // class CConxPrintable
+
 
 //////////////////////////////////////////////////////////////////////////////
 // If an object is associated with the Poincare Disk, Poincare UHP, and
@@ -49,7 +54,8 @@ public: // types
 public: // static members
   static PrintHow getDesiredFormat() { return phow; }
   static void setDesiredFormat(PrintHow a) { phow = a; }
-  template <class T> static ostream &printByModel(ostream &o, const T &a)
+  // DLC delete  template <class T> static ostream &printByModel(ostream &o, const T &a)
+  static ostream &printByModel(ostream &o, const CConxPrintableByModel &a)
   {
     PrintHow p = getDesiredFormat();
     switch (p) {
@@ -61,12 +67,20 @@ public: // static members
   }
 
 public: // pure virtual functions
-  virtual ostream &printOn(ostream &, ConxModlType) const = 0;
+  virtual ostream &printOn(ostream &o, ConxModlType mt) const
+  {
+    return printOn(o);
+  }
 
+  virtual ostream &printOn(ostream &o) const
+  {
+    o << "<CConxPrintableByModel default `virtual ostream &printOn(ostream &o) const'>";
+    return o;
+  }
 
 private:
   static PrintHow phow;
-};
+}; // class CConxPrintableByModel
 
 
 /*
@@ -75,12 +89,8 @@ private:
      CConxPoint c(0.3, 0.4, CONX_KLEIN_DISK);
      cout << "The point is " << c << endl;
   }
-  will print out c's coordinates in all models since we use
-    ostream &operator<<(ostream &o, const CConxPoint &a)
-    {
-      return a.printOn(o);
-    }
-  as a shortcut.
+  will print out c's coordinates in all models since we overload
+  `ostream &operator<<(ostream &o, const CConxPrintable &)'.
 
   If you want to print out c's coordinates only in the Klein disk,
   then you must say the lengthier:
@@ -97,38 +107,22 @@ private:
      CConxPoint c(0.3, 0.4, CONX_KLEIN_DISK);
      cout << "The point is " << kd << c << all << endl;
   }
-  so long as we define
-    ostream &operator<<(ostream &o, const CConxPoint &a)
-    {
-      return CConxPrintableByModel::printByModel(o, a);
-    }
-  as our shortcut.
-
-  It's a timesaver; see how it's used in `tgeomobj.cc'.
  */
 ostream &pd(ostream &);
 ostream &kd(ostream &);
 ostream &puhp(ostream &);
 ostream &all(ostream &);
 
-// See `geomobj.cc' and `geomobj.hh' to see how these are used:
-#define PBM_STREAM_OUTPUT_SHORTCUT_DECL(subclass) \
-ostream &operator<<(ostream &, const subclass &)
-
-#define PBM_STREAM_OUTPUT_SHORTCUT(subclass) \
-ostream &operator<<(ostream &o, const subclass &a) \
-{ \
-  return CConxPrintableByModel::printByModel(o, a); \
+inline
+ostream &operator<<(ostream &o, const CConxPrintable &s)
+{
+  return s.printOn(o);
 }
 
-// For subclasses of Printable
-#define P_STREAM_OUTPUT_SHORTCUT_DECL(subclass) \
-ostream &operator<<(ostream &, const subclass &)
-
-#define P_STREAM_OUTPUT_SHORTCUT(subclass) \
-ostream &operator<<(ostream &o, const subclass &a) \
-{ \
-  return a.printOn(o); \
+inline
+ostream &operator<<(ostream &o, const CConxPrintableByModel &s)
+{
+  return CConxPrintableByModel::printByModel(o, s);
 }
 
 #define DEFAULT_PRINTON() \

@@ -37,6 +37,7 @@ class CClsHypEllipse : VIRT public CClsDrawable {
   DEFAULT_SEND_MESSAGE(CClsDrawable)
   ANSMACH_ANSWERS(CClsDrawable)
   STCLONE(CClsHypEllipse)
+  DEFAULT_ST_EQUALS(CClsDrawable, CClsHypEllipse)
 public:
   CClsHypEllipse() { init(); ensureValidity(); }
   CClsHypEllipse(CClsPoint *Focus1, CClsPoint *Focus2, CClsNumber *Dist);
@@ -58,8 +59,8 @@ public:
   CConxHypEllipse getValue() const throw(CClsError *);
   const CConxArtist *getArtist() const;
   CConxDwGeomObj getDwValue() const throw(CClsError *);
-  int operator==(const CClsHypEllipse &o);
-  int operator!=(const CClsHypEllipse &o) { return !operator==(o); }
+  int operator==(const CClsHypEllipse &o) const;
+  int operator!=(const CClsHypEllipse &o) const { return !operator==(o); }
   void clear();
   void makeReadOnly();
 
@@ -90,6 +91,9 @@ protected:
                                  ciActionF1F2K, const);
 private:
   static void initializeAnsweringMachines();
+
+protected:
+  Boole dependsOn(const CClsBase *p) const;
 
 
 private: // attributes

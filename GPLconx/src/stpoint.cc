@@ -29,7 +29,7 @@
 #include "sterror.hh"
 #include "stfloat.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsPoint::ansMachs = NULL;
+Answerers *CClsPoint::ansMachs = NULL;
 
 NF_INLINE
 CConxString CClsPoint::printString() const
@@ -205,9 +205,12 @@ CConxDwGeomObj CClsPoint::getDwValue() const throw(CClsError *)
 }
 
 NF_INLINE
-int CClsPoint::operator==(const CClsPoint &o) 
+int CClsPoint::operator==(const CClsPoint &o) const
 {
-  return (getValue() == o.getValue() && getDwValue() == getDwValue());
+  return (isClassInstance() == o.isClassInstance()
+          && (isClassInstance()
+              || (getValue() == o.getValue()
+                  && getDwValue() == getDwValue())));
 }
 
 NF_INLINE
@@ -374,6 +377,14 @@ void CClsPoint::initializeAnsweringMachines()
   }
   // DLC add setters, add CClsBase set: CClsBase general assignment operator
   // invoker.
+}
+
+NF_INLINE
+Boole CClsPoint::dependsOn(const CClsBase *p) const
+{
+  if (p == xCoord || p == yCoord || p == model)
+    return TRUE;
+  return CClsDrawable::dependsOn(p);
 }
 
 

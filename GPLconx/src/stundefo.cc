@@ -49,7 +49,7 @@ CClsUndefinedObject::operator=(const CClsUndefinedObject &o)
 }
 
 NF_INLINE
-int CClsUndefinedObject::operator==(const CClsUndefinedObject &o)
+int CClsUndefinedObject::operator==(const CClsUndefinedObject &o) const
 {
   return (isClassInstance() == o.isClassInstance());
 }

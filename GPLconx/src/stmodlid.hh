@@ -40,6 +40,7 @@ class CClsModelIdentifier : VIRT public CClsCharacterArray {
   DEFAULT_SEND_MESSAGE(CClsCharacterArray)
   ANSMACH_ANSWERS(CClsCharacterArray)
   STCLONE2(CClsModelIdentifier)
+  DEFAULT_ST_EQUALS(CClsCharacterArray, CClsModelIdentifier)
 public:
   enum Model { KD, UHP, PD, NONE, NIL };
   // NIL when we haven't calculated it yet, #hello is NONE, #klein is KD, etc.
@@ -53,8 +54,10 @@ public:
   CClsModelIdentifier &operator=(const CClsModelIdentifier &o);
   CConxString printString() const;
   CConxString printShortString() const;
-  int operator==(const CClsModelIdentifier &o) const {
-    return model() == o.model();
+  int operator==(const CClsModelIdentifier &o) const
+  {
+    return (isClassInstance() == o.isClassInstance())
+      && (isClassInstance() || (model() == o.model()));
   }
   int operator!=(const CClsModelIdentifier &o) const { return !operator==(o); }
   void setValue(const CConxString &str);

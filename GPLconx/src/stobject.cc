@@ -30,7 +30,7 @@
 #include "stcommon.hh"
 #include "stconx.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsBase::ansMachs = NULL;
+Answerers *CClsBase::ansMachs = NULL;
 // DLC NEWSTCLASS in the appropriate `.cc' file
 
 NF_INLINE
@@ -73,6 +73,8 @@ const char *CClsBase::getClsNameByType(ClsType c)
     return CClsParabola::sGetClsName();
   case CLS_HYPELLIPSE:
     return CClsHypEllipse::sGetClsName();
+  case CLS_EQDISTCURVE:
+    return CClsEqDistCurve::sGetClsName();
 // DLC NEWSTCLASS
   case CLS_SYMBOL:
     return CClsSymbol::sGetClsName();
@@ -90,59 +92,85 @@ NF_INLINE
 void CClsBase::initializeAnsweringMachines()
 {
   if (ansMachs == NULL) {
-    ansMachs = new CConxOwnerArray<CConxClsAnsMach>();
+    ansMachs = new Answerers();
     // DLC check oom
 
     // DLC for efficiency, don't allow `Boolean true' and `Boolean false',
     // force copying `true' and `false'.
-    ST_METHOD(ansMachs, "makeReadOnly", OBJECT, oiAnswererMakeReadOnly,
-              "Makes the object instance read-only; if the object is a container, such as Array, Canvas, Drawable, Point, Line, etc., then the contents become read-only also.  This is irreversible and comes with some performance advantages.  Clone a read-only object to get a read-write equivalent");
-    ST_METHOD(ansMachs, "isReadOnly", OBJECT, oiAnswererIsReadOnly,
-              "Returns a Boolean to indicate the receiver's read-only status");
-    ST_METHOD(ansMachs, "superClass", CLASS, ciAnswererSuperClass,
-              "Returns the class from which the receiver is derived");
-    ST_METHOD(ansMachs, "superClass", OBJECT, oiAnswererSuperClass,
-              "Returns the class from which the receiver is derived");
-    ST_METHOD(ansMachs, "class", CLASS, ciAnswererClass,
-              "Returns the class of which the receiver is a class instance");
-    ST_METHOD(ansMachs, "class", OBJECT, oiAnswererClass,
-              "Returns the class of which the receiver is an object instance");
-    ST_METHOD(ansMachs, PRINTSTRING, OBJECT, iAnswererPrintString,
-              "Returns a human-readable String object instance representation");
-    ST_METHOD(ansMachs, PRINTSTRING, CLASS, iAnswererPrintString,
-              "Returns a human-readable String object instance representation");
-    ST_METHOD(ansMachs, "isClass", CLASS, iAnswererIsClass,
-              "Returns true if the receiver is a class instance rather than an object instance");
-    ST_METHOD(ansMachs, "isClass", OBJECT, iAnswererIsClass,
-      "Returns true if the receiver is a class instance rather than an object instance");
-    ST_METHOD(ansMachs, "cloneDeep", OBJECT, oiAnswererCloneDeep,
-              "Returns a copy of the receiver with, in the case or containers, all contents replaced by cloneDeep copies");
-    ST_METHOD(ansMachs, "clone", CLASS, iAnswererClone,
-              "Returns an identical copy of the receiver (not the receiver itself) that shares any contents if the receiver is a container");
-    ST_METHOD(ansMachs, "clone", OBJECT, iAnswererClone,
-              "Returns an identical copy of the receiver (not the receiver itself) that shares any contents if the receiver is a container");
-    ST_METHOD(ansMachs, "exactlyEquals:", OBJECT, oiAnswererExactlyEquals,
-              "Returns true iff the receiver is precisely the same object instance as the argument (iff the pointers are equal, for you C folk)");
-    ST_METHOD(ansMachs, "set:", OBJECT, oiAnswererSet,
-              "Sets the receiver's value to a copy of the argument's value");
-    ST_METHOD(ansMachs, "help", OBJECT, iAnswererHelp,
-              "Returns help on using the receiver");
-    ST_METHOD(ansMachs, "help", CLASS, iAnswererHelp,
-              "Returns help on using the receiver");
-
+    ST_CMETHOD(ansMachs, "makeReadOnly", "setting",
+               OBJECT, oiAnswererMakeReadOnly,
+               "Makes the object instance read-only; if the object is a container, such as Array, Canvas, Drawable, Point, Line, etc., then the contents become read-only also.  This is irreversible and comes with some performance advantages.  Clone a read-only object to get a read-write equivalent");
+    ST_CMETHOD(ansMachs, "dependsOn:", "Private",
+               OBJECT, oiAnswererDependsOn,
+               "Returns true if the receiver is a container that contains the argument or an object that contains the argument");
+    ST_CMETHOD_BOTH(ansMachs, "respondsTo:", "testing functionality",
+                    iAnswererRespondsTo,
+                    "Returns true if the receiver responds to the message, which is represented by a #symbol or #symbol:like:this:");
+    ST_CMETHOD_BOTH(ansMachs, "invoke:", "method invocation",
+                    iAnswererInvoke,
+                    "Invokes on behalf of the receiver the unary method that has that name.  This indirection may prove useful in writing scripts.");
+    ST_CMETHOD_BOTH(ansMachs, "invoke:passing:", "method invocation",
+                    iAnswererInvokeA,
+                    "Invokes on behalf of the receiver the method that has that name.  The arguments are in the Array object instance that is the argument to #passing; its size and the number of keywords in the method name must match.  This indirection may prove useful in writing scripts.");
+    ST_CMETHOD(ansMachs, "isReadOnly", "setting",
+               OBJECT, oiAnswererIsReadOnly,
+               "Returns a Boolean to indicate the receiver's read-only status");
+    ST_CMETHOD_BOTH(ansMachs, "superClass", "metaclasses",
+                    oiAnswererSuperClass,
+                    "Returns the class from which the receiver is derived");
+    ST_CMETHOD(ansMachs, "class", "metaclasses",
+               CLASS, ciAnswererClass,
+               "Returns the class of which the receiver is a class instance");
+    ST_CMETHOD(ansMachs, "class", "metaclasses",
+               OBJECT, oiAnswererClass,
+               "Returns the class of which the receiver is an object instance");
+    ST_CMETHOD_BOTH(ansMachs, PRINTSTRING, "printing", iAnswererPrintString,
+                    "Returns a human-readable String object instance representation");
+    ST_CMETHOD_BOTH(ansMachs, "isClass", "testing functionality",
+                    iAnswererIsClass,
+                    "Returns true if the receiver is a class instance rather than an object instance");
+    ST_CMETHOD(ansMachs, "cloneDeep", "instance creation",
+               OBJECT, oiAnswererCloneDeep,
+               "Returns a copy of the receiver with, in the case or containers, all contents replaced by cloneDeep copies");
+    ST_CMETHOD_BOTH(ansMachs, "clone", "instance creation", iAnswererClone,
+                    "Returns an identical copy of the receiver (not the receiver itself) that shares any contents if the receiver is a container");
+    ST_CMETHOD_BOTH(ansMachs, "=:", "comparison", iAnswererEquals,
+                    "Returns true iff the receiver is functionally the same as the argument.  This can be a complex test.");
+    ST_CMETHOD_BOTH(ansMachs, "~=:", "comparison", iAnswererNotEquals,
+                    "Returns true iff the receiver is not functionally the same as the argument.  This can be a complex test.");
+    ST_CMETHOD(ansMachs, "==:", "comparison",
+               OBJECT, iAnswererExactlyEquals,
+               "Returns true iff the receiver is precisely the same object instance as the argument (iff the pointers are equal, for you C folk) -- this is the identity relationship, and testing it is very quick.");
+    ST_CMETHOD(ansMachs, "~~:", "comparison",
+               OBJECT, iAnswererNotExactlyEquals,
+               "Returns true iff the receiver is not precisely the same object instance as the argument (iff the pointers are inequal, for you C folk) -- this is the negation of identity relationship, and testing it is very quick.");
+    ST_CMETHOD(ansMachs, "set:", "setting",
+               OBJECT, oiAnswererSet,
+               "Sets the receiver's value to a copy of the argument's value");
+    ST_CMETHOD(ansMachs, "help", "help",
+               OBJECT, iAnswererHelp,
+               "Returns help on using the receiver");
+    ST_CMETHOD(ansMachs, "help", "help",
+               CLASS, iAnswererHelp,
+               "Returns help on using the receiver");
+    // DLC add respondsTo: aSymbol
 
 // Handle `nil isNil' vs. `UndefinedObject isNil' with isClassInstance() test
 #define TEST_TYPE(msgString, clsType, answerer) \
- ST_METHOD(ansMachs, msgString, OBJECT, answerer, \
-           "Returns true if the receiver " msgString); \
- ST_METHOD(ansMachs, msgString, CLASS, answerer, \
-           "Returns true if the receiver " msgString)
+ ST_CMETHOD(ansMachs, msgString, "testing functionality", \
+            OBJECT, answerer, \
+            "Returns true if the receiver " msgString); \
+ ST_CMETHOD(ansMachs, msgString, "testing functionality", \
+            CLASS, answerer, \
+            "Returns true if the receiver " msgString)
 
 #define TEST_NOT_TYPE(msgString, clsType, answerer) \
- ST_METHOD(ansMachs, msgString, OBJECT, answerer, \
-           "Returns true if the receiver is " msgString); \
- ST_METHOD(ansMachs, msgString, CLASS, answerer, \
-           "Returns true if the receiver is " msgString)
+ ST_CMETHOD(ansMachs, msgString, "testing functionality", \
+            OBJECT, answerer, \
+            "Returns true if the receiver is " msgString); \
+ ST_CMETHOD(ansMachs, msgString, "testing functionality", \
+            CLASS, answerer, \
+            "Returns true if the receiver is " msgString)
 
 #define HANDLE_CLASS_TYPE_TESTS(s, clsTyp, fn) \
     TEST_TYPE("is" s, clsTyp, iAnswererIs ## fn); \
@@ -172,6 +200,7 @@ void CClsBase::initializeAnsweringMachines()
     HANDLE_CLASS_TYPE_TESTS("Point", CLS_POINT, Point);
     HANDLE_CLASS_TYPE_TESTS("Parabola", CLS_PARABOLA, Parabola);
     HANDLE_CLASS_TYPE_TESTS("HypEllipse", CLS_HYPELLIPSE, HypEllipse);
+    HANDLE_CLASS_TYPE_TESTS("EqDistCurve", CLS_EQDISTCURVE, EqDistCurve);
 // DLC NEWSTCLASS
   }
 }
@@ -209,13 +238,7 @@ NF_INLINE CClsBase::ErrType
 CClsBase::sendMessage(CClsBase **result, CConxClsMessage &o)
 {
   TRY_TO_ANSWER_BY_MACHINE();
-
-  if (o.isKeywordMessage()) {
-    RETURN_ERROR_RESULT(result, "unknown keyword message");
-  } else {
-    assert(o.isUnaryMessage());
-    RETURN_ERROR_RESULT(result, "unknown unary message");
-  }
+  RETURN_ERROR_RESULT(result, o.getUnknownMessageComplaint());
 }
 
 NF_INLINE CClsBase::ErrType
@@ -315,7 +338,7 @@ NF_INLINE CClsBase::ErrType
 CClsBase::iActionIsClass(CClsBase **result, CConxClsMessage &o) const
 {
   // DLC test case.
-  RETURN_BOOLE(isClassInstance(), result);
+  RETURN_BOOLE_R(isClassInstance());
 }
 
 NF_INLINE CClsBase::ErrType
@@ -335,11 +358,89 @@ CClsBase::oiActionCloneDeep(CClsBase **result, CConxClsMessage &o) const
 }
 
 NF_INLINE CClsBase::ErrType
-CClsBase::oiActionExactlyEquals(CClsBase **result, CConxClsMessage &o) const
+CClsBase::iActionEquals(CClsBase **result, CConxClsMessage &o) const
 {
-  // DLC test case.
+  CClsBase *argv[1]; o.getBoundObjects(argv);
+  RETURN_BOOLE(equals(argv[0]), result);
+}
+
+NF_INLINE CClsBase::ErrType
+CClsBase::iActionNotEquals(CClsBase **result, CConxClsMessage &o) const
+{
+  CClsBase *argv[1]; o.getBoundObjects(argv);
+  RETURN_BOOLE(!equals(argv[0]), result);
+}
+
+NF_INLINE CClsBase::ErrType
+CClsBase::iActionExactlyEquals(CClsBase **result, CConxClsMessage &o) const
+{
   CClsBase *argv[1]; o.getBoundObjects(argv);
   RETURN_BOOLE(argv[0] == this, result);
+}
+
+NF_INLINE CClsBase::ErrType
+CClsBase::iActionNotExactlyEquals(CClsBase **result, CConxClsMessage &o) const
+{
+  CClsBase *argv[1]; o.getBoundObjects(argv);
+  RETURN_BOOLE(argv[0] != this, result);
+}
+
+NF_INLINE CClsBase::ErrType
+CClsBase::iActionRespondsTo(CClsBase **result, CConxClsMessage &o) const
+{
+  ENSURE_SINGLE_ARG_IS_OF_TYPE(CClsSymbol, argv, o);
+  RETURN_BOOLE(answers(argv[0]->getValue()), result);
+}
+
+NF_INLINE CClsBase::ErrType
+CClsBase::iActionInvoke(CClsBase **result, CConxClsMessage &o)
+{
+  // Do not CHECK_READ_ONLYNESS here.
+  ENSURE_SINGLE_ARG_IS_OF_TYPE(CClsSymbol, argv, o);
+  if (argv[0]->getValue() == "invoke") {
+    RETURN_ERROR_RESULT(result, "#invoke: cannot invoke itself; picture a dragon eating its own tail");
+  } else {
+    CConxClsMessage msg(argv[0]->getValue());
+    return sendMessage(result, msg);
+  }
+}
+
+NF_INLINE CClsBase::ErrType
+CClsBase::oiActionDependsOn(CClsBase **result, CConxClsMessage &o) const
+{
+  ENSURE_SINGLE_ARG_IS_OF_TYPE(CClsBase, argv, o);
+  RETURN_BOOLE_R(dependsOn(argv[0]));
+}
+
+NF_INLINE CClsBase::ErrType
+CClsBase::iActionInvokeA(CClsBase **result, CConxClsMessage &o)
+{
+  // Do not CHECK_READ_ONLYNESS here.
+  CClsBase *argv[2]; o.getBoundObjects(argv);
+  ENSURE_KEYWD_TYPE(result, o, argv, 0, CLS_SYMBOL, TRUE);
+  ENSURE_KEYWD_TYPE(result, o, argv, 1, CLS_ARRAY, TRUE);
+  CClsSymbol *methodSym = (CClsSymbol *)argv[0];
+  CClsArray *args = (CClsArray *)argv[1];
+  const CConxString &method = methodSym->getValue();
+  if (method == "invoke:passing:") {
+    RETURN_ERROR_RESULT(result, "#invoke:passing: cannot invoke itself; picture a dragon eating its own tail");
+  } else if (args->numElements() != methodSym->numberOfKeywords()) {
+    RETURN_ERROR_RESULT(result, "#invoke:passing: requires an Array with as many element as the method name has colons");
+  } else {
+    size_t ne = args->numElements();
+    CConxClsMessage msg;
+    if (ne == 0) {
+      msg.setToUnaryMessage(method);
+    } else {
+      CConxClsKeywordMessage kmsg;
+      for (size_t i = 0; i < ne; i++) {
+        kmsg.appendKeyedArg(CConxClsKeyedArg(methodSym->nthKeyword(i),
+                                             args->get(i)));
+      }
+      msg.setToKeywordMessage(kmsg);
+    }
+    return sendMessage(result, msg);
+  }
 }
 
 NF_INLINE
@@ -402,6 +503,8 @@ NF_INLINE CConxString CClsBase::clsTypeToString(ClsType c)
     return CConxString("CLS_PARABOLA");
   case CLS_HYPELLIPSE:
     return CConxString("CLS_HYPELLIPSE");
+  case CLS_EQDISTCURVE:
+    return CConxString("CLS_EQDISTCURVE");
 // DLC NEWSTCLASS
   case CLS_SYMBOL:
     return CConxString("CLS_SYMBOL");
@@ -419,6 +522,12 @@ NF_INLINE CConxString CClsBase::clsTypeToString(ClsType c)
   }
 }
 
+ANSWERER_IMPL(CClsBase, iAnswererEquals, iActionEquals);
+ANSWERER_IMPL(CClsBase, iAnswererNotEquals, iActionNotEquals);
+ANSWERER_IMPL(CClsBase, oiAnswererDependsOn, oiActionDependsOn);
+ANSWERER_IMPL(CClsBase, iAnswererRespondsTo, iActionRespondsTo);
+ANSWERER_IMPL(CClsBase, iAnswererInvoke, iActionInvoke);
+ANSWERER_IMPL(CClsBase, iAnswererInvokeA, iActionInvokeA);
 ANSWERER_IMPL(CClsBase, iAnswererHelp, iActionHelp);
 ANSWERER_IMPL(CClsBase, ciAnswererClass, ciActionClass);
 ANSWERER_IMPL(CClsBase, oiAnswererClass, oiActionClass);
@@ -431,7 +540,8 @@ ANSWERER_IMPL(CClsBase, iAnswererPrintString, iActionPrintString);
 ANSWERER_IMPL(CClsBase, iAnswererIsClass, iActionIsClass);
 ANSWERER_IMPL(CClsBase, iAnswererClone, iActionClone);
 ANSWERER_IMPL(CClsBase, oiAnswererCloneDeep, oiActionCloneDeep);
-ANSWERER_IMPL(CClsBase, oiAnswererExactlyEquals, oiActionExactlyEquals);
+ANSWERER_IMPL(CClsBase, iAnswererExactlyEquals, iActionExactlyEquals);
+ANSWERER_IMPL(CClsBase, iAnswererNotExactlyEquals, iActionNotExactlyEquals);
 
 
 #define TYPE_TESTS_IMPLS(cn, clsType) \
@@ -459,6 +569,7 @@ TYPE_TESTS_IMPLS(Circle, CLS_CIRCLE);
 TYPE_TESTS_IMPLS(Point, CLS_POINT);
 TYPE_TESTS_IMPLS(Parabola, CLS_PARABOLA);
 TYPE_TESTS_IMPLS(HypEllipse, CLS_HYPELLIPSE);
+TYPE_TESTS_IMPLS(EqDistCurve, CLS_EQDISTCURVE);
 // DLC NEWSTCLASS
 
 
@@ -503,7 +614,7 @@ ostream &CClsBase::printOn(ostream &o) const
 }
 
 NF_INLINE
-int CClsBase::operator==(const CClsBase &o)
+int CClsBase::operator==(const CClsBase &o) const
 {
   INVARIANTS();
   return (isClassInstance() == o.isClassInstance()
@@ -606,5 +717,3 @@ void CClsBase::makeReadOnly()
   INVARIANTS();
   setReadOnly(TRUE);
 }
-
-OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CClsBase)

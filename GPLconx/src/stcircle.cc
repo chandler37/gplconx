@@ -29,7 +29,7 @@
 #include "stfloat.hh"
 #include "sterror.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsCircle::ansMachs = NULL;
+Answerers *CClsCircle::ansMachs = NULL;
 
 CF_INLINE
 CClsCircle::CClsCircle(CClsPoint *Center, CClsNumber *Radius)
@@ -142,9 +142,11 @@ CConxDwGeomObj CClsCircle::getDwValue() const throw(CClsError *)
 }
 
 NF_INLINE
-int CClsCircle::operator==(const CClsCircle &o)
+int CClsCircle::operator==(const CClsCircle &o) const
 {
-  return (getValue() == o.getValue() && getDwValue() == o.getDwValue());
+  return (isClassInstance() == o.isClassInstance())
+    && (isClassInstance()
+        || (getValue() == o.getValue() && getDwValue() == o.getDwValue()));
 }
 
 NF_INLINE
@@ -215,14 +217,24 @@ void CClsCircle::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
-              "Returns a new object instance of a circle in Hyperbolic geometry" DRAWABLE_STR);
-    ST_METHOD(ansMachs, "center:radius:", CLASS, ciAnswererCenterRadius,
-              "Returns a new, set object instance of a circle in Hyperbolic geometry" DRAWABLE_STR);
+    ST_CMETHOD(ansMachs, "new", "instance creation",
+               CLASS, ciAnswererNew,
+               "Returns a new object instance of a circle in Hyperbolic geometry" DRAWABLE_STR);
+    ST_CMETHOD(ansMachs, "center:radius:", "instance creation",
+               CLASS, ciAnswererCenterRadius,
+               "Returns a new, set object instance of a circle in Hyperbolic geometry" DRAWABLE_STR);
     ADD_ANS_GETTER("center", Center);
     ADD_ANS_GETTER("radius", Radius);
     ADD_ANS_SETTER("center:", CenterColon);
     ADD_ANS_SETTER("radius:", RadiusColon);
   }
+}
+
+NF_INLINE
+Boole CClsCircle::dependsOn(const CClsBase *p) const
+{
+  if (p == center || p == radius)
+    return TRUE;
+  return CClsDrawable::dependsOn(p);
 }
 

@@ -30,7 +30,7 @@
 #include "stboole.hh"
 #include "stfloat.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsSmallInt::ansMachs = NULL;
+Answerers *CClsSmallInt::ansMachs = NULL;
 
 NF_INLINE
 void CClsSmallInt::initializeAnsweringMachines()
@@ -38,11 +38,10 @@ void CClsSmallInt::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ST_METHOD(ansMachs, "between:and:", OBJECT, oiAnswererBetweenAnd,
-              "Returns true iff the inclusive range "
-                                     "from the first argument to the second"
-                                     " argument contains the receiver");
-    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
+    ST_CMETHOD(ansMachs, "between:and:", "superclass method implementation",
+               OBJECT, oiAnswererBetweenAnd,
+               "Returns true iff the inclusive range from the first argument to the second argument contains the receiver");
+    ST_CMETHOD(ansMachs, "new", "instance creation", CLASS, ciAnswererNew,
               "Returns a new SmallInt object instance");
   }
 }

@@ -36,6 +36,7 @@ class CClsLine : VIRT public CClsDrawable {
   DEFAULT_SEND_MESSAGE(CClsDrawable)
   ANSMACH_ANSWERS(CClsDrawable)
   STCLONE(CClsLine)
+  DEFAULT_ST_EQUALS(CClsDrawable, CClsLine)
 public:
   CClsLine() { init(); ensureValidity(); }
   CClsLine(CClsPoint *A, CClsPoint *B, CClsBoolean *seg);
@@ -62,8 +63,8 @@ public:
   CConxLine getValue() const throw(CClsError *);
   const CConxArtist *getArtist() const;
   CConxDwGeomObj getDwValue() const throw(CClsError *);
-  int operator==(const CClsLine &o);
-  int operator!=(const CClsLine &o) { return !operator==(o); }
+  int operator==(const CClsLine &o) const;
+  int operator!=(const CClsLine &o) const { return !operator==(o); }
   void clear();
   void makeReadOnly();
   
@@ -92,6 +93,9 @@ protected:
 private:
   static void initializeAnsweringMachines();
   
+protected:
+  Boole dependsOn(const CClsBase *p) const;
+
 
 private: // attributes
   CClsPoint *P[2];

@@ -28,7 +28,7 @@
 #include "stparabo.hh"
 #include "sterror.hh"
 
-CConxOwnerArray<CConxClsAnsMach> *CClsParabola::ansMachs = NULL;
+Answerers *CClsParabola::ansMachs = NULL;
 
 CF_INLINE
 CClsParabola::CClsParabola(CClsPoint *Focus, CClsLine *Line)
@@ -157,9 +157,11 @@ CConxDwGeomObj CClsParabola::getDwValue() const throw(CClsError *)
 }
 
 NF_INLINE
-int CClsParabola::operator==(const CClsParabola &o)
+int CClsParabola::operator==(const CClsParabola &o) const
 {
-  return (getValue() == o.getValue() && getDwValue() == o.getDwValue());
+  return (isClassInstance() == o.isClassInstance())
+    && (isClassInstance()
+        || (getValue() == o.getValue() && getDwValue() == o.getDwValue()));
 }
 
 NF_INLINE
@@ -230,14 +232,24 @@ void CClsParabola::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
-              "Returns a new object instance of a parabola in Hyperbolic geometry" DRAWABLE_STR);
-    ST_METHOD(ansMachs, "focus:line:", CLASS, ciAnswererFocusLine,
-              "Returns a new, set object instance of a parabola in Hyperbolic geometry" DRAWABLE_STR);
+    ST_CMETHOD(ansMachs, "new", "instance creation",
+               CLASS, ciAnswererNew,
+               "Returns a new object instance of a parabola in Hyperbolic geometry" DRAWABLE_STR);
+    ST_CMETHOD(ansMachs, "focus:line:", "instance creation",
+               CLASS, ciAnswererFocusLine,
+               "Returns a new, set object instance of a parabola in Hyperbolic geometry" DRAWABLE_STR);
     ADD_ANS_GETTER("focus", Focus);
     ADD_ANS_GETTER("line", Line);
     ADD_ANS_SETTER("focus:", FocusColon);
     ADD_ANS_SETTER("line:", LineColon);
   }
+}
+
+NF_INLINE
+Boole CClsParabola::dependsOn(const CClsBase *p) const
+{
+  if (p == focus || p == line)
+    return TRUE;
+  return CClsDrawable::dependsOn(p);
 }
 

@@ -44,6 +44,19 @@ CConxClsAnsMach::answer(CClsBase *receiver, CClsBase **result,
   return (*ansMach)(receiver, result, o);
 }
 
+Boole AnswerersRespondsTo(const Answerers &a, const CConxString &method,
+                          Boole forClassInstances)
+// Returns TRUE if a answers method forClassInstances or for object instances
+{
+  for (size_t i = 0; i < a.size(); i++) {
+    const CConxClsAnsMach &answ = a.get(i);
+    if (answ.isClassMessage() == forClassInstances
+        && answ.getMessageName() == method)
+      return TRUE;
+  }
+  return FALSE;
+}
+
 CConxString getCompleteHelpMessage(const CClsBase &c, const Answerers &a)
 {
   CConxString e = getClassHelpMessage(c);
@@ -169,5 +182,3 @@ void CConxClsAnsMach::uninitializedCopy(const CConxClsAnsMach &o)
   category = o.category;
   classMessage = o.classMessage;
 }
-
-OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxClsAnsMach)

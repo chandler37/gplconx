@@ -36,7 +36,9 @@ proc tconx_get_help { widget } {
 
 proc tconx_help_help { } {
     # DLC
-    tconx_new_text [tconx_base].text_help "None yet DLC " "Help for GPLconx"
+    tconx_new_text [tconx_base].text_help \
+        "Type `System helpMe' in the entry to the right of the `$' for help on the command language.  Try clicking all your mouse buttons in the model windows to see what they do." \
+        "Help for GPLconx"
 }
 
 proc tconx_help_about { } {

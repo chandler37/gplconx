@@ -20,6 +20,10 @@
 #ifndef CONXV_VIEWER_H
 #define CONXV_VIEWER_H 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 #include <math.h>
 
@@ -169,5 +173,9 @@ void conx_draw_arc(double x, double y, double r, double theta_1,
                    ConxPointFunc *pfunc, void *pArg);
 /* end of lines.c */
 #define FLUSH()  /* do nothing, wait until display(model) */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CONXV_VIEWER_H */

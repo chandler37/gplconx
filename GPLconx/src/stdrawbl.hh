@@ -46,6 +46,7 @@ class CClsDrawable : VIRT public CClsBase {
   DEFAULT_SEND_MESSAGE(CClsBase)
   ANSMACH_ANSWERS(CClsBase)
   STCLONE(CClsDrawable)
+  DEFAULT_ST_EQUALS(CClsBase, CClsDrawable)
 public:
   CClsDrawable();
   CClsDrawable(const CConxDwGeomObj &od);
@@ -57,8 +58,8 @@ public:
   CConxDwGeomObj getValue() const;
   void affectValue(CConxDwGeomObj &r) const;
   CConxString printString() const;
-  int operator==(const CClsDrawable &o) { return getValue() == o.getValue(); }
-  int operator!=(const CClsDrawable &o) { return !operator==(o); }
+  int operator==(const CClsDrawable &o) const;
+  int operator!=(const CClsDrawable &o) const { return !operator==(o); }
   void clear();
 
   virtual const CConxArtist *getArtist() const;
@@ -81,6 +82,9 @@ protected:
   ANS_SETTER(CClsDrawable, CClsSymbol, DrawingMethodColon, drawingMethod);
 private:
   static void initializeAnsweringMachines();
+
+protected:
+  Boole dependsOn(const CClsBase *p) const;
 
 private: // operations
   void init();

@@ -19,9 +19,9 @@
 
 /*
   C++ classes that model elements of computational hyperbolic geometry
-  that can draw themselves on a CConxCanvas.  These classes could extend those
-  in `geomobj.hh' if multiple inheritance were not evil.  Since it is,
-  we have a class that has a geometric object member.
+  that can draw themselves on a CConxCanvas.  These could be classes
+  that extend those in `h_all.hh' if multiple inheritance were not evil.
+  Since it is, we have a class that has a geometric object member.
 
   Classes here do not share stored drawings.  Let's say you try:
   {
@@ -43,7 +43,7 @@
 #include <iostream.h>
 #include <assert.h>
 
-#include "geomobj.hh"
+#include "h_all.hh"
 #include "color.hh"
 
 typedef unsigned long SDID;
@@ -80,8 +80,8 @@ public:
   CConxArtist(const CConxArtist &o) : CConxObject(o) { }
   CConxArtist &operator=(const CConxArtist &o);
   ~CConxArtist() { MMM("destructor"); LLL("CConxArtist::Deleting " << this); }
-  int operator==(const CConxArtist &o) { return 1; }
-  int operator!=(const CConxArtist &o) { return !operator==(o); }
+  int operator==(const CConxArtist &o) const { return 1; }
+  int operator!=(const CConxArtist &o) const { return !operator==(o); }
 
   // Make sure we can instantiate this fellow, although we won't, so
   // that we can have an array of CConxArtist objects and just ask
@@ -190,9 +190,6 @@ private: // attributes
   double thickness, lwtol;
   mutable ConxModlType sModel;
 }; // class CConxDwGeomObj
-
-
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxArtist);
 
 
 #endif // GPLCONX_DGEOMOBJ_CXX_H

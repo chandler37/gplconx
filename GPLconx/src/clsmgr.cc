@@ -102,7 +102,7 @@ CConxClsManager::~CConxClsManager()
       LLL("~CConxClsManager 650 " << i << " about to delete "
           << bptr << " which is " << "of type "
           << CClsBase::clsTypeToString(bptr->getType())
-          << " which prints as " << *bptr << endl);
+          << " which prints as " << flush << (*bptr) << endl);
       delete bptr;
     }
   }
@@ -330,6 +330,7 @@ void CConxClsManager::loadStartupClassInstances()
   LOAD_ALIAS_FOR_THAT_CLASS_INST("Hyperbola");
   LOAD_ALIAS_FOR_THAT_CLASS_INST("Ellipse");
 
+  LOAD_CLASS_INSTANCE(CClsEqDistCurve);
   // DLC NEWSTCLASS
   LOAD_CLASS_INSTANCE(CClsBase);
   LOAD_CLASS_INSTANCE(CClsFloat);
@@ -450,6 +451,8 @@ void CConxClsManager::removeUser(CClsBase *pp) throw(const char *)
       } else {
         // DLC how could we get here?  We can only get the user
         // count of a first-class object down to 1, so we can't be here!
+        cerr << "We cannot be having to delete " << pp << flush
+             << "(" << (*pp) << ")" << "\n";
         abort();
 
 #ifndef NDEBUG
@@ -533,6 +536,4 @@ void CConxClsManager::init()
   isInitialized = FALSE;
 }
 
-
-OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxClsManager)
 
