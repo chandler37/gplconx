@@ -27,4 +27,45 @@
 
 #include "stmparse.hh"
 
-// DLC nothing here yet.
+CF_INLINE
+CConxClsMetaParser::CConxClsMetaParser(CConxCanvas *kdCanvas,
+                                       CConxCanvas *pdCanvas,
+                                       CConxCanvas *uhpCanvas)
+{
+  init();
+  this->kdCanvas = kdCanvas;
+  this->pdCanvas = pdCanvas;
+  this->uhpCanvas = uhpCanvas;
+}
+
+CF_INLINE
+CConxClsMetaParser::CConxClsMetaParser(const CConxClsMetaParser &o)
+  : CConxMetaParser(o)
+{
+  uninitializedCopy(o);
+}
+
+NF_INLINE
+CConxClsMetaParser &CConxClsMetaParser::operator=(const CConxClsMetaParser &o)
+{
+  (void) CConxMetaParser::operator=(o);
+  uninitializedCopy(o);
+  return *this;
+}
+
+NF_INLINE
+void CConxClsMetaParser::initializeClsMgr(CConxClsManager *m)
+{
+  assert(m != NULL);
+  m->firstInit(pdCanvas, kdCanvas, uhpCanvas);
+  // it doesn't hurt to call it repeatedly.
+}
+
+NF_INLINE
+void CConxClsMetaParser::uninitializedCopy(const CConxClsMetaParser &o)
+{
+  pdCanvas = o.pdCanvas;
+  kdCanvas = o.kdCanvas;
+  uhpCanvas = o.uhpCanvas;
+}
+

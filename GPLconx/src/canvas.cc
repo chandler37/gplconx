@@ -98,7 +98,9 @@ NF_INLINE
 void CConxCanvas::append(const CConxArtist *m) throw(const char *)
 // Takes ownership of *m; our destructor will delete m.
 {
+  MMM("void append(const CConxArtist *m) throw(const char *)");
   if (m == NULL) throw "why a NULL arg?";
+  LLL("Appending to the canvas " << (*m) << " @" << m);
   artists.append(m);
 }
 
@@ -115,14 +117,10 @@ void CConxCanvas::masterDraw()
   size_t i, sz = artists.size();
   for (i = 0; i < sz; i++) {
     const CConxArtist *a = artists.get(i);
-    if (LLL_ON()) {
-      cout << "Now rendering ";
-      a->printOn(cout);
-      cout << endl;
-    }
+    LLL("Now rendering " << a << ": " << flush << (*a));
     a->drawOn(*this);
   }
-  flush();
+  flushQueue();
 }
 
 NF_INLINE
@@ -157,7 +155,89 @@ const char *CConxCanvas::modelToString(ConxModlType modl)
   return s;
 }
 
+NF_INLINE
+CConxDumbCanvas &CConxDumbCanvas::operator=(const CConxDumbCanvas &o)
+{
+  uninitializedCopy(o);
+  return *this;
+}
 
-OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxCanvas)
+NF_INLINE
+Pt CConxDumbCanvas::screenCoordinatesToModelCoordinates(long x, long y)
+  // This has poor error checking -- x is usually less than getWidth()
+  // and y is usually less than getHeight().  Both are usually nonnegative.
+{
+  Pt modelCoords;
+  screenCoordinatesToModelCoordinates(x, y, modelCoords);
+  return modelCoords;
+}
+
+NF_INLINE
+void CConxDumbCanvas::screenCoordinatesToModelCoordinates(long x, long y, Pt &modelCoords)
+  // This has poor error checking.
+{
+  modelCoords.x =
+    getXmin() + ((double) x/(double) getWidth()) * (getXmax() - getXmin());
+  modelCoords.y =
+    getYmax() - ((double) y/(double) getHeight()) * (getYmax() - getYmin());
+}
+
+NF_INLINE
+void CConxDumbCanvas::uninitializedCopy(const CConxDumbCanvas &o)
+{
+  width = o.width;
+  height = o.height;
+  xmin = o.xmin;
+  xmax = o.xmax;
+  ymin = o.ymin;
+  ymax = o.ymax;
+}
+
+NF_INLINE
+CConxDrawCanvas &CConxDrawCanvas::operator=(const CConxDrawCanvas &o)
+{
+  (void) CConxDumbCanvas::operator=(o);
+  return *this;
+}
+
+NF_INLINE
+void CConxDrawCanvas::drawTopSemiCircle(Pt p, double r)
+{
+  drawTopSemiCircle(p.x, p.y, r);
+}
+
+NF_INLINE
+void CConxDrawCanvas::drawArc(Pt center, double r, double t0, double t1)
+{
+  drawArc(center.x, center.y, r, t0, t1);
+}
+
+CF_INLINE
+CConxCanvas::CConxCanvas(const CConxCanvas &o)
+  : CConxDrawCanvas(o)
+{
+  uninitializedCopy(o);
+}
+
+NF_INLINE
+CConxCanvas &CConxCanvas::operator=(const CConxCanvas &o)
+{
+  (void) CConxDrawCanvas::operator=(o);
+  uninitializedCopy(o);
+  return *this;
+}
+
+NF_INLINE
+int CConxCanvas::operator==(const CConxCanvas &o) const
+{
+  return (artists == o.artists);
+}
+
+NF_INLINE
+void CConxCanvas::uninitializedCopy(const CConxCanvas &o)
+{
+  artists = o.artists;
+}
+
+
 OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxDumbCanvas)
-OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxDrawCanvas)

@@ -40,43 +40,21 @@ public:
 public:
   CConxClsMetaParser() { init(); }
   CConxClsMetaParser(CConxCanvas *kdCanvas, CConxCanvas *pdCanvas,
-                     CConxCanvas *uhpCanvas)
-  {
-    init();
-    this->kdCanvas = kdCanvas;
-    this->pdCanvas = pdCanvas;
-    this->uhpCanvas = uhpCanvas;
-  }
+                     CConxCanvas *uhpCanvas);
   ~CConxClsMetaParser() { }
-  CConxClsMetaParser(const CConxClsMetaParser &o)
-    : CConxMetaParser(o) { uninitializedCopy(o); }
-  CConxClsMetaParser &operator=(const CConxClsMetaParser &o)
-  {
-    (void) CConxMetaParser::operator=(o);
-    uninitializedCopy(o);
-    return *this;
-  }
+  CConxClsMetaParser(const CConxClsMetaParser &o);
+  CConxClsMetaParser &operator=(const CConxClsMetaParser &o);
 
   // parser debugging does not matter for equality.
   int operator==(const CConxClsMetaParser &o) const { return 0; } // DLC
   int operator!=(const CConxClsMetaParser &o) const { return !operator==(o); }
 
 protected: // operations
-  virtual void initializeClsMgr(CConxClsManager *m)
-  {
-    assert(m != NULL);
-    m->firstInit(pdCanvas, kdCanvas, uhpCanvas);
-    // it doesn't hurt to call it repeatedly.
-  }
+  virtual void initializeClsMgr(CConxClsManager *m);
 
 private: // operations
   void init() { pdCanvas = kdCanvas = uhpCanvas = NULL; }
-  void uninitializedCopy(const CConxClsMetaParser &o)
-  {
-    pdCanvas = o.pdCanvas;
-    kdCanvas = o.kdCanvas;
-    uhpCanvas = o.uhpCanvas;
-  }
+  void uninitializedCopy(const CConxClsMetaParser &o);
 
 private: // attributes
   // We do not own these, and we'll never make a copy of them:

@@ -255,6 +255,7 @@ int main(int argc, char **argv)
   if (garg.Tcl_dir_given) {
     /* DLC */
     printf("not yet DLC\n");
+    exit(2);
   }
 
   if (garg.long_help_given) {

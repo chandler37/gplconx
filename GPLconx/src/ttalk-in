@@ -54,8 +54,10 @@ uhp set: 'p '
 uhp clone set: 'P '
 uhp isModelIdentifier
 uhp isParseError
-uhp unknownUnaryMessg isParseError
-uhp unknownUnaryMessg isModelIdentifier
+uhp unknownUnaryMessg
+ans isParseError
+uhp unknownUnaryMessg
+ans isModelIdentifier
 c1 := Color R: .3 G: .5 B: .7
 c1 R
 c1 G
@@ -263,3 +265,23 @@ l
 d drawingMethod: #bresenham
 l
 d drawingMethod
+(System at: #d) drawingMethod
+p := Parabola new
+p := Parabola focus: Point new line: Line new
+p line
+p focus
+p line: Line new
+p focus: p focus
+p line set: Line new
+(Float randomBetween: -1.0 and: 1.0) isFloat
+Float help
+Number help
+Point help
+Parabola help
+Line help
+Circle help
+Point random isPoint
+(Point random: 0.0) isPoint
+(Point random: 0.0) x
+(Line random: 0.0) isPoint
+(Line random: 0.0) A

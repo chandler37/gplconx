@@ -135,6 +135,9 @@ notNil predicate.
 
 extern int conx_count_line; /* DLC */
 
+#define ERROR_HEADER ""
+/* #define ERROR_HEADER "Syntax error: " */
+
 static void yyerror ( const char *error ) ;
 extern int yylex (void) ;
 
@@ -159,6 +162,13 @@ AssnList assnlist;
 
 
 %{
+  /* DLC this needs to show dd's message */
+#define HANDLE_ERROR(dd) \
+                  if (conxP_is_parse_error(dd)) { \
+                    yyerror(conxP_get_specific_parse_error(dd)); \
+                    YYERROR; \
+                  }
+
 #define HANDLE_KEYWORD_MESSAGE(resultptr, receiver, keymsg) \
    conxP_send_and_delete_keyword_message(resultptr, receiver, keymsg)
 
@@ -174,8 +184,8 @@ AssnList assnlist;
 static void local_yyprint(FILE *f, int toktype, YYSTYPE v);
 %}
 
-%token <id> TOK_SYMBOL TOK_ID TOK_ID_COLON TOK_STRING_LITERAL
-%token TOK_ERROR TOK_STMT_END
+%token <id> TOK_SYMBOL TOK_ID TOK_ID_COLON TOK_STRING_LITERAL TOK_ERROR
+%token TOK_STMT_END
 %token <r> TOK_REAL
 %token <l> TOK_LONG
 %right TOK_ASSIGN
@@ -191,7 +201,7 @@ static void local_yyprint(FILE *f, int toktype, YYSTYPE v);
 
 %%
 
-  /* TOK_ERROR is an error just because we don't handle it. */
+/* TOK_ERROR is a scanner error. */
 
 
 input:	/* empty */ {
@@ -231,28 +241,39 @@ input:	/* empty */ {
     */
 partofline:	/* empty */ { conxP_set_to_empty(&$$); }
 		| partofline '.' { $$ = $1; }
-		| partofline obj '.' { $$ = $2; }
+		| partofline obj '.' { $$ = $2; }/*
 		| partofline TOK_ERROR '.'
                         {
-                          conxP_set_to_new_err(&$$, "Scanner error, "
-                                               "unrecognized token");
+                          char s[MAX_ID_LENGTH + 80];
+                          (void) sprintf(s, "%s%s", "Scanner error -- ", $2);
+                          conxP_set_to_new_err(&$$, s);
+                          YYERROR;
                         }
 		| partofline error '.'
                         {
-                          conxP_handle_yyerror(&$$, "Syntax error: ", ";;");
-                        }
+                          conxP_handle_yyerror(&$$, ERROR_HEADER, ";;");
+                          } DLC */
 ;
 
 line:	partofline TOK_STMT_END { $$ = $1; }
-	| partofline obj TOK_STMT_END { $$ = $2; }
-	| partofline TOK_ERROR TOK_STMT_END
+	| partofline obj TOK_STMT_END {
+                              if (!conxP_is_parse_error($1))
+                                $$ = $2;
+                              else
+                                $$ = $1;
+        }
+	| partofline TOK_ERROR
                  {
-                   conxP_set_to_new_err(&$$, "Scanner error, unrecognized "
-                                        "token before newline.");
+                   char s[MAX_ID_LENGTH + 80];
+                   (void) sprintf(s, "%s%s", "Scanner error -- ", $2);
+                   yyerror(s);
+                   /* DLC delete                   conxP_set_to_new_err(&$$, s); */
+                   YYERROR;
                  }
 	| partofline error TOK_STMT_END
                  {
-                   conxP_handle_yyerror(&$$, "Syntax error: ", ";;");
+                   conxP_handle_yyerror(&$$, ERROR_HEADER, ";;");
+                   /* DLC decide:                  yyerrok; */
                  }
 ;
 
@@ -321,6 +342,7 @@ msgobj:	simpleobj
 	| simpleobj keymsg /* 'between:and:'-style message */
 		{
                   HANDLE_KEYWORD_MESSAGE(&$$, $1, &$2);
+                  HANDLE_ERROR($$);
                 }
 ;
 
@@ -329,6 +351,7 @@ cascrecv:	simpleobj
 			{ /* A cascaded message goes to $1, not the result of
                              applying the keyword message. */
 	                  HANDLE_KEYWORD_MESSAGE(&$$, $1, &$2);
+                          HANDLE_ERROR($$);
                           $$ = $1;
 	                }
 ;
@@ -339,22 +362,26 @@ carriedobj:	cascrecv ';' TOK_ID /* unary message */
 	              {
                         $$.receiver = $1;
 	                TRY_UNARY_MESSAGE(&($$.result), $1, $3);
+                        HANDLE_ERROR($$.result);
 	              }
 		| cascrecv ';' keymsg
 	              {
                         $$.receiver = $1;
 	                HANDLE_KEYWORD_MESSAGE(&($$.result), $1, &$3);
+                        HANDLE_ERROR($$.result);
 	              }
 		| carriedobj ';' keymsg
 	              {
                         $$.receiver = $1.receiver;
 	                HANDLE_KEYWORD_MESSAGE(&($$.result), $1.receiver,
                                                &$3);
+                        HANDLE_ERROR($$.result);
 	              }
 		| carriedobj ';' TOK_ID /* unary message */
 	              {
                         $$.receiver = $1.receiver;
 	                TRY_UNARY_MESSAGE(&($$.result), $1.receiver, $3);
+                        HANDLE_ERROR($$.result);
 	              }
 ;
 
@@ -388,6 +415,7 @@ simpleobj:	simpleobj TOK_ID /* unary message */
 {
         /* `id unarymessage unarymessage', e.g., runs through this twice. */
         TRY_UNARY_MESSAGE(&$$, $1, $2);
+        HANDLE_ERROR($$);
 }
 ;
 
@@ -429,7 +457,7 @@ void conxP_yyprint (FILE *f, int r, void *v)
   } else if (r == TOK_ASSIGN) {
     (void) fprintf(f, " :=");
   } else if (r == TOK_ERROR) {
-    (void) fprintf(f, " <Flex encountered an error.>");
+    (void) fprintf(f, " <Flex encountered an error, `%s'.>", value->id);
   } else {
     if (r <= 255) {
       if (r == '\n')

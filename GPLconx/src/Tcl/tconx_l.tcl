@@ -54,6 +54,9 @@ proc tconx_init_help_menu { m } {
 
 proc tconx_init_file_menu { m } {
     tconx_new_nameless_menu $m
+    $m add command -command {tconx_read_in_st_commands_ui} \
+        -label {Execute Text File of Commands} \
+        -underline 0
     $m add command -command {tconx_draw CONXCMD_RESETTHISONE} \
         -label {Clear windows, retain changes} -underline 1
     $m add command -command {tconx_draw CONXCMD_CLEAR} -label {Reset program} \
@@ -67,29 +70,56 @@ proc tconx_init_input_menu { m } {
     tconx_new_nameless_menu $m
 
     global tconx_globls
-    $m add checkbutton -label "Word-wrapping for parse results" -underline 0 \
-        -offvalue none -onvalue word -variable tconx_globls(prw_wrap) \
-        -command {tconx_set_prw_wrapping $tconx_globls(prw_wrap)}
     if ![info exists tconx_globls(prw_wrap)] {
         set tconx_globls(prw_wrap) word; #DLC .GPLconx entry
         tconx_set_prw_wrapping $tconx_globls(prw_wrap)
     }
+    $m add checkbutton -label "Word-wrapping for parse results" -underline 0 \
+        -offvalue none -onvalue word -variable tconx_globls(prw_wrap) \
+        -command {tconx_set_prw_wrapping $tconx_globls(prw_wrap)}
 
-    $m add command -label "Conic distance" -underline 0 \
-        -command {tconx_get_viz_input CONXCMD_GETCD CONXCMD_SHOWCD}
-    $m add command -label "Conic distance" -underline 0 \
-        -command {tconx_get_viz_input CONXCMD_GETCD CONXCMD_SHOWCD}
-    $m add command -label "Tolerance for slow method" -underline 0 \
-        -command {tconx_get_viz_input CONXCMD_GETTOL CONXCMD_SHOWTOL}
-    $m add command -label "Step size for drawing circles" -underline 0 \
-        -command {tconx_get_viz_input CONXCMD_GETTSTEP CONXCMD_SHOWTSTEP}
-    $m add command -label "Debug logging level" -underline 0 \
-        -command {tconx_get_viz_input CONXCMD_GETLOGLEVEL CONXCMD_SHOWLOGLEVEL}
-    # DLC
+#DLC radio button for button2 "mouse" menu
+
+    $m add separator
+    $m add checkbutton -label "Poincare Upper Half Plane" -underline 9 \
+        -command {tconx_mother_check puhp} -variable tconx_globls(check_puhp)
+    $m add checkbutton -label "Beltrami-Klein Disk" -underline 9 \
+        -command {tconx_mother_check kd} -variable tconx_globls(check_kd)
+    $m add checkbutton -label "Poincare Disk" -underline 0 \
+        -command {tconx_mother_check pd} -variable tconx_globls(check_pd)
+
+    if {![tconx_we_are_cxxconx]} {
+        $m add separator
+        $m add command -label "Conic distance" -underline 0 \
+            -command {tconx_get_viz_input CONXCMD_GETCD CONXCMD_SHOWCD}
+        $m add command -label "Tolerance for slow method" -underline 0 \
+            -command {tconx_get_viz_input CONXCMD_GETTOL CONXCMD_SHOWTOL}
+        $m add command -label "Step size for drawing circles" -underline 0 \
+            -command {tconx_get_viz_input CONXCMD_GETTSTEP CONXCMD_SHOWTSTEP}
+        $m add command -label "Debug logging level" -underline 0 \
+            -command {tconx_get_viz_input CONXCMD_GETLOGLEVEL CONXCMD_SHOWLOGLEVEL}
+    }
+    # DLC find a use for that widget at least!
 }
 
 proc tconx_init_choose_click_action_menu { m } {
     tconx_new_nameless_menu $m
+    
+    # Update the viz during mouse motion, not just when the mouse button is
+    # released, if the following is checked:
+    global tconx_globls
+    if ![info exists tconx_globls(update_during_mouse_motion)] {
+        set tconx_globls(update_during_mouse_motion) 1; # DLC config file entry
+        tconx_set_mouse_motion_matters $tconx_globls(update_during_mouse_motion)
+        tconx_cca CONXCMD_GETF1; # DLC config file entry
+    }
+    $m add checkbutton -label "Update during mouse motion" \
+        -offvalue 0 -onvalue 1 \
+        -variable tconx_globls(update_during_mouse_motion) \
+        -command {tconx_set_mouse_motion_matters $tconx_globls(update_during_mouse_motion)} \
+        -underline 0
+
+    $m add separator
     $m add command -label "Get Foci" \
         -command {tconx_cca CONXCMD_MGETFS} -underline 4
     $m add command -label "Get Focus 1" \

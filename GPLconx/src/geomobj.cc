@@ -25,6 +25,8 @@
 #include <config.h>
 #endif
 
+#include <math.h>
+
 extern "C" {
 #include "viewer.h"
 }
@@ -32,6 +34,32 @@ extern "C" {
 #include "hypmath.hh"
 #include "cassert.h"
 #include "geomobj.hh"
+#include "canvas.hh"
+
+#define DRAW_SINGLE_LINE(cv, A, B) \
+   do { \
+           cv.beginDraw(CConxCanvas::LINES); \
+           cv.drawVertex(A); \
+           cv.drawVertex(B); \
+           cv.endDraw(); \
+   } while (0)
+
+
+// The rest of the code doesn't want +INF or NaN, it wants a large double.
+// This is within an order of magnitude of the largest double, which could
+// be found by enquire or paranoia.  <float.h> would have this as DBL_MAX.
+// We don't bother with all that since it is not standard and since
+// this is plenty big:
+#define CCONX_INFINITY 1.8e+307
+// On x86, I think 1.7976931348623157e+308 is the correct value.
+
+
+// So that the bit-flags 0, a=CONX_MODEL2BIT(CONX_POINCARE_DISK),
+// b=CONX_MODEL2BIT(CONX_KLEIN_DISK),
+// c=CONX_MODEL2BIT(CONX_POINCARE_UHP),
+// a|b, a|c, b|c, and a|b|c are all distinct, we define:
+#define CONX_MODEL2BIT(modl) (1 << modl)
+
 
 CF_INLINE
 CConxPoint::CConxPoint()
@@ -221,6 +249,20 @@ ostream &CConxPoint::printOn(ostream &o, ConxModlType modl) const
   o << conx_modelenum2short_string(modl) << "(" << getX(modl) << ", "
     << getY(modl) << ")";
   return o;
+}
+
+NF_INLINE
+void CConxPoint::drawGarnishOn(CConxCanvas &cv) const
+{
+  // do nothing
+}
+
+NF_INLINE
+void CConxPoint::drawBresenhamOn(CConxCanvas &cv) const
+{
+  cv.beginDraw(cv.POINTS);
+  cv.drawVertex(getX(cv.getModel()), getY(cv.getModel()));
+  cv.endDraw();
 }
 
 CF_INLINE
@@ -506,6 +548,137 @@ double CConxLine::getPUHP_R() const
   return y[CONX_POINCARE_UHP];
 }
 
+NF_INLINE
+void CConxLine::drawGarnishOn(CConxCanvas &cv) const
+{
+  // DLC draw the points.
+}
+
+NF_INLINE
+void CConxLine::drawBresenhamOn(CConxCanvas &cv) const
+{
+  // We use only one method, since the lines are Euclidean arcs or lines.
+  ConxModlType modl = cv.getModel();
+
+  if (modl == CONX_KLEIN_DISK) {
+    if (isLineSegment()) {
+      DRAW_SINGLE_LINE(cv, getA().getPt(modl), getB().getPt(modl));
+    } else {
+      // Draw a line across the unit circle.
+      DRAW_SINGLE_LINE(cv, getKleinEndPoint1(), getKleinEndPoint2());
+    }
+  } else {
+    // Draw a circle for most lines, a straight line for the rare few.
+    Pt cc; // the circle's center (in most cases)
+    double circleRadius;
+    if (modl == CONX_POINCARE_UHP) {
+      if (isTypeI()) {
+        if (isLineSegment()) {
+          DRAW_SINGLE_LINE(cv, getA().getPt(modl), getB().getPt(modl));
+        } else {
+          double midx = (getA().getX(modl) + getB().getX(modl)) / 2.0;
+          // DLC could clip
+          Pt p1, p2;
+          p1.x = p2.x = midx;
+          p1.y = greater(0.0, cv.getXmin());
+          p2.y = cv.getXmax();
+          DRAW_SINGLE_LINE(cv, p1, p2);
+        }
+      } else {
+        cc.x = getPUHP_A();
+        cc.y = 0.0;
+        circleRadius = getPUHP_R();
+        if (isLineSegment()) {
+          // from conxp_graphsegment()
+          Pt A = getA().getPt(modl);
+          Pt B = getB().getPt(modl);
+          double min, max, ax;
+          double r = circleRadius;
+          min=asin(B.y/r); /* B.y=r*sin(min) */
+          max=asin(A.y/r);
+          ax=cc.x+r*cos(min);
+          if ((myabs(ax-A.x)>VERTICALNESS)&&(myabs(ax-B.x)>VERTICALNESS))
+            min=M_PI-min;
+          ax=cc.x+r*cos(max);
+          if ((myabs(ax-A.x)>VERTICALNESS)&&(myabs(ax-B.x)>VERTICALNESS))
+            max=M_PI-max;
+          if (myabs(min-max)<VERTICALNESS)
+            min=M_PI-min;
+          swap(&min, &max);
+          cv.drawArc(cc, circleRadius, min, max);
+        } else {
+          // Draw a semicircle in the upper half plane
+          cv.drawTopSemiCircle(cc, circleRadius);
+        }
+      }
+    } else {
+      assert(modl == CONX_POINCARE_DISK);
+      cc.x = getPD_Cx();
+      cc.y = getPD_Cy();
+      circleRadius = getPD_R(); // DLC test to see if we should just
+                                  // draw a point because it's too small.
+      if (circleRadius == DIAMETER) {
+        // Draw a diameter, i.e. a line with
+        // slope m = cc.y/cc.x and y-intercept 0
+        if (isLineSegment()) {
+          // Just draw a straight line between the two points.
+          DRAW_SINGLE_LINE(cv, getA().getPt(modl), getB().getPt(modl));
+        } else {
+          Pt endPt1, endPt2;
+          // Draw a straight line across the unit circle.  We could use
+          // existing math functionality, but getKleinEndPoint?'s calculation
+          // and conversion is a lot of overhead.
+
+          /*
+            y = cc.y/cc.x * x                // because this is a diameter
+            y^2 = 1-x^2
+            (cc.y^2/cc.x^2 * x^2) + x^2 = 1
+            x^2 = 1 / (1+(cc.y/cc.x)^2)
+          */
+
+          endPt1.x = sqrt(1.0 / (1.0+sqr(cc.y/cc.x)));
+          endPt2.x = -endPt1.x;
+          endPt1.y = sqrt(1.0-sqr(endPt1.x));
+          endPt2.y = sqrt(1.0-sqr(endPt2.x));
+          DRAW_SINGLE_LINE(cv, endPt1, endPt2);
+        }
+      } else {
+        // Draw an arc of the circle orthogonal to the unit circle.
+        double t1, t2;
+        Pt oc1, oc2;
+
+        if (isLineSegment()) {
+          oc1 = getA().getPt(modl);
+          oc2 = getB().getPt(modl);
+        } else {
+          oc1 = getPoincareDiskEndPoint1();
+          oc2 = getPoincareDiskEndPoint2();
+        }
+
+        // from conxpd_graphc():
+        if (oc1.y<cc.y) {
+          t1=2.0*M_PI-acos((oc1.x-cc.x)/circleRadius);
+        } else {
+          t1=acos((oc1.x-cc.x)/circleRadius);
+        }
+        if (oc2.y<cc.y) {
+          t2=2.0*M_PI-acos((oc2.x-cc.x)/circleRadius);
+        } else {
+          t2=acos((oc2.x-cc.x)/circleRadius);
+        }
+        if (t1>t2) {
+          swap(&t1, &t2);
+        }
+        if (t2-t1>M_PI) {
+          t1+=2.0*M_PI;
+          swap(&t1, &t2);
+        }
+        cv.drawArc(cc, circleRadius, t1, t2);
+      }
+    } // pd treatment
+  } // uhp and pd treatment
+}
+
 CF_INLINE
 CConxGeomObj::CConxGeomObj()
 {
@@ -604,13 +777,16 @@ void CConxParabola::setLine(const CConxLine &o)
 }
 
 NF_INLINE
-void CConxParabola::getPointOn(CConxPoint *LB, double computol) const
+int CConxParabola::getPointOn(CConxPoint *LB, double computol) const
+// Returns 0 on success, or 1 if the math doesn't quite work out, such as
+// if the point or the line is not in the plane.
 {
   if (!isValid) {
     Pt tLB, tRB;
-    conxhm_p_getPstarted(&tLB, &tRB, getFocus().getPt(CONX_POINCARE_UHP),
-                         getLine().getPUHP_A(), getLine().getPUHP_R(),
-                         computol);
+    if (conxhm_p_getPstarted(&tLB, &tRB, getFocus().getPt(CONX_POINCARE_UHP),
+                             getLine().getPUHP_A(), getLine().getPUHP_R(),
+                             computol))
+      return 1;
     assert(tLB.x == tRB.x && tLB.y == tRB.y);
     pLB.setPoint(tLB, CONX_POINCARE_UHP);
     isValid = TRUE;
@@ -621,6 +797,42 @@ void CConxParabola::getPointOn(CConxPoint *LB, double computol) const
   } else {
     *LB = pLB;
   }
+  return 0;
+}
+
+NF_INLINE
+void CConxParabola::drawBresenhamOn(CConxCanvas &cv) const
+{
+  // DLC this is nearly the same for parabolas, hyp/ells, and eqdistcurves, so
+  // implement only once!
+  CConxPoint lb, rb; // DLC static for a slight speed increase.
+
+  if (getPointOn(&lb)) return; // DLC should the user be able to find out
+  // about this if she wants to?
+
+  cv.drawByBresenham(lb, lb, definingFunctionWrapper, this);
+}
+
+NF_INLINE
+void CConxParabola::drawGarnishOn(CConxCanvas &cv) const
+{
+  // DLC draw the line and the focus
+}
+
+NF_INLINE
+void CConxHypEllipse::drawBresenhamOn(CConxCanvas &cv) const
+{
+  // DLC this is the same for parabolas, hyp/ells, and eqdistcurves, so
+  // implement only once!
+  CConxPoint lb, rb; // DLC static for a slight speed increase.
+  getPointsOn(&lb, &rb);
+  cv.drawByBresenham(lb, rb, definingFunctionWrapper, this);
+}
+
+NF_INLINE
+void CConxHypEllipse::drawGarnishOn(CConxCanvas &cv) const
+{
+  // DLC draw the foci (and the line between them?)
 }
 
 NF_INLINE
@@ -661,11 +873,15 @@ void CConxHypEllipse::getPointsOn(CConxPoint *lb, CConxPoint *rb) const
 }
 
 NF_INLINE
-int CConxHypEllipse::isEllipse() const
-// Returns non-zero if this is an ellipse, zero if this is a hyperbola.
+Boole CConxHypEllipse::isEllipse() const
+// Returns TRUE if this is an ellipse, FALSE if this is a hyperbola.
 {
-  return (getScalar() > conxp_distAB(getFocus1().getPt(CONX_POINCARE_UHP),
-                                     getFocus2().getPt(CONX_POINCARE_UHP)));
+  if (!isEllipseIsValid) {
+    isEllips = (getScalar()
+                  > conxp_distAB(getFocus1().getPt(CONX_POINCARE_UHP),
+                                 getFocus2().getPt(CONX_POINCARE_UHP)));
+  }
+  return isEllips;
 }
 
 PF_INLINE
@@ -748,6 +964,20 @@ ostream &CConxEqDistCurve::printOn(ostream &o, ConxModlType modl) const
   return o;
 }
 
+NF_INLINE
+void CConxEqDistCurve::drawGarnishOn(CConxCanvas &cv) const
+{
+  // DLC draw the line and possibly some perpendicular segments?
+}
+
+NF_INLINE
+void CConxEqDistCurve::drawBresenhamOn(CConxCanvas &cv) const
+{
+  CConxPoint lb, rb; // DLC static for a slight speed increase.
+  getPointsOn(&lb, &rb, cv.getYmin(), cv.getYmax());
+  cv.drawByBresenham(lb, rb, definingFunctionWrapper, this);
+}
+
 CF_INLINE
 CConxCircle::CConxCircle()
 {
@@ -810,6 +1040,71 @@ ostream &CConxCircle::printOn(ostream &o, ConxModlType modl) const
   getCenter().printOn(o, modl);
   o << ", radius=" << getRadius() << ")";
   return o;
+}
+
+NF_INLINE
+void CConxCircle::drawGarnishOn(CConxCanvas &cv) const
+{
+  // DLC draw the center and possibly some spokes.
+}
+
+NF_INLINE
+void CConxCircle::drawBresenhamOn(CConxCanvas &cv) const
+{
+  ConxModlType modl = cv.getModel();
+
+  // The Poincare UHP and Poincare Disk
+  // circles are Euclidean circular, but their Euclidean center is not
+  // the same as the true, hyperbolic center.  We convert and draw the
+  // Euclidean circles.
+
+  // DLC implement like we do in conx_quickdraw_circle()
+  Pt uhpCenter = getCenter().getPt(CONX_POINCARE_UHP);
+  double r = getRadius();
+  Pt uhpEuclideanCenter = { uhpCenter.x, myabs(uhpCenter.y * cosh(r)) };
+  // DLC explain this math in terms of the uhp distance metric.
+  double uhpEuclideanRadius = myabs(uhpCenter.y * sinh(r));
+  if (modl == CONX_POINCARE_UHP) {
+    cv.drawCircle(uhpEuclideanCenter, uhpEuclideanRadius);
+  } else {
+    // The Klein disk circle is not Euclidean-circular, but the Poincare Disk
+    // circle is. Luckily, it is roughly the same number of
+    // pixels as the Euclidean-circular circle in the Poincare Disk,
+    // so we can just find the
+    // points that correspond to those pixels, convert them to Klein Disk
+    // coordinates, and then draw them.  We might want to zoom in
+    // (xmin, xmax, ymin, ymax) on the Poincare disk so that we draw a few
+    // more points than we need, else we'll need to do
+    // a line strip and the accuracy may not be as high as you'd like.
+
+    // For now, we do the simpler trick of calculating the HG points on the
+    // Poincare UHP circle via the Euclidean equations
+    // ( x=uhpEuclideanCenter.x+uhpEuclideanRadius*cos(theta),
+    //   y=uhpEuclideanCenter.y+uhpEuclideanRadius*sin(theta)  )
+    // and then converting these uhp points to Klein disk or Poincare disk
+    // points.  To avoid the zooming in and out and still get a good-looking
+    // circle, we just use a small theta increment, smaller than is needed.
+
+    // DLC for greater efficiency, calculate the Euclidean center and
+    // radius of the Poincare Disk circle.  For now, we do what we do in
+    // the Klein disk.
+    
+    #define NUM_POINTS_PER_CIRCLE 1500.0
+    // A 1500-gon is going to be drawn, which will look pretty much like
+    // a smooth curve.
+
+    double thetaIncr = M_PI * 2.0 / NUM_POINTS_PER_CIRCLE;
+    cv.beginDraw(cv.LINE_STRIP);
+    CConxPoint pointOnTheCircle;
+    for (double theta = 0.0; theta < M_PI * 2.0; theta += thetaIncr) {
+      pointOnTheCircle.setPoint( \
+                         uhpEuclideanCenter.x+uhpEuclideanRadius*cos(theta), \
+                         uhpEuclideanCenter.y+uhpEuclideanRadius*sin(theta), \
+                         CONX_POINCARE_UHP);
+      cv.drawVertex(pointOnTheCircle.getPt(modl));
+    }
+    cv.endDraw();
+  }
 }
 
 OOLTLTI_INLINE PBM_STREAM_OUTPUT_SHORTCUT(CConxPoint)

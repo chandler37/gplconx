@@ -21,6 +21,11 @@
 # We must catch any errors in any of the Tcl source files here:
 if [catch {
 
+proc tconx_is_debug_mode { } {
+    global tconx_globls
+    return $tconx_globls(DebuggingOutput)
+}
+
 proc tconx_source { filename } {
 # DLC `Tcl/' is a kludge.
     uplevel "tconx_source_i [list Tcl/$filename] 1 1"
@@ -61,7 +66,9 @@ proc tconx_source_i { filename allow_dbg in_tcl_source_dir } {
 
 # DLC allow --Tcl-code-is-in=/usr/local/GPLconx/mojo
 tconx_source_absolute tconx_d.tcl
-DebugOn 1
+if {[tconx_is_debug_mode]} {
+    DebugOn 1
+}
 Debugloc "Beginning tconx's Tcl Initialization"
 
 wm withdraw .
@@ -87,6 +94,7 @@ set auto_noexec \
 # Matches the big `if [catch]':
 } toplevel_error] {
     puts "Error in tconx.tcl;  tconx init is flawed.\n$toplevel_error.\n"
+    tconx_verbosity [tconx_verbosity_level LOGG_OFF]
     exit 2
 }
 unset toplevel_error; # Clean up global namespace.

@@ -52,7 +52,7 @@ CConxString CConxMetaParser::getLastParseResult() const
 }
 
 NF_INLINE
-int CConxMetaParser::parse(const char *s)
+long CConxMetaParser::parse(const char *s)
 // s == NULL causes a nop
 {
   void *scanHandle = NULL;
@@ -62,7 +62,7 @@ int CConxMetaParser::parse(const char *s)
     if (scanHandle == NULL)
       throw "scanHandle cannot be NULL -- out of memory?";
     initializeClsMgr(&m);
-    int retval = innerParse();
+    long retval = innerParse();
     yy_delete_buffer(scanHandle);
     return retval;
   }
@@ -70,16 +70,26 @@ int CConxMetaParser::parse(const char *s)
 }
 
 NF_INLINE
-int CConxMetaParser::innerParse()
+long CConxMetaParser::innerParse()
 {
+  size_t numErrBefore = m.getNumParsingErrors();
+  int rc;
   yydebug = dbg;
   conxP_change_manager(&m);
   conx_count_line = 0;
-  return yyparse();
+  rc = yyparse();
+  if (rc) {
+    cerr << "DLC No, it is not impossible to have a fatal parse error.  Alert maintainer.\n";
+    return -1; // fatal error, isn't this impossible.
+  }
+  size_t nen = m.getNumParsingErrors();
+  assert(nen >= numErrBefore);
+  lastParseWasError = (nen > numErrBefore);
+  return (long) (nen - numErrBefore);
 }
 
 NF_INLINE
-int CConxMetaParser::parse(FILE *f)
+long CConxMetaParser::parse(FILE *f)
 {
   if (f != NULL) {
     yyrestart(f);
@@ -91,6 +101,32 @@ NF_INLINE
 void CConxMetaParser::restoreStartupObjectWorld()
 {
   m.clear();
+}
+
+CF_INLINE
+CConxMetaParser::CConxMetaParser(const CConxMetaParser &o)
+  : CConxObject(o)
+{
+  dbg = o.dbg;
+  lastParseWasError = o.lastParseWasError;
+  // DLC m = o.m
+}
+
+NF_INLINE
+CConxMetaParser &CConxMetaParser::operator=(const CConxMetaParser &o)
+{
+  (void) CConxObject::operator=(o);
+  dbg = o.dbg;
+  lastParseWasError = o.lastParseWasError;
+  // DLC m = o.m
+  return *this;
+}
+
+NF_INLINE
+void CConxMetaParser::initializeClsMgr(CConxClsManager *m)
+{
+  assert(m != NULL);
+  m->firstInit();  // it doesn't hurt to call firstInit() repeatedly.
 }
 
 OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxMetaParser)

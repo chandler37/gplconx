@@ -41,6 +41,22 @@
 Boole CConxGLCanvas::isInitialized = FALSE;
 
 NF_INLINE
+void CConxGLCanvas::drawByBresenham(const CConxPoint &lb, const CConxPoint &rb,
+                                    DFN *f, const CConxSimpleArtist *sa)
+{
+  savedFoo = f;
+  savedFooArg = sa;
+  // DLC CONX_BEGIN_DISP_LIST(dl);
+  assert(sa != NULL);
+  conx_bresenham(lb.getPt(getModel()), rb.getPt(getModel()), bresMetric, this,
+                 getPixelWidth(), getPixelHeight(),
+                 bresKeepGoing, this, bresTrace);
+  savedFoo = NULL;
+  savedFooArg = NULL;
+  // DLC  CONX_END_DISP_LIST(dl);
+}
+
+NF_INLINE
 void CConxGLCanvas::initDraw()
 {
   if (!isInitialized) {
@@ -169,7 +185,7 @@ void CConxGLCanvas::setPointSize(double pSize)
 }
 
 NF_INLINE
-void CConxGLCanvas::flush()
+void CConxGLCanvas::flushQueue()
 // Causes the drawing to be presented to the user.  Call after endDraw()
 {
   glFlush();
@@ -209,5 +225,95 @@ void CConxGLCanvas::drawArc(double x, double y, double r, double t0, double t1)
   endDraw();
 }
 
+CF_INLINE
+CConxGLCanvas::CConxGLCanvas(const CConxGLCanvas &o)
+  : CConxCanvas(o)
+{
+  // Just clears all our stored drawings since we don't share them between
+  // instances, hence it's the same as DLC...
+  uninitializedCopy(o);
+}
+
+NF_INLINE
+CConxGLCanvas &CConxGLCanvas::operator=(const CConxGLCanvas &o)
+{
+  // Just clears all our stored drawings since we don't share them between
+  // instances.
+  (void) CConxCanvas::operator=(o);
+  deleteAllSD();
+  uninitializedCopy(o);
+  return *this;
+}
+
+CF_INLINE
+CConxGLCanvas::~CConxGLCanvas()
+{
+  deleteAllSD();
+}
+
+NF_INLINE
+void CConxGLCanvas::uninitializedCopy(const CConxGLCanvas &o)
+{
+  // do NOT share stored drawings.
+  lowestSD = 3;
+  highestSD = 2;
+  // Do not allow initDraw to work for both. DLC?
+}
+
+NF_INLINE
+void CConxGLCanvas::bresVertex2(double a, double b, void *kArg)
+{
+  assert(kArg != NULL);
+  CConxGLCanvas *glc = (CConxGLCanvas *) kArg;
+  glc->drawVertex(a, b);
+}
+
+NF_INLINE
+double CConxGLCanvas::bresMetric(Pt middle, void *t)
+{
+  assert(t != NULL);
+  CConxGLCanvas *glc = (CConxGLCanvas *)t;
+  assert(glc->savedFoo != NULL);
+  assert(glc->savedFooArg != NULL);
+  static CConxPoint pt;
+  pt.setPoint(middle, glc->getModel());
+  return (*glc->savedFoo)(glc->savedFooArg, pt);
+  // DLC static point for a speed-up that makes debugging memory alloc a bit
+  // harder.
+}
+
+NF_INLINE
+void CConxGLCanvas::bresTrace(Pt middle, ConxDirection last,
+                              double dw, double dh,
+                              ConxMetric *func, void *fArg,
+                              ConxContinueFunc *keepgoing, void *kArg)
+{
+  assert(kArg != NULL);
+  CConxGLCanvas *glc = (CConxGLCanvas *) kArg;
+  glc->beginDraw(POINTS);
+  conx_bres_trace(middle, last, dw, dh, func, fArg, keepgoing, kArg,
+                  bresVertex2, kArg);
+  glc->endDraw();
+}
+
+NF_INLINE
+int CConxGLCanvas::bresKeepGoing(Pt middle, Pt oldmiddle, void *t)
+{
+  assert(t != NULL);
+  CConxGLCanvas *glc = (CConxGLCanvas *) t;
+  ConxModlType saved_hgmodel = glc->getModel();
+  return (((saved_hgmodel != CONX_POINCARE_UHP)
+           ? (sqr(middle.x) + sqr(middle.y) < 1.0)
+           /* DLC what about xmin and xmax?  We can save time but may
+              have to reenter if we treat them correctly, the same
+              troubles as in the Poincare UHP. */
+           : ((middle.x < glc->getXmax())
+              && (middle.x > glc->getXmin())
+              && (middle.y < glc->getYmax())
+              && (middle.y > glc->getYmin())))
+          && (myabs(middle.x - oldmiddle.x) + myabs(middle.y - oldmiddle.y)
+              > ARBITRARILYSMALL)
+          );
+}
 
 OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxGLCanvas)

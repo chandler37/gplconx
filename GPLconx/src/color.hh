@@ -46,17 +46,8 @@ public:
 public:
   CConxColor();
   CConxColor(double t1, double t2, double t3, ColorType ct = RGB);
-  CConxColor(const CConxColor &o)
-    : CConxObject(o)
-  {
-    uninitializedCopy(o);
-  }
-  CConxColor &operator=(const CConxColor &o)
-  {
-    (void) CConxObject::operator=(o);
-    uninitializedCopy(o);
-    return *this;
-  }
+  CConxColor(const CConxColor &o);
+  CConxColor &operator=(const CConxColor &o);
   
   void setRGB(double R, double G, double B);
   void setHSV(double H, double S, double V);
@@ -66,17 +57,7 @@ public:
   double getH() const;
   double getS() const;
   double getV() const;
-  double get(Component c) const
-  {
-    switch (c) {
-    case H: return getH();
-    case S: return getS();
-    case V: return getV();
-    case R: return getR();
-    case G: return getG();
-    default: assert(B == c); return getB();
-    }
-  }
+  double get(Component c) const;
   Boole equals(const CConxColor &c, double tol = EQUALITY_TOL) const;
   ostream &printOn(ostream &o) const;
 
@@ -93,17 +74,7 @@ protected:
 private:
   void convertToRGB() const;
   void convertToHSV() const;
-  void uninitializedCopy(const CConxColor &o)
-  {
-    r = o.r;
-    g = o.g;
-    b = o.b;
-    rgbIsValid = o.rgbIsValid;
-    h = o.h;
-    s = o.s;
-    v = o.v;
-    hsvIsValid = o.hsvIsValid;
-  }
+  void uninitializedCopy(const CConxColor &o);
 
 private:
   mutable double r, g, b;
@@ -143,47 +114,11 @@ public:
   CConxNamedColor(ColorName cn) { setColorByName(cn); }
   CConxNamedColor(double t1, double t2, double t3, ColorType ct = RGB)
     : CConxColor(t1, t2, t3, ct) { }
-  CConxNamedColor &operator=(const CConxColor &c)
-  {
-    (void) CConxColor::operator=(c);
-    return *this;
-  }
+  CConxNamedColor &operator=(const CConxColor &c);
 
-  Boole isNamed(ColorName cn) const
-  {
-    CConxNamedColor isItMe(cn);
-    return (equals(isItMe, 0.0)); // Do we need to account for a tiny error? DLC test, think and see.
-  }
+  Boole isNamed(ColorName cn) const;
 
-  void setColorByName(ColorName cn)
-  {
-    switch (cn) {
-    case EQDISTCURVE:
-    case GREEN:
-      setRGB(0.0, 1.0, 0.3); break;
-    case BLACK:
-      setRGB(0.0, 0.0, 0.0); break;
-    case LINE:
-    case LINESEG:
-    case BLUE:
-      setRGB(0.5, 0.5, 1.0); break;
-    case POINT:
-    case RED:
-      setRGB(1.0, 0.0, 0.0); break;
-    case PARABOLA:
-    case CYAN:
-      setRGB(0.0, 1.0, 1.0); break;
-    case ELLIPSE:
-    case YELLOW:
-      setRGB(1.0, 1.0, 0.0); break;
-    case CIRCLE:
-    case MAGENTA:
-      setRGB(1.0, 0.0, 1.0); break;
-    default:
-      assert(cn == WHITE);
-      setRGB(1.0, 1.0, 1.0); break;
-    }
-  }
+  void setColorByName(ColorName cn);
 }; // class CConxNamedColor
 
 

@@ -118,7 +118,7 @@ static void displayswitch(ConxMenuChoice choice, int *jc, ConxModlType modl);
 static void conxpd_disp(int icount, int *jcount, ConxModlType modl);
 static void kdisp(int icount, int *jcount, ConxModlType modl);
 static void pdisp(int icount, int *jcount, ConxModlType modl);
-inline static int bres_keep_going(Pt middle, Pt oldmiddle);
+inline static int bres_keep_going(Pt middle, Pt oldmiddle, void *ignored);
 
 /* For conx_gl_longway: */
 inline static double conxp_circle(Pt X, void *ignored);
@@ -791,7 +791,7 @@ int conx_mouse(ConxModlType mdl, ConxMouseChoice cmc, int x, int y,
   saved_hgmodel = mdl; /* DLC I think this is unnecessary since only the
                           Bresenham keep_going function uses it. */
 
-  LOGGG1(LOGG_QUICK, "\nmodel %s\n", conx_modelenum2short_string(mdl));
+  LOGGG1(LOGG_QUICK, "\nconx_mouse(): model %s\n", conx_modelenum2short_string(mdl));
   if (cmc == CONXMOUSE_DOWN) {
     conx_screen2model(x, y, xmin[mdl], xmax[mdl], ymin[mdl], ymax[mdl],
                       win_height, &held);
@@ -1220,7 +1220,7 @@ int conx_menufunc(ConxMenuChoice a, ConxModlType modl, int win_height)
   return rettval;
 }
 
-int bres_keep_going(Pt middle, Pt oldmiddle)
+int bres_keep_going(Pt middle, Pt oldmiddle, void *ignored)
 /* Bresenham method requires this to know when to stop. */
 {
   return (((saved_hgmodel != CONX_POINCARE_UHP)

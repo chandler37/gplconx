@@ -24,6 +24,7 @@ proc tconx_do_most_sourcing { } {
     tconx_source tconxt.ui.tcl;
     tconx_source tconx_h.tcl;
     tconx_source tconx_b.tcl;
+    tconx_source tconx_c.tcl;
     tconx_source tconx_w.tcl;
     tconx_source simple.ui.tcl;
     tconx_source text.ui.tcl;
@@ -44,6 +45,7 @@ proc sync { } {
     tconx_source tconx_d.tcl;
     tconx_source tconx_h.tcl;
     tconx_source tconx_b.tcl;
+    tconx_source tconx_c.tcl;
     tconx_source tconx_w.tcl;
     tconx_source simple.ui.tcl;
     tconx_source text.ui.tcl;

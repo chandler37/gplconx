@@ -341,4 +341,90 @@ void CConxColor::calc_hsv_to_rgb(double *rw_h, double *rw_s, double *rw_v)
     }
 }
 
+NF_INLINE
+void CConxNamedColor::setColorByName(ColorName cn)
+{
+  switch (cn) {
+  case EQDISTCURVE:
+  case GREEN:
+    setRGB(0.0, 1.0, 0.3); break;
+  case BLACK:
+    setRGB(0.0, 0.0, 0.0); break;
+  case LINE:
+  case LINESEG:
+  case BLUE:
+    setRGB(0.5, 0.5, 1.0); break;
+  case POINT:
+  case RED:
+    setRGB(1.0, 0.0, 0.0); break;
+  case PARABOLA:
+  case CYAN:
+    setRGB(0.0, 1.0, 1.0); break;
+  case ELLIPSE:
+  case YELLOW:
+    setRGB(1.0, 1.0, 0.0); break;
+  case CIRCLE:
+  case MAGENTA:
+    setRGB(1.0, 0.0, 1.0); break;
+  default:
+    assert(cn == WHITE);
+    setRGB(1.0, 1.0, 1.0); break;
+  }
+}
+
+NF_INLINE
+Boole CConxNamedColor::isNamed(ColorName cn) const
+{
+  CConxNamedColor isItMe(cn);
+  return (equals(isItMe, 0.0)); // Do we need to account for a tiny error? DLC test, think and see.
+}
+
+NF_INLINE
+CConxNamedColor &CConxNamedColor::operator=(const CConxColor &c)
+{
+  (void) CConxColor::operator=(c);
+  return *this;
+}
+
+NF_INLINE
+void CConxColor::uninitializedCopy(const CConxColor &o)
+{
+  r = o.r;
+  g = o.g;
+  b = o.b;
+  rgbIsValid = o.rgbIsValid;
+  h = o.h;
+  s = o.s;
+  v = o.v;
+  hsvIsValid = o.hsvIsValid;
+}
+
+NF_INLINE
+double CConxColor::get(Component c) const
+{
+  switch (c) {
+  case H: return getH();
+  case S: return getS();
+  case V: return getV();
+  case R: return getR();
+  case G: return getG();
+  default: assert(B == c); return getB();
+  }
+}
+
+NF_INLINE
+CConxColor &CConxColor::operator=(const CConxColor &o)
+{
+  (void) CConxObject::operator=(o);
+  uninitializedCopy(o);
+  return *this;
+}
+
+CF_INLINE
+CConxColor::CConxColor(const CConxColor &o)
+  : CConxObject(o)
+{
+  uninitializedCopy(o);
+}
+
 OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxColor)

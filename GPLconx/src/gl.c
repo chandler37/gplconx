@@ -75,7 +75,7 @@ void conx_gl_vertex2(double a, double b, void *ignored);
 inline static
 void conx_gl_bres_trace(Pt middle, ConxDirection last, double dw, double dh,
                         ConxMetric *func, void *fArg,
-                        ConxContinueFunc *keepgoing);
+                        ConxContinueFunc *keepgoing, void *kArg);
 
 
 void conx_set_drawing_color(ConxColorEnum color)
@@ -116,10 +116,10 @@ void conx_gl_longway(ConxMetric *test, ConxModlType modl, double tlrance,
 
 void conx_gl_bres_trace(Pt middle, ConxDirection last, double dw, double dh,
                         ConxMetric *func, void *fArg,
-                        ConxContinueFunc *keepgoing)
+                        ConxContinueFunc *keepgoing, void *kArg)
 {
   glBegin(GL_POINTS);
-  conx_bres_trace(middle, last, dw, dh, func, fArg, keepgoing,
+  conx_bres_trace(middle, last, dw, dh, func, fArg, keepgoing, kArg,
                   conx_gl_vertex2, NULL);
   glEnd();
   FLUSH();
@@ -129,9 +129,12 @@ void conx_gl_bresenham(ConxBresenhamStarter *getB, ConxMetric *func,
                        void *fArg, double delta_x, double delta_y,
                        ConxContinueFunc *keepgoing, ConxDispList dl)
 {
+  Pt LB, RB;
   CONX_BEGIN_DISP_LIST(dl);
-  conx_bresenham(getB, func, fArg,
-                 delta_x, delta_y, keepgoing, conx_gl_bres_trace);
+  assert(getB != NULL);
+  (*getB)(&LB, &RB);
+  conx_bresenham(LB, RB, func, fArg,
+                 delta_x, delta_y, keepgoing, NULL, conx_gl_bres_trace);
   green();
   CONX_END_DISP_LIST(dl);
 }

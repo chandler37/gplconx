@@ -95,11 +95,20 @@ int main(int argc, char **argv)
   if (garg.Tcl_dir_given) {
     /* DLC */
     cout << "not yet DLC\n";
+    exit(2);
   }
 
   if (garg.long_help_given) {
     CConxToglObj::printLongHelp();
     exit(TCONX_EXIT_LONG_HELP);
+  }
+
+  if (garg.debug_given) {
+    loglevel = 801;
+    CConxToglObj::setDebugMode(TRUE);
+  } else {
+    CConxToglObj::setDebugMode(FALSE);
+    loglevel = 0;
   }
 
   if (garg.inputs_num > 0) {

@@ -50,7 +50,7 @@ extern "C" {
 #include <iostream.h>
 #define LLL_ON() (loglevel > LOGG_CXX_LOC)
 #define LLL1_ON() (loglevel > LOGG_CXX_LOC1)
-#define LLL(s) if (LLL_ON()) cout << s << endl << flush
+#define LLL(tmpSMsg) if (LLL_ON()) cout << tmpSMsg << endl << flush
 
 #include <stdlib.h>
 #define CXXFATAL(s) do { cerr << PACKAGE " fatal error:\n" << s; exit(1); } while(0)
@@ -107,14 +107,14 @@ private:
 // CCONX_METHOD_STRING won't work very well for class CConxString, of course!
 // Use like `LLL(CCONX_COUT_METHOD("CConxString()");', as MMM("CConxString()")
 // does.
-#define CCONX_METHOD_STRING(m) (CConxString(this->className()) + "::" + (m))
-#define CCONX_COUT_METHOD(m) this->className() << "::" << (m)
-#define MMM(m) LLL(CCONX_COUT_METHOD(m))
+#define CCONX_METHOD_STRING(tmpMMsg) (CConxString(this->className()) + "::" + (tmpMMsg))
+#define CCONX_COUT_METHOD(tmpMMsg) this->className() << "::" << (tmpMMsg)
+#define MMM(tmpMMsg) LLL(CCONX_COUT_METHOD(tmpMMsg))
 
 // For bug-free code that is used often, use these so debugging output is
 // not so cluttered:
-#define LLL1(s) if (LLL1_ON()) cout << s << endl << flush
-#define MMM1(m) LLL1(CCONX_COUT_METHOD(m))
+#define LLL1(tmpSMsg) if (LLL1_ON()) cout << tmpSMsg << endl << flush
+#define MMM1(tmpMMsg) LLL1(CCONX_COUT_METHOD(tmpMMsg))
 
 #define OOM() CXXFATAL("OUT OF MEMORY\n")
 

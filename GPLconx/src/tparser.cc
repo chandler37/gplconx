@@ -36,6 +36,8 @@
 #include "parser.h"
 #include "cparse.hh"
 #include "clsmgr.hh"
+#include "stcommon.hh"
+#include "stconx.hh"
 #include "cmparse.hh"
 #include "tester.hh"
 

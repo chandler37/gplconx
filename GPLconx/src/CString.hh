@@ -43,25 +43,27 @@ public:
   CConxString(long l) throw(const char *);
   // l == 3 will cause this string to be "3", e.g.
 
-  CConxString(double f, char conversion = 'g', int digits = -1) throw(const char *);
+  CConxString(double f, char conversion = 'g', int digits = -1)
+    throw(const char *);
   // f == 3.0 will cause this string to be "3.0", e.g.
   // Throws if there is not enough memory or if conversion is not in [eEfFgG]
 
   CConxString(const char *s) throw(const char *);
   CConxString(const CConxString &s) throw(const char *);
   ~CConxString();
+
+  // If s is NULL, then the string is cleared.  Otherwise, a copy
+  // of s becomes this object's value.  This will throw a const char *
+  // exception if memory for the copy could not be allocated.
+
   void setString(const char *s) throw(const char *);
+
   void setString(const CConxString &s) throw(const char *);
   const char *getString() const;
-  char *getStringAsNewArray() const
+
   // Remember to delete [] it.
-  {
-    const char *m = getString();
-    char *n = new char[getLength()+1];
-    if (n == NULL) OOM();
-    (void) strcpy(n, m);
-    return n;
-  }
+  char *getStringAsNewArray() const;
+
   ostream &printOn(ostream &o) const;
   Boole equals(const char *s, Boole case_sensitive = TRUE) const;
   Boole equals(const CConxString &s, Boole case_sensitive = TRUE) const;
@@ -77,30 +79,15 @@ public:
   // Returns zero for an unset object or an object set to "";
   // use getString() to distinguish between the two if necessary.
   size_t getLength() const { return ((dsize == 0) ? 0 : (dsize - 1)); }
-  char getNthChar(size_t n) const
+
   // Returns the nth character, which is '\0' if the character
   // is past the end of the string.  n == 0 is the first character.
-  {
-    // DLC move to CString.cc
-    if (n + 1 < dsize)
-      return data[n];
-    return '\0';
-  }
-  size_t numberOf(char c) const
+  char getNthChar(size_t n) const;
+
   // Returns the number of times c occurs in the string.  '\0' is contained
   // 1 time for a set string and zero times for an unset string.
-  {
-    if (c == '\0') {
-      if (dsize == 0) return 0;
-      return 1;
-    }
-    size_t count = 0;
-    for (size_t i = 0; i < dsize; i++) {
-      if (data[i] == c) ++count;
-    }
-    return count;
-  }
-  CConxString substring(size_t start, size_t length) const throw(const char *)
+  size_t numberOf(char c) const;
+
   // Returns the substring that begins with the character at index start
   // (start == 0 for the first character) and continues for length characters.
   // If length is zero, then you get an unset object.
@@ -108,37 +95,7 @@ public:
   // get an object set to "".
   // If length is longer than is possible, you get from start to the end of
   // the string.
-  {
-    MMM1("substring(size_t start, size_t length) const throw(const char *)");
-    CConxString substr; // unset
-    // DLC move to CString.cc
-    if (length < 1) {
-      return substr;
-    }
-    if (1 + start >= dsize) {
-      substr.setString("");
-      return substr;
-    }
-
-    // we'll null-terminate the substring and set substr to the const char *;
-    if (start+length+1 >= dsize) {
-      // it's already null-terminated.
-      substr.setString(data+start);
-      return substr;
-    }
-    char tmp = data[start+length];
-    data[start+length] = '\0';       // data is _technically_ mutable
-    try {
-      substr.setString(data+start);
-      // in fact, if we did not catch this, data would be mutable.
-    } catch (const char *s) {
-      data[start+length] = tmp;
-      // data is really not changed by this const function.
-      throw s;
-    }
-    data[start+length] = tmp;        // data is really not mutable.
-    return substr;
-  }
+  CConxString substring(size_t start, size_t length) const throw(const char *);
 
   void append(const char *s) throw(const char *);
 
@@ -182,6 +139,7 @@ int operator==(const char *s, const CConxString &a);
 int operator!=(const char *s, const CConxString &a);
 CConxString operator+(const char *s, const CConxString &a);
 CConxString operator*(size_t n, const CConxString &a);
+
 OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxString);
 
 #endif // GPLCONX_CSTRING_CXX_H

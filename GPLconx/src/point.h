@@ -183,14 +183,14 @@ typedef enum ConxColorEnum {
 
 typedef void (ConxBresenhamStarter) (Pt *, Pt *);
 typedef double (ConxMetric) (Pt, void *);
-typedef int (ConxContinueFunc) (Pt, Pt);
+typedef int (ConxContinueFunc) (Pt, Pt, void *);
 
 /* A function that converts (a, b) to (c, d), e.g. ptopd */
 typedef void (ConxPoint2DConverterFunc) (double, double, double *, double *);
 typedef void (ConxPointFunc) (double, double, void *);
 typedef void (ConxBresTraceFunc) (Pt middle, ConxDirection last, double dw, \
                                   double dh, ConxMetric *func, void *fArg, \
-                                  ConxContinueFunc *keepgoing);
+                                  ConxContinueFunc *keepgoing, void *kArg);
 
 #ifdef __cplusplus
 }

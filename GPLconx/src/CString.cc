@@ -81,7 +81,7 @@ CConxString::CConxString(const char *s) throw(const char *)
 
 CF_INLINE
 CConxString::CConxString(const CConxString &s) throw(const char *)
-  : CConxObject(s), data(NULL), dsize(0) // DLC do CConxObject copy constructor for all children.
+  : CConxObject(s), data(NULL), dsize(0)
 {
   MMM1("CConxString(const CConxString &s)");
   setString(s.getString());
@@ -97,10 +97,6 @@ CConxString::~CConxString()
 NF_INLINE
 void CConxString::setString(const char *s) throw(const char *)
 {
-  // If s is NULL, then the string is cleared.  Otherwise, a copy
-  // of s becomes this object's value.  This will throw a const char *
-  // exception if memory for the copy could not be allocated.
-
   MMM1("setString(const char *s) throw(const char *)");
   Clear();
   if (s != NULL) {
@@ -369,5 +365,72 @@ CConxString operator*(size_t n, const CConxString &a)
   return a.repetition(n);
 }
 
+NF_INLINE
+char *CConxString::getStringAsNewArray() const
+{
+  const char *m = getString();
+  char *n = new char[getLength()+1];
+  if (n == NULL) OOM();
+  (void) strcpy(n, m);
+  return n;
+}
+
+NF_INLINE
+char CConxString::getNthChar(size_t n) const
+{
+  // DLC move to CString.cc
+  if (n + 1 < dsize)
+    return data[n];
+  return '\0';
+}
+
+NF_INLINE
+size_t CConxString::numberOf(char c) const
+{
+  if (c == '\0') {
+    if (dsize == 0) return 0;
+    return 1;
+  }
+  size_t count = 0;
+  for (size_t i = 0; i < dsize; i++) {
+    if (data[i] == c) ++count;
+  }
+  return count;
+}
+
+NF_INLINE
+CConxString CConxString::substring(size_t start, size_t length) const
+  throw(const char *)
+{
+  MMM1("substring(size_t start, size_t length) const throw(const char *)");
+  CConxString substr; // unset
+  // DLC move to CString.cc
+  if (length < 1) {
+    return substr;
+  }
+  if (1 + start >= dsize) {
+    substr.setString("");
+    return substr;
+  }
+
+  // we'll null-terminate the substring and set substr to the const char *;
+  if (start+length+1 >= dsize) {
+    // it's already null-terminated.
+    substr.setString(data+start);
+    return substr;
+  }
+  char tmp = data[start+length];
+  data[start+length] = '\0';       // data is _technically_ mutable
+  try {
+    substr.setString(data+start);
+    // in fact, if we did not catch this, data would be mutable.
+  } catch (const char *s) {
+    data[start+length] = tmp;
+    // data is really not changed by this const function.
+    throw s;
+  }
+  data[start+length] = tmp;        // data is really not mutable.
+  return substr;
+}
 
 OOLTLTI_INLINE P_STREAM_OUTPUT_SHORTCUT(CConxString)

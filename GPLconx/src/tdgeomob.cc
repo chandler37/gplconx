@@ -195,7 +195,7 @@ int tlineseg(void)
 
 int tpoint(void)
 {
-  CConxDwPoint p1(0.3, 0.4, CONX_KLEIN_DISK);
+  CConxDwGeomObj p1(new CConxPoint(0.3, 0.4, CONX_KLEIN_DISK));
   ostrstream ostr;
   ostr << all << "first all " << p1 << " then kd " << kd << p1 << pd
        << " and now pd " << p1 << puhp << " and now puhp " << p1
@@ -203,7 +203,7 @@ int tpoint(void)
   char *s = ostr.str();
 #ifndef NO_IFFY_TESTS
   OUT(s);
-  RET1(CConxString("first all CConxDwPoint<[<CConxDwGeomObj object color=CConxColor[RGB=(1, 0, 0), HSV=(0, 1, 1)], isValid=FALSE, withGarnish=TRUE, drawingMethod=BEST, thickness=6, lwtol=0.0015>, [puhp(0.5, 1.44338), kd(0.3, 0.4), pd(0.16077, 0.214359)]]> then kd CConxDwPoint<[<CConxDwGeomObj object color=CConxColor[RGB=(1, 0, 0), HSV=(0, 1, 1)], isValid=FALSE, withGarnish=TRUE, drawingMethod=BEST, thickness=6, lwtol=0.0015>, [puhp(0.5, 1.44338), kd(0.3, 0.4), pd(0.16077, 0.214359)]]> and now pd CConxDwPoint<[<CConxDwGeomObj object color=CConxColor[RGB=(1, 0, 0), HSV=(0, 1, 1)], isValid=FALSE, withGarnish=TRUE, drawingMethod=BEST, thickness=6, lwtol=0.0015>, [puhp(0.5, 1.44338), kd(0.3, 0.4), pd(0.16077, 0.214359)]]> and now puhp CConxDwPoint<[<CConxDwGeomObj object color=CConxColor[RGB=(1, 0, 0), HSV=(0, 1, 1)], isValid=FALSE, withGarnish=TRUE, drawingMethod=BEST, thickness=6, lwtol=0.0015>, [puhp(0.5, 1.44338), kd(0.3, 0.4), pd(0.16077, 0.214359)]]> and now all again CConxDwPoint<[<CConxDwGeomObj object color=CConxColor[RGB=(1, 0, 0), HSV=(0, 1, 1)], isValid=FALSE, withGarnish=TRUE, drawingMethod=BEST, thickness=6, lwtol=0.0015>, [puhp(0.5, 1.44338), kd(0.3, 0.4), pd(0.16077, 0.214359)]]>\n") == s);
+  RET1(CConxString("first all <CConxDwGeomObj object {Point: [puhp(0.5, 1.44338), kd(0.3, 0.4), pd(0.16077, 0.214359)]} color=CConxColor[RGB=(0, 1, 0.3), HSV=(138, 1, 1)], isValid=FALSE, withGarnish=TRUE, drawingMethod=BEST, thickness=1, lwtol=0.0015> then kd <CConxDwGeomObj object {Point: [puhp(0.5, 1.44338), kd(0.3, 0.4), pd(0.16077, 0.214359)]} color=CConxColor[RGB=(0, 1, 0.3), HSV=(138, 1, 1)], isValid=FALSE, withGarnish=TRUE, drawingMethod=BEST, thickness=1, lwtol=0.0015> and now pd <CConxDwGeomObj object {Point: [puhp(0.5, 1.44338), kd(0.3, 0.4), pd(0.16077, 0.214359)]} color=CConxColor[RGB=(0, 1, 0.3), HSV=(138, 1, 1)], isValid=FALSE, withGarnish=TRUE, drawingMethod=BEST, thickness=1, lwtol=0.0015> and now puhp <CConxDwGeomObj object {Point: [puhp(0.5, 1.44338), kd(0.3, 0.4), pd(0.16077, 0.214359)]} color=CConxColor[RGB=(0, 1, 0.3), HSV=(138, 1, 1)], isValid=FALSE, withGarnish=TRUE, drawingMethod=BEST, thickness=1, lwtol=0.0015> and now all again <CConxDwGeomObj object {Point: [puhp(0.5, 1.44338), kd(0.3, 0.4), pd(0.16077, 0.214359)]} color=CConxColor[RGB=(0, 1, 0.3), HSV=(138, 1, 1)], isValid=FALSE, withGarnish=TRUE, drawingMethod=BEST, thickness=1, lwtol=0.0015>\n") == s);
 #endif
   delete [] s;
   

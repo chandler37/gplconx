@@ -34,7 +34,7 @@ class ostream;
 //////////////////////////////////////////////////////////////////////////////
 // This class would be a Java Interface; any class that subclasses this
 // class must fill in the printOn method.
-class CConxPrintable {
+class /* interface */ CConxPrintable {
 public: // pure virtual functions
   virtual ostream &printOn(ostream &) const = 0;
 };
@@ -43,7 +43,7 @@ public: // pure virtual functions
 // If an object is associated with the Poincare Disk, Poincare UHP, and
 // Klein Disk models of hyperbolic geometry, then implement this
 // as well as using printOn(ostream &) to output for all models:
-class CConxPrintableByModel : VIRT public CConxPrintable {
+class /* interface */ CConxPrintableByModel : public CConxPrintable {
 public: // types
   enum PrintHow { PP_PD, PP_KD, PP_PUHP, PP_ALL };
 public: // static members

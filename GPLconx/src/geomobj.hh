@@ -56,29 +56,91 @@ extern "C" {
 #include "printon.hh"
 #include "decls.hh"
 
-// The rest of the code doesn't want +INF or NaN, it wants a large double.
-// This is within an order of magnitude of the largest double, which could
-// be found by enquire or paranoia.  <float.h> would have this as DBL_MAX.
-// We don't bother with all that since it is not standard and since
-// this is plenty big:
-#define CCONX_INFINITY 1.8e+307
-// On x86, I think 1.7976931348623157e+308 is the correct value.
-
-
-// So that the bit-flags 0, a=CONX_MODEL2BIT(CONX_POINCARE_DISK),
-// b=CONX_MODEL2BIT(CONX_KLEIN_DISK),
-// c=CONX_MODEL2BIT(CONX_POINCARE_UHP),
-// a|b, a|c, b|c, and a|b|c are all distinct, we define:
-#define CONX_MODEL2BIT(modl) (1 << modl)
-
-
 class CConxLine;
+class CConxCanvas;
+class CConxPoint;
+
+
+//////////////////////////////////////////////////////////////////////////////
+// A class that implements this interface draws itself without regard to
+// color, line size, etc.
+class /* interface */ CConxSimpleArtist : public CConxPrintable {
+public:
+  virtual ~CConxSimpleArtist() { LLL("CConxSimpleArtist interface implementor destructor activated.  If this were not virtual, there would be a crash."); }
+  /* So that we don't need run-type type identification (rtti): */
+  enum SAType { SA_POINT, SA_LINE, SA_CIRCLE, SA_HYPELLIPSE, SA_EQDISTCURVE,
+                SA_PARABOLA
+  };
+  static const char *humanSAType(SAType s);
+  virtual SAType getSAType() const = 0;
+
+  // DLC use rtti cast:
+#define SA_TYPE(m, Me) private: SAType getSAType() const { return m; } \
+           public: int eql(const CConxSimpleArtist &o) const \
+                   { \
+                     return (getSAType() == o.getSAType() \
+                             && operator==((const Me &)o)); \
+                   }
+                   
+  
+
+
+  // You must overload the assignment operator, copy constructor,
+  // and equality operator.
+
+  // There are many ways to draw yourself.  These may all do the same
+  // thing for some objects.
+  
+  // If a display list (stored drawing) might be a good idea, override
+  // this to return TRUE:
+  virtual Boole requiresHeavyComputation() const { return FALSE; }
+
+  // If you are a line, draw your two defining points, e.g.:
+  virtual void drawGarnishOn(CConxCanvas &cv) const = 0;
+
+  // Bresenham means ``Either by the Bresenham method, or the best, fastest,
+  // way you know how''.
+  virtual void drawBresenhamOn(CConxCanvas &cv) const = 0;
+   
+  // This function returns zero if and only if X is on the object.
+  // Most of the time, nearly zero means nearly on the object.
+  virtual double definingFunction(const CConxPoint &X) const = 0;
+#define SA_DEFFN() \
+ private: \
+   static double definingFunctionWrapper(const CConxSimpleArtist *sa, \
+                                         const CConxPoint &X) \
+   { \
+     assert(sa != NULL); \
+     return sa->definingFunction(X); \
+   }
+
+  // A virtual copy constructor, if you will.  This is needed
+  // because CConxDwGeomObj is a container, but copying it is a deep copy,
+  // not a shallow one.
+  virtual CConxSimpleArtist *clone() const = 0;
+
+// Relies on the copy constructor:
+#define SA_CLONE(Me) private: \
+          CConxSimpleArtist *clone() const { return new Me(*this); }
+
+  // Virtual operator==, if you will:
+  virtual int eql(const CConxSimpleArtist &o) const = 0;
+
+
+#define SA_IMP(m, Me) \
+ SA_TYPE(m, Me) \
+ SA_CLONE(Me) \
+ SA_DEFFN()
+
+
+}; // class CConxSimpleArtist
 
 
 //////////////////////////////////////////////////////////////////////////////
 // This is a point that is in the plane or disk or on the boundary of it.
-class CConxPoint : VIRT public CConxObject, public CConxPrintableByModel {
+class CConxPoint : VIRT public CConxObject, public CConxSimpleArtist {
   CCONX_CLASSNAME("CConxPoint")
+  SA_IMP(SA_POINT, CConxPoint)
 public:
   CConxPoint();
   ~CConxPoint() { MMM("destructor"); }
@@ -102,19 +164,19 @@ public:
   ostream &printOn(ostream &o) const;
   ostream &printOn(ostream &o, ConxModlType modl) const;
 
+  double definingFunction(const CConxPoint &X) const
+  {
+    return distanceFrom(X);
+  }
+  void drawGarnishOn(CConxCanvas &cv) const;
+  void drawBresenhamOn(CConxCanvas &cv) const;
 
 private: // operations
   void convertTo(ConxModlType modl) const;
-  void uninitializedCopy(const CConxPoint &o)
-  // copy CConxPoint-specific data from o, but do not rely on this object
+
+  void uninitializedCopy(const CConxPoint &o);
+  // Copies CConxPoint-specific data from o, but does not rely on this object
   // being in a defined state.
-  {
-    isValid = o.isValid;
-    for (int i = 0; i < CONX_NUM_MODELS; i++) {
-      x[i] = o.x[i];
-      y[i] = o.y[i];
-    }
-  }
 
 private: // attributes
   mutable double x[CONX_NUM_MODELS], y[CONX_NUM_MODELS];
@@ -124,7 +186,7 @@ private: // attributes
   mutable Bitflag isValid;
   // This is a bitmask that indicates which of the three models we have
   // already converted to.
-};
+}; // class CConxPoint
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -149,7 +211,7 @@ public:
 
 private:
   CConxPoint A, B;
-};
+}; // class CConxTwoPts
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -163,8 +225,9 @@ private:
 // the models with getPUHP*, getK*, getPoincareDisk*, getPD*, etc.  This is
 // useful for both visualization and some calculations.  In the Klein disk,
 // it is easy to find the intersection of two lines, e.g.
-class CConxLine : VIRT protected CConxTwoPts {
+class CConxLine : VIRT protected CConxTwoPts, public CConxSimpleArtist {
   CCONX_CLASSNAME("CConxLine")
+  SA_IMP(SA_LINE, CConxLine)
 public:
 #ifndef NDEBUG
   CConxTwoPts::setDebuggingTag;
@@ -206,26 +269,17 @@ public:
   }
   int operator!=(const CConxLine &o) const { return !operator==(o); }
 
+  void drawGarnishOn(CConxCanvas &cv) const;
+  void drawBresenhamOn(CConxCanvas &cv) const;
+  double definingFunction(const CConxPoint &X) const
+  {
+    return distanceFrom(X);
+  }
 
 private: // operations
   void convertTo(ConxModlType modl) const;
 
-  void uninitializedCopy(const CConxLine &o)
-  // copy CConxLine-specific data from o, but do not rely on this object
-  // being in a defined state.
-  {
-    isSegment = o.isSegment;
-    isValid = o.isValid;
-    for (int i = 0; i < CONX_NUM_MODELS; i++) {
-      x[i] = o.x[i];
-      y[i] = o.y[i];
-    }
-    pd_radius = o.pd_radius;
-    klein_endpts[0] = o.klein_endpts[0];
-    klein_endpts[1] = o.klein_endpts[1];
-    pd_endpts[0] = o.pd_endpts[0];
-    pd_endpts[1] = o.pd_endpts[1];
-  }
+  void uninitializedCopy(const CConxLine &o);
 
 
 private: // attributes
@@ -275,8 +329,9 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////////////
-class CConxParabola : VIRT protected CConxGeomObj {
+class CConxParabola : VIRT protected CConxGeomObj, public CConxSimpleArtist {
   CCONX_CLASSNAME("CConxParabola")
+  SA_IMP(SA_PARABOLA, CConxParabola)
 public:
 #ifndef NDEBUG
   CConxGeomObj::setDebuggingTag;
@@ -290,7 +345,7 @@ public:
   void setLine(const CConxLine &o);
   const CConxPoint &getFocus() const { return getA(); }
   void setFocus(const CConxPoint &A) { isValid = FALSE; setA(A); }
-  void getPointOn(CConxPoint *LB, double computol = EQUALITY_TOL) const;
+  int getPointOn(CConxPoint *LB, double computol = EQUALITY_TOL) const;
   ostream &printOn(ostream &o) const;
   ostream &printOn(ostream &o, ConxModlType modl) const;
 
@@ -300,19 +355,20 @@ public:
   int operator==(const CConxParabola &o) const;
   int operator!=(const CConxParabola &o) const { return !operator==(o); }
 
+  void drawGarnishOn(CConxCanvas &cv) const;
+  void drawBresenhamOn(CConxCanvas &cv) const;
+  double definingFunction(const CConxPoint &X) const
+  {
+    return getFocus().distanceFrom(X) - getLine().distanceFrom(X);
+  }
 
 private: // operations
-  void uninitializedCopy(const CConxParabola &o)
-  {
-    isValid = o.isValid;
-    if (isValid)
-      pLB = o.pLB;
-  }
+  void uninitializedCopy(const CConxParabola &o);
 
 private: // attributes
   mutable Boole isValid;
   mutable CConxPoint pLB; // A Point on the Parabola.
-};
+}; // class CConxParabola
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -321,20 +377,22 @@ private: // attributes
 // difference (for a hyperbola)
 // of the distances between each focus and a point C is equal to Scalar.  Use
 // getScalar() and setScalar() to change it.
-class CConxHypEllipse : VIRT protected CConxGeomObj {
+class CConxHypEllipse
+  : VIRT protected CConxGeomObj, public CConxSimpleArtist {
   CCONX_CLASSNAME("CConxHypEllipse")
+  SA_IMP(SA_HYPELLIPSE, CConxHypEllipse)
 public:
 #ifndef NDEBUG
   CConxGeomObj::setDebuggingTag;
   CConxGeomObj::getDebuggingTag;
 #endif
-  CConxHypEllipse() : isValid(FALSE) { }
+  CConxHypEllipse() { init(); }
   CConxHypEllipse(const CConxHypEllipse &A)
     : CConxGeomObj(A)
   {
     uninitializedCopy(A);
   }
-  void setScalar(double S) { isValid = 0; CConxGeomObj::setScalar(S); }
+  void setScalar(double S) { isValid = FALSE; CConxGeomObj::setScalar(S); }
   CONX_USING CConxGeomObj::getScalar;
   void setFocus1(const CConxPoint &p) { isValid = FALSE; setA(p); }
   const CConxPoint &getFocus1() const { return getA(); }
@@ -353,27 +411,26 @@ public:
   ostream &printOn(ostream &o) const;
   ostream &printOn(ostream &o, ConxModlType modl) const;
 
+  void drawGarnishOn(CConxCanvas &cv) const;
+  void drawBresenhamOn(CConxCanvas &cv) const;
+  double definingFunction(const CConxPoint &X) const;
 
 private: // operations
-  void uninitializedCopy(const CConxHypEllipse &o)
-  {
-    isValid = o.isValid;
-    if (isValid) {
-      LB = o.LB;
-      RB = o.RB;
-    }
-  }
+  void init();
+  void uninitializedCopy(const CConxHypEllipse &o);
 
 private: // attributes
   // Save the point(s) analytically determined to be on the ellipse(hyperbola)
-  mutable Boole isValid;
+  mutable Boole isValid, isEllipseIsValid, isEllips;
   mutable CConxPoint LB, RB;
-};
+}; // class CConxHypEllipse
 
 
 //////////////////////////////////////////////////////////////////////////////
-class CConxEqDistCurve : VIRT protected CConxGeomObj {
+class CConxEqDistCurve
+  : VIRT protected CConxGeomObj, public CConxSimpleArtist {
   CCONX_CLASSNAME("CConxEqDistCurve")
+  SA_IMP(SA_EQDISTCURVE, CConxEqDistCurve)
 public:
 #ifndef NDEBUG
   CConxGeomObj::setDebuggingTag;
@@ -381,10 +438,7 @@ public:
 #endif
   CConxEqDistCurve() : isValid(FALSE) { }
   CConxEqDistCurve(const CConxEqDistCurve &A)
-    : CConxGeomObj(A)
-  {
-    uninitializedCopy(A);
-  }
+    : CConxGeomObj(A) { uninitializedCopy(A); }
   void setLine(const CConxLine &L);
   CONX_USING CConxGeomObj::getLine;
   void setDistance(double d) { isValid = FALSE; setScalar(d); }
@@ -395,26 +449,27 @@ public:
   ostream &printOn(ostream &o) const;
   ostream &printOn(ostream &o, ConxModlType modl) const;
 
+  double definingFunction(const CConxPoint &X) const
+  {
+    return (getLine().distanceFrom(X) - getDistance());
+  }
+  void drawGarnishOn(CConxCanvas &cv) const;
+  void drawBresenhamOn(CConxCanvas &cv) const;
+  Boole requiresHeavyComputation() const { return TRUE; }
 
 private: // operations
-  void uninitializedCopy(const CConxEqDistCurve &o)
-  {
-    isValid = o.isValid;
-    if (isValid) {
-      LB = o.LB;
-      RB = o.RB;
-    }
-  }
+  void uninitializedCopy(const CConxEqDistCurve &o);
 
 private: // attributes
   mutable Boole isValid;
   mutable CConxPoint LB, RB;
-};
+}; // class CConxEqDistCurve
 
 
 //////////////////////////////////////////////////////////////////////////////
-class CConxCircle : VIRT protected CConxGeomObj {
+class CConxCircle : VIRT protected CConxGeomObj, public CConxSimpleArtist {
   CCONX_CLASSNAME("CConxCircle")
+  SA_IMP(SA_CIRCLE, CConxCircle)
 public:
 #define MIN_RADIUS 0.0
 
@@ -442,7 +497,11 @@ public:
   int operator!=(const CConxCircle &o) const { return !operator==(o); }
   ostream &printOn(ostream &o) const;
   ostream &printOn(ostream &o, ConxModlType modl) const;
-};
+
+  void drawGarnishOn(CConxCanvas &cv) const;
+  void drawBresenhamOn(CConxCanvas &cv) const;
+  Boole requiresHeavyComputation() const { return TRUE; }
+}; // class CConxCircle
 
 // DLC TODO What is the HG area of a circle?
 
@@ -457,5 +516,99 @@ OOLTLT_INLINE PBM_STREAM_OUTPUT_SHORTCUT_DECL(CConxHypEllipse);
 OOLTLT_INLINE PBM_STREAM_OUTPUT_SHORTCUT_DECL(CConxEqDistCurve);
 OOLTLT_INLINE PBM_STREAM_OUTPUT_SHORTCUT_DECL(CConxParabola);
 
-#endif // GPLCONX_GEOMOBJ_CXX_H
 
+//////////////////////////////////////////////////////////////////////////////
+// Implementation
+//////////////////////////////////////////////////////////////////////////////
+
+inline const char *CConxSimpleArtist::humanSAType(SAType s)
+{
+  switch (s) {
+  case SA_POINT: return "Point";
+  case SA_LINE: return "Line";
+  case SA_CIRCLE: return "Circle";
+  case SA_PARABOLA: return "Parabola";
+  case SA_HYPELLIPSE: return "HypEllipse";
+  case SA_EQDISTCURVE: return "EqDistCurve";
+  default: throw "how?";
+  }
+}
+
+inline
+void CConxPoint::uninitializedCopy(const CConxPoint &o)
+{
+  isValid = o.isValid;
+  for (int i = 0; i < CONX_NUM_MODELS; i++) {
+    x[i] = o.x[i];
+    y[i] = o.y[i];
+  }
+}
+
+inline
+void CConxLine::uninitializedCopy(const CConxLine &o)
+{
+  isSegment = o.isSegment;
+  isValid = o.isValid;
+  for (int i = 0; i < CONX_NUM_MODELS; i++) {
+    x[i] = o.x[i];
+    y[i] = o.y[i];
+  }
+  pd_radius = o.pd_radius;
+  klein_endpts[0] = o.klein_endpts[0];
+  klein_endpts[1] = o.klein_endpts[1];
+  pd_endpts[0] = o.pd_endpts[0];
+  pd_endpts[1] = o.pd_endpts[1];
+}
+
+inline
+void CConxParabola::uninitializedCopy(const CConxParabola &o)
+{
+  isValid = o.isValid;
+  if (isValid)
+    pLB = o.pLB;
+}
+
+inline
+double CConxHypEllipse::definingFunction(const CConxPoint &X) const
+{
+  return (isEllipse()
+          ? (getFocus1().distanceFrom(X)
+             + getFocus2().distanceFrom(X) - getScalar())
+          : (myabs(getFocus1().distanceFrom(X)
+                   - getFocus2().distanceFrom(X)) - getScalar()));
+}
+
+inline
+void CConxHypEllipse::init()
+{
+  isValid = FALSE;
+  isEllipseIsValid = FALSE;
+
+  isEllips = FALSE;
+  // This is not really necessary, but we don't want to copy an
+  // uninitialized field.
+}
+
+inline
+void CConxHypEllipse::uninitializedCopy(const CConxHypEllipse &o)
+{
+  isValid = o.isValid;
+  isEllipseIsValid = o.isEllipseIsValid;
+  isEllips = o.isEllips;
+  if (isValid) {
+    LB = o.LB;
+    RB = o.RB;
+  }
+}
+
+inline
+void CConxEqDistCurve::uninitializedCopy(const CConxEqDistCurve &o)
+{
+  isValid = o.isValid;
+  if (isValid) {
+    LB = o.LB;
+    RB = o.RB;
+  }
+}
+
+#endif // GPLCONX_GEOMOBJ_CXX_H

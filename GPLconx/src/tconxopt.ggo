@@ -22,6 +22,7 @@
 # to get tconxggo.c and tconxggo.h
 
 option "Tcl-dir" T "The directory containing the Tcl source code (`tconx.tcl' and friends); not needed unless you do a manual install." string no
+option "debug" d "Cause reams of useless output to go to standard output" no
 option "long-help" H "Print extended help message and exit." no
 
 # TODO DLC window sizes, which windows, window positions, etc.

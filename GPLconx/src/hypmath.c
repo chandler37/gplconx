@@ -773,11 +773,16 @@ void conxhm_p_getHstarted(Pt *LB, Pt *RB, Pt f1, Pt f2, double cdist)
     *RB=temp;
 }
 
-void conxhm_p_getPstarted(Pt *LB, Pt *RB, Pt f1, double line_a, double line_r,
-                          double computol)
+int conxhm_p_getPstarted(Pt *LB, Pt *RB, Pt f1, double line_a, double line_r,
+                         double computol)
 /* Find one point on the Poincare UHP parabola, which is the set of points
    that are equidistant from the Poincare UHP line `(x-line_a)^2+y^2=line_r^2'
    and f1.
+   
+   Returns 0 upon success, 1 if (line_a, line_r, f1, computol) does not
+   have a point on it.
+
+   DLC test to see when.  When f1 or r is not valid (lower half plane or y = 0), e.g.
 */
 {
   double fa, fr, neardist;
@@ -803,13 +808,15 @@ void conxhm_p_getPstarted(Pt *LB, Pt *RB, Pt f1, double line_a, double line_r,
   */
   if (conx_pt_not_between(near, *LB, f1)) {
     if (conx_pt_not_between(near, *RB, f1)) {
-      printf("Error getting parabola started for bresenham search");
+      // point is on the line!!! DLC
+      return 1;
     } else {
       *LB=*RB;
     }
   }
   *RB=*LB;
 
+  return 0;
 
 /*  glColor3f(0, 1, 1);
   conx_draw_circle(f1.x, f1.y*cosh(neardist/2), f1.y*sinh(neardist/2), tstp);*/

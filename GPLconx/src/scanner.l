@@ -30,7 +30,8 @@
 #include "parser.h"
 #include "util.h"
 extern int conx_count_line;
-static int llerror(const char *errmsg);
+/* DLC delete static int llerror(const char *errmsg); */
+#define LLERROR(msg) assert(strlen(msg) < MAX_ID_LENGTH); strcpy(yylval.id, (msg)); return TOK_ERROR
 int yylex (void) ;
 %}
 
@@ -44,7 +45,7 @@ ID ([[:alpha:]][[:alnum:]]*)
 
 {ID}:		{ if (yyleng >= MAX_ID_LENGTH) {
                     /* error */
-                    return llerror("Message with colon has a name that is too long");
+                    LLERROR("Message with colon has a name that is too long");
                   }
                   (void) strcpy(yylval.id, yytext);
                   yylval.id[yyleng-1] = '\0';
@@ -53,7 +54,7 @@ ID ([[:alpha:]][[:alnum:]]*)
 
 #{ID}		{ if (yyleng-1 >= MAX_ID_LENGTH) {
                     /* error */
-                    return llerror("#Literal is too long.");
+                    LLERROR("#Literal is too long.");
                   }
                   (void) strcpy(yylval.id, yytext+1);
                   return TOK_SYMBOL;
@@ -61,7 +62,7 @@ ID ([[:alpha:]][[:alnum:]]*)
 
 {ID}		{ if (yyleng >= MAX_ID_LENGTH) {
                     /* error */
-                    return llerror("ID is too long.");
+                    LLERROR("ID is too long.");
                   }
                   (void) strcpy(yylval.id, yytext);
                   return TOK_ID;
@@ -69,7 +70,7 @@ ID ([[:alpha:]][[:alnum:]]*)
 
 '[^'\n]*'	{ if (yyleng - 2 >= MAX_ID_LENGTH) {
                     /* error */
-                    return llerror("'String literal' is too long.");
+                    LLERROR("'String literal' is too long.");
                   }
                   (void) strncpy(yylval.id, yytext+1, yyleng - 2); /* DLC - 2??? */
                   yylval.id[yyleng - 2] = '\0';
@@ -80,7 +81,7 @@ ID ([[:alpha:]][[:alnum:]]*)
                  int err = conx_str2l(yytext, &yylval.l);
                  if (err) {
                    assert(err < 0);
-                   return llerror("The integer value won't fit.");
+                   LLERROR("The integer value won't fit.");
                  }
                  return TOK_LONG;
                }
@@ -90,7 +91,7 @@ ID ([[:alpha:]][[:alnum:]]*)
   int err = conx_str2d(yytext, &yylval.r);
   if (err) {
     assert(err < 0);
-    return llerror("The floating-point value won't fit.");
+    LLERROR("The floating-point value won't fit.");
   }
   return TOK_REAL;
 }
@@ -107,7 +108,7 @@ ID ([[:alpha:]][[:alnum:]]*)
 \\\n				conx_count_line++; /* continue onto next line */
 \n				conx_count_line++; return TOK_STMT_END;
 
-.		{ return llerror("Unrecognized char"); }
+.		{ LLERROR("Unrecognized character"); }
 
 <<EOF>> { yyterminate(); }
 
@@ -126,9 +127,9 @@ void llextern_set_interactive(int isInteractive)
 }
 
 /* DLC make `Point new' initialize to new Floats */
-int llerror(const char *errmsg)
-/* DLC pass on errmsg in a const char * field in YYSTYPE */
+/* DLC delete int llerror(const char *errmsg)
+/  * DLC pass on errmsg in a const char * field in YYSTYPE *   /
 {
   return TOK_ERROR;
 }
-
+*/

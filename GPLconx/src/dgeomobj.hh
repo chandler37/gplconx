@@ -19,17 +19,19 @@
 
 /*
   C++ classes that model elements of computational hyperbolic geometry
-  that can draw themselves on a CConxCanvas.  These classes extend those
-  in `geomobj.hh'.
+  that can draw themselves on a CConxCanvas.  These classes could extend those
+  in `geomobj.hh' if multiple inheritance were not evil.  Since it is,
+  we have a class that has a geometric object member.
 
   Classes here do not share stored drawings.  Let's say you try:
   {
-    CConxDwPoint b;
+    CConxDwGeomObj b(new CConxPoint());
     // initialize b
     b.drawOn(glcanvas);
     c=b;
     c.drawOn(glcanvas); // This works fine.
-    b.setPoint(.1, .2, CONX_KLEIN_DISK); // now the display list is deleted.
+    b.setGeomObj(new CConxPoint(.1, .2, CONX_KLEIN_DISK));
+         // now the display list is deleted.
     c.drawOn(glcanvas); // This won't work.
   }
   To fix it, we don't share stored drawings.
@@ -53,7 +55,7 @@ class CConxCanvas;
 // `void drawOn(CConxCanvas &) const' method.
 //
 // (A Java ``Interface'' would be more appropriate.)
-class CConxDrawable {
+class /* interface */ CConxDrawable {
 public: // pure virtual functions
   virtual void drawOn(CConxCanvas &) const throw(int) = 0;
 }; // class CConxDrawable
@@ -70,12 +72,8 @@ public:
 public:
   CConxArtist() { }
   CConxArtist(const CConxArtist &o) : CConxObject(o) { }
-  CConxArtist &operator=(const CConxArtist &o)
-  {
-    (void) CConxObject::operator=(o);
-    return *this;
-  }
-  ~CConxArtist() { }
+  CConxArtist &operator=(const CConxArtist &o);
+  ~CConxArtist() { MMM("destructor"); }
   int operator==(const CConxArtist &o) { return 1; }
   int operator!=(const CConxArtist &o) { return !operator==(o); }
 
@@ -84,21 +82,19 @@ public:
   // each of them to draw themselves to implement the master rendering
   // loop.
   ostream &printOn(ostream &o, ConxModlType m) const { return printOn(o); }
-  void drawOn(class CConxCanvas &o) const
-  {
-    MMM("void drawOn(class CConxCanvas &o) const");
-  }
-
+  void drawOn(class CConxCanvas &o) const;
 }; // class CConxArtist
 
 
 //////////////////////////////////////////////////////////////////////////////
-// CConxDwGeomObj is the base class for DLC ...
+// CConxDwGeomObj is a container that draws its CConxSimpleArtist contents,
+// which it owns memory-management-wise.
+//
 // ``Validity'' here means ``lack of change since last drawing'', which
 // becomes FALSE when something changes.  We keep track so that
 // we do the LONGWAY method only once and then ``replay it'' via
 // a stored drawing.  If the object becomes ``invalid'', then we must,
-// of course, recompute the stored drawing.
+// of course, recompute the stored drawing. DLC NOT IMPLEMENTED
 //
 // The default copy constructor, operator=, and equality operators would
 // work, but subclasses would get compiler warnings about removed
@@ -112,93 +108,44 @@ class CConxDwGeomObj : VIRT public CConxArtist {
 public: // types
   enum DrawingMethod { SAFEST, BRESENHAM, LONGWAY, BEST };
 public:
-  CConxDwGeomObj()
-    : sc(NULL), color(CConxNamedColor::GREEN), isValid(FALSE),
-      withGarnish(TRUE), dm(BEST), thickness(1.0), lwtol(.0015),
-      sModel(CONX_KLEIN_DISK) { }
-  CConxDwGeomObj(const CConxDwGeomObj &o)
-    : CConxArtist(o)
-  {
-    uninitializedCopy(o);
-  }
-  int operator==(const CConxDwGeomObj &o) const
-  {
-    return (getColor().equals(o.getColor())
-            && getGarnishing() == o.getGarnishing()
-            && getThickness() == o.getThickness()
-            && getLongwayTolerance() == o.getLongwayTolerance()
-            && getDrawingMethod() == o.getDrawingMethod());
-  }
+  CConxDwGeomObj(CConxSimpleArtist *p);
+  CConxDwGeomObj(const CConxSimpleArtist &p);
+  CConxDwGeomObj() { init(); }
+  CConxDwGeomObj(const CConxDwGeomObj &o);
+  int operator==(const CConxDwGeomObj &o) const;
   int operator!=(const CConxDwGeomObj &o) const { return !operator==(o); }
-  CConxDwGeomObj &operator=(const CConxDwGeomObj &o)
-  {
-    (void) CConxArtist::operator=(o);
-    uninitializedCopy(o);
-    return *this;
-  }
-  virtual ~CConxDwGeomObj() { /* No, don't delete the stored canvas. */ }
-
-  // since drawOn is not defined, test that we cannot instantiate.  DLC
+  CConxDwGeomObj &operator=(const CConxDwGeomObj &o);
+  ~CConxDwGeomObj();
 
   virtual const CConxNamedColor &getColor() const { return color; }
-  virtual void setColor(const CConxColor &c)
-  {
-    if (!color.equals(c)) {
-      setValidity(FALSE);
-      color = c;
-    }
-  }
-  virtual void setColor(CConxNamedColor::ColorName cn)
-  {
-    if (!color.isNamed(cn)) {
-      setValidity(FALSE);
-      color.setColorByName(cn);
-    }
-  }
+  virtual void setColor(const CConxColor &c);
+  virtual void setColor(CConxNamedColor::ColorName cn);
   virtual double getLongwayTolerance() const { return lwtol; }
   virtual void setLongwayTolerance(double t) { setValidity(FALSE); lwtol = t; }
   virtual double getThickness() const { return thickness; }
   virtual void setThickness(double t) { setValidity(FALSE); thickness = t; }
   virtual Boole getGarnishing() const { return withGarnish; }
-  virtual void setGarnishing(Boole g)
-  {
-    if (withGarnish != g) {
-      setValidity(FALSE);
-      withGarnish = g;
-    }
-  }
+  virtual void setGarnishing(Boole g);
   virtual DrawingMethod getDrawingMethod() const { return dm; }
-  virtual void setDrawingMethod(DrawingMethod m)
-  {
-    if (dm != m) {
-      setValidity(FALSE);
-      dm = m;
-    }
-  }
-  ostream &printOn(ostream &o) const
-  {
-    o << "<CConxDwGeomObj object color=";
-    color.printOn(o);
-    o << ", isValid=" << BOOLE2STRING(isValid) << ", withGarnish="
-      << BOOLE2STRING(withGarnish) << ", drawingMethod="
-      << drawingMethodToString(dm) << ", thickness=" << thickness
-      << ", lwtol=" << lwtol
-      << ">";
-    return o;
-  }
+  virtual void setDrawingMethod(DrawingMethod m);
+  ostream &printOn(ostream &o) const;
   ostream &printOn(ostream &o, ConxModlType m) const { return printOn(o); }
-  static const char *drawingMethodToString(DrawingMethod m)
-  {
-    switch (m) {
-    case SAFEST: return "SAFEST";
-    case BRESENHAM: return "BRESENHAM";
-    case LONGWAY: return "LONGWAY";
-    default: assert(m == BEST); return "BEST";
-    }
-  }
+  static const char *drawingMethodToString(DrawingMethod m);
+
+  // DLC invalSD???
+
+  // These are invalid once you call setGeomObj or destroy this instance:
+  const CConxSimpleArtist *getGeomObj() const { return P; }
+  CConxSimpleArtist *getGeomObj();
+
+  // After this, we own n and will be sure to delete it.  It should not be
+  // scheduled for destruction.
+  void setGeomObj(CConxSimpleArtist *n);
+
+  void drawOn(CConxCanvas &cv) const throw(int);
 
   // DLC avoid run-time type identification by providing a `virtual TypeIdEnum whoAmI()' method
-  // DLC add CString identifier
+  // DLC add CConxString identifier
 
 protected:
   virtual void setValidity(Boole v) { isValid = v; }
@@ -206,27 +153,23 @@ protected:
   CConxCanvas *getStoredCanvas() const { return sc; }
   void storeCanvas(CConxCanvas *c) const { sc = c; }
   void removeStoredCanvas() const { sc = NULL; }
-  void drawLongway(CConxCanvas &cv, ConxMetric *test) const;
+  void drawLongway(CConxCanvas &cv, const CConxSimpleArtist &o) const;
+
+  // We need this to send to the longway method, but it must use stored
+  // information.
+  static double longwayMetric(Pt x, void *t);
+
   void saveLongwayModel(ConxModlType m) const { sModel = m; }
   ConxModlType getLongwaySavedModel() const { return sModel; }
 
 private: // operations
   static void longwayDrawVertex(double a, double b, void *t);
-  void uninitializedCopy(const CConxDwGeomObj &o)
-  {
-    color = o.color;
-    isValid = o.isValid;
-    withGarnish = o.withGarnish;
-    dm = o.dm;
-    thickness = o.thickness;
-    lwtol = o.lwtol;
-    sModel = o.sModel;
-
-    sc = NULL;
-    // Why share this too? We only keep this during a call to drawOn!
-  }
+  void clear();
+  void init();
+  void uninitializedCopy(const CConxDwGeomObj &o);
 
 private: // attributes
+  CConxSimpleArtist *P;
   mutable CConxCanvas *sc;
   CConxNamedColor color;
   Boole isValid;
@@ -237,229 +180,6 @@ private: // attributes
 }; // class CConxDwGeomObj
 
 
-//////////////////////////////////////////////////////////////////////////////
-class CConxDwPoint : VIRT public CConxDwGeomObj {
-  CCONX_CLASSNAME("CConxDwPoint")
-public:
-#define DWPOINT_INIT() setColor(CConxNamedColor::POINT); setThickness(6.0)
-
-  CConxDwPoint() : P(), sdid(0), sdidIsValid(FALSE) { DWPOINT_INIT(); }
-  CConxDwPoint(double x, double y, ConxModlType modl)
-    : P(x, y, modl), sdid(0), sdidIsValid(FALSE) { DWPOINT_INIT(); }
-  CConxDwPoint(const CConxPoint &p) : P(p), sdid(0), sdidIsValid(FALSE)
-  {
-    DWPOINT_INIT();
-  }
-  CConxDwPoint(const CConxDwPoint &o)
-    : CConxDwGeomObj(o), P(o.P), sdid(0), sdidIsValid(FALSE)
-  {
-    setValidity(FALSE);
-  }
-  CConxDwPoint &operator=(const CConxDwPoint &o)
-  {
-    (void) CConxDwGeomObj::operator=(o);
-    setValidity(FALSE);
-    invalSD();
-    P = o.P;
-    return *this;
-  }
-
-  void drawOn(CConxCanvas &) const throw(int);
-  const CConxPoint &getPoint() const { return P; }
-  CConxPoint &getPoint() { setValidity(FALSE); return P; }
-  void setPoint(const CConxPoint &p)
-  {
-    // DLC test for equality for max efficiency.
-    P = p;
-    setValidity(FALSE);
-  }
-
-  ostream &printOn(ostream &o) const
-  {
-    o << "CConxDwPoint<[";
-    CConxDwGeomObj::printOn(o);
-    o << ", ";
-    P.printOn(o);
-    o << "]>";
-    return o;
-  }
-  ostream &printOn(ostream &o, ConxModlType modl) const
-  {
-    o << "CConxDwPoint<[";
-    CConxDwGeomObj::printOn(o, modl);
-    o << ", ";
-    P.printOn(o);
-    o << "]>";
-    return o;
-  }
-
-
-private: // operations
-  void invalSD()
-  // Call when the display list becomes invalid.
-  {
-    // We need to know who the canvas is!  The canvas needs to store display lists??? DLC
-    if (sdidIsValid) {
-      // DLC delete the sd.
-      sdidIsValid = FALSE;
-    }
-  }
-
-private: // attributes
-  CConxPoint P;
-  mutable SDID sdid;
-  mutable Boole sdidIsValid;
-}; // class CConxDwPoint
-
-
-//////////////////////////////////////////////////////////////////////////////
-// CConxLine's drawable cousin
-class CConxDwLine : VIRT public CConxDwGeomObj {
-  CCONX_CLASSNAME("CConxDwLine")
-public:
-#define DWLINE_INIT() setColor(CConxNamedColor::LINE)
-  CConxDwLine() : L(), sdid(0), sdidIsValid(FALSE) { DWLINE_INIT(); }
-  CConxDwLine(const CConxLine &l)
-    : L(l), sdid(0), sdidIsValid(FALSE) { DWLINE_INIT(); }
-  CConxDwLine(const CConxLine &l, Boole ls)
-    : L(l), sdid(0), sdidIsValid(FALSE) { DWLINE_INIT(); L.setSegment(ls); }
-  CConxDwLine(const CConxPoint &A, const CConxPoint &B)
-    : L(A, B), sdid(0), sdidIsValid(FALSE) { DWLINE_INIT(); }
-  CConxDwLine(const CConxDwLine &o)
-    : CConxDwGeomObj(o), L(o.L), sdid(0), sdidIsValid(FALSE)
-  {
-    MMM("CConxDwLine(const CConxDwLine &)");
-    setValidity(FALSE);
-  }
-  CConxDwLine &operator=(const CConxDwLine &o)
-  {
-    MMM("CConxDwLine &operator=(const CConxDwLine &)");
-    (void) CConxDwGeomObj::operator=(o);
-    L = o.L;
-    setValidity(FALSE);
-    sdidIsValid = FALSE;
-    return *this;
-  }
-
-  void setLine(const CConxLine &l) { setValidity(FALSE); invalSD(); L = l; }
-  const CConxLine &getLine() const { return L; }
-  CConxLine &getLine() { setValidity(FALSE); return L; }
-  void setA(const CConxPoint &A) { setValidity(FALSE); invalSD(); L.setA(A); }
-  void setB(const CConxPoint &B) { setValidity(FALSE); invalSD(); L.setB(B); }
-  void drawOn(CConxCanvas &) const throw(int);
-  ostream &printOn(ostream &o) const
-  {
-    o << "CConxDwLine<[";
-    CConxDwGeomObj::printOn(o);
-    o << ", ";
-    L.printOn(o);
-    o << "]>";
-    return o;
-  }
-  ostream &printOn(ostream &o, ConxModlType modl) const
-  {
-    o << "CConxDwLine<[";
-    CConxDwGeomObj::printOn(o, modl);
-    o << ", ";
-    L.printOn(o, modl);
-    o << "]>";
-    return o;
-  }
-
-
-private: // operations
-  void invalSD()
-  // Call when the display list becomes invalid.
-  {
-    // We need to know who the canvas is!  The canvas needs to store display lists??? DLC
-    if (sdidIsValid) {
-      // DLC delete the sd.
-      sdidIsValid = FALSE;
-    }
-  }
-
-private: // attributes
-  CConxLine L;
-  mutable SDID sdid;
-  mutable Boole sdidIsValid;
-}; // class CConxDwLine
-
-
-//////////////////////////////////////////////////////////////////////////////
-// CConxCircle's drawable cousin
-class CConxDwCircle : VIRT public CConxDwGeomObj {
-  CCONX_CLASSNAME("CConxDwCircle")
-public:
-#define DWCIRCLE_INIT() setColor(CConxNamedColor::CIRCLE)
-  CConxDwCircle() : L(), sdid(0), sdidIsValid(FALSE) { DWCIRCLE_INIT(); }
-  CConxDwCircle(const CConxCircle &l)
-    : L(l), sdid(0), sdidIsValid(FALSE) { DWCIRCLE_INIT(); }
-  CConxDwCircle(const CConxPoint &C, double radius)
-    : L(C, radius), sdid(0), sdidIsValid(FALSE) { DWCIRCLE_INIT(); }
-  CConxDwCircle(const CConxDwCircle &o)
-    : CConxDwGeomObj(o), L(o.L), sdid(0), sdidIsValid(FALSE)
-  {
-    MMM("CConxDwCircle(const CConxDwCircle &)");
-    setValidity(FALSE);
-  }
-  CConxDwCircle &operator=(const CConxDwCircle &o)
-  {
-    MMM("CConxDwCircle &operator=(const CConxDwCircle &)");
-    (void) CConxDwGeomObj::operator=(o);
-    L = o.L;
-    setValidity(FALSE);
-    sdidIsValid = FALSE;
-    return *this;
-  }
-
-  void setCircle(const CConxCircle &l) { setValidity(FALSE); invalSD(); L = l; }
-  const CConxCircle &getCircle() const { return L; }
-  CConxCircle &getCircle() { setValidity(FALSE); return L; }
-  void setRadius(double r) { setValidity(FALSE); invalSD(); L.setRadius(r); }
-  void setCenter(const CConxPoint &C) { setValidity(FALSE); invalSD(); L.setCenter(C); }
-  void drawOn(CConxCanvas &) const throw(int);
-  ostream &printOn(ostream &o) const
-  {
-    o << className() << "<[";
-    CConxDwGeomObj::printOn(o);
-    o << ", ";
-    L.printOn(o);
-    o << "]>";
-    return o;
-  }
-  ostream &printOn(ostream &o, ConxModlType modl) const
-  {
-    o << className() << "<[";
-    CConxDwGeomObj::printOn(o, modl);
-    o << ", ";
-    L.printOn(o, modl);
-    o << "]>";
-    return o;
-  }
-
-
-private: // operations
-  static double longwayMetric(Pt x, void *t);
-  void longwayDrawOn(CConxCanvas &cvs) const throw(int);
-  void smartDrawOn(CConxCanvas &cvs) const throw(int);
-  void invalSD()
-  // Call when the display list becomes invalid.
-  {
-    // We need to know who the canvas is!  The canvas needs to store display lists??? DLC
-    if (sdidIsValid) {
-      // DLC delete the sd.
-      sdidIsValid = FALSE;
-    }
-  }
-
-private: // attributes
-  CConxCircle L;
-  mutable SDID sdid;
-  mutable Boole sdidIsValid;
-}; // class CConxDwCircle
-
-
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxDwGeomObj);
 OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxArtist);
 
 

@@ -52,6 +52,8 @@ extern "C" {
 
 // DLC make it so that we don't have to link with lines.c and conxv.c
 
+Boole CConxToglObj::debugMode = FALSE;
+
 static CConxGLCanvas pdCanvas, puhpCanvas, kdCanvas;
 static CConxClsMetaParser mp(&kdCanvas, &pdCanvas, &puhpCanvas);
 
@@ -71,6 +73,7 @@ void initCanvases()
   CConxPoint focus2(0.2, 0.75, CONX_POINCARE_UHP);
   CConxLine l1(focus1, focus2);
   CConxCircle c1(CConxPoint(-0.3, 0.1, CONX_POINCARE_UHP), 0.7);
+#ifdef DLC
   CConxDwCircle dwc1(c1);
   CConxDwCircle dwc2(c1);
   dwc1.setDrawingMethod(dwc1.LONGWAY);
@@ -103,6 +106,7 @@ void initCanvases()
   pdCanvas.append(&d11);
   static CConxDwCircle d12(dwc2);
   kdCanvas.append(&d12);
+#endif
 }
 
 CConxGLCanvas *getCanvasByType(ConxModlType m)
@@ -208,9 +212,23 @@ int CConxToglObj::firstInit(Tcl_Interp *interp)
   Togl_DisplayFunc(CConxToglObj::displayCallBack);
   Togl_ReshapeFunc(CConxToglObj::reshapeCallBack);
 
+#ifdef DLC
   {
     char s1[] = "SAMPLE_GLOBAL_VARIABLE";
     const char *dd = "SAMPLE VALUE";
+    char *unconst_dd;
+    CONST_CAST(char *, unconst_dd, dd);
+    Tcl_SetVar2(interp, arrayname, s1, unconst_dd, mode);
+  }
+#endif
+
+  {
+    char s1[] = "DebuggingOutput";
+    const char *dd;
+    if (isDebugMode())
+      dd = "1";
+    else
+      dd = "0";
     char *unconst_dd;
     CONST_CAST(char *, unconst_dd, dd);
     Tcl_SetVar2(interp, arrayname, s1, unconst_dd, mode);
@@ -226,6 +244,13 @@ int CConxToglObj::firstInit(Tcl_Interp *interp)
   {
     char s1[] = "Package";
     char s2[] = PACKAGE;
+    /* To avoid warnings, these are defined as non-const char arrays */
+    Tcl_SetVar2(interp, arrayname, s1, s2, mode);
+  }
+
+  {
+    char s1[] = "CXXCONX";
+    char s2[] = "just existing is enough";
     /* To avoid warnings, these are defined as non-const char arrays */
     Tcl_SetVar2(interp, arrayname, s1, s2, mode);
   }
@@ -247,8 +272,8 @@ int CConxToglObj::firstInit(Tcl_Interp *interp)
    */
 
   {
-    char mutabl[] = "mouse";    /* To avoid warnings */
-    Togl_CreateCommand(mutabl, tconx_tcl_mouse);
+    char mutabl[] = "mouse2model";    /* To avoid warnings */
+    Togl_CreateCommand(mutabl, CConxToglObj::mouseHandler);
   }
   {
     char mutabl[] = "data_entry";    /* To avoid warnings */
@@ -278,6 +303,35 @@ int CConxToglObj::firstInit(Tcl_Interp *interp)
   return TCL_OK;
 }
 
+int CConxToglObj::mouseHandler(struct Togl *togl, int argc, char *argv[])
+// Evaluate `.modelpd.togl_wig mouse2model 40 55', e.g., to get pd coordinates
+// for this location.
+{
+  Tcl_Interp *interp = Togl_Interp(togl);
+  char help_message[] = "Illegal usage.  Try `.modelpd.togl_wig "
+    "mouse2model 40 55', e.g., to get Poincare Disk coordinates "
+    "corresponding to mouse coordinates (40, 55).";
+
+
+  argc -= 2; argv += 2;
+
+  if (argc != 2) TCONX_TCL_BAD_ARGS(interp);
+
+  long x, y;
+  if (conx_str2l(argv[0], &x) || conx_str2l(argv[1], &y))
+    TCONX_TCL_BAD_ARGS(interp);
+
+  CConxDumbCanvas *cnvs = getCanvasByType(tconx_togl_id2model(togl));
+  assert((uint) Togl_Height(togl) == cnvs->getHeight());
+  assert((uint) Togl_Width(togl) == cnvs->getWidth());
+  
+  Pt m;
+  cnvs->screenCoordinatesToModelCoordinates(x, y, m);
+  char s[250];
+  (void) sprintf(s, "%.18e %.18e", m.x, m.y); // a list of two elements.
+  TCONX_TCL_OK_ARRAY(s);
+}
+
 int CConxToglObj::parseString(struct Togl *togl, int argc, char *argv[])
 {
   char help_message[] = "Illegal usage.  Try `.modelpd.togl_wig yap "
@@ -291,16 +345,23 @@ int CConxToglObj::parseString(struct Togl *togl, int argc, char *argv[])
     mp.debugParse(TRUE);
   }
   if (argc != 1) TCONX_TCL_BAD_ARGS(interp);
-  if (mp.parse(argv[0])) {
+  long reslt = mp.parse(argv[0]);
+  int retval = TCL_OK;
+  if (reslt < 0) {
     // DLC how can this happen??? We have `input: error' in the grammar!
-    TCONX_TCL_ERROR("Parse error");
+    TCONX_TCL_ERROR("General Fatal Parse error");
+  } else if (reslt > 0) {
+    // We have reslt non-fatal errors.
+    retval = TCL_ERROR;
   }
+
+  // DLC rename ttalk-make-current-good-sh to a <=14-letter name
 
   // Return the value of the implicit variable `ans'.
   CConxString css = mp.getLastParseResult().getString();
   char *nonconst = css.getStringAsNewArray();
   Tcl_SetResult(interp, nonconst, TCL_VOLATILE);
   delete [] nonconst;
-  return TCL_OK;
+  return retval;
 }
 

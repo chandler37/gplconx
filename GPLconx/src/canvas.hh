@@ -38,11 +38,7 @@ class CConxDumbCanvas
 public:
   CConxDumbCanvas();
   CConxDumbCanvas(const CConxDumbCanvas &o) { uninitializedCopy(o); }
-  CConxDumbCanvas &operator=(const CConxDumbCanvas &o)
-  {
-    uninitializedCopy(o);
-    return *this;
-  }
+  CConxDumbCanvas &operator=(const CConxDumbCanvas &o);
   // The default operator== and != will work.
 
   void setSize(uint w, uint h) throw(int);
@@ -56,18 +52,12 @@ public:
   double getYmax() const { return ymax; }
   double getPixelWidth() const;
   double getPixelHeight() const;
+  Pt screenCoordinatesToModelCoordinates(long x, long y);
+  void screenCoordinatesToModelCoordinates(long x, long y, Pt &modelCoords);
   ostream &printOn(ostream &o) const;
 
 private: // operations
-  void uninitializedCopy(const CConxDumbCanvas &o)
-  {
-    width = o.width;
-    height = o.height;
-    xmin = o.xmin;
-    xmax = o.xmax;
-    ymin = o.ymin;
-    ymax = o.ymax;
-  }
+  void uninitializedCopy(const CConxDumbCanvas &o);
 
 private: // attributes
   uint width, height; // In pixels.  Always strictly positive.
@@ -88,11 +78,7 @@ public:
 public:
   CConxDrawCanvas() { }
   CConxDrawCanvas(const CConxDrawCanvas &o) : CConxDumbCanvas(o) { }
-  CConxDrawCanvas &operator=(const CConxDrawCanvas &o)
-  {
-    (void) CConxDumbCanvas::operator=(o);
-    return *this;
-  }
+  CConxDrawCanvas &operator=(const CConxDrawCanvas &o);
   ~CConxDrawCanvas() { }
 
   // SD means ``stored drawing'', like an OpenGL display list.
@@ -105,26 +91,20 @@ public:
   virtual void beginDraw(DrawingType dt) = 0;
   virtual void endDraw() = 0;
   virtual void drawVertex(double x, double y) = 0;
-  virtual void drawVertex(const Pt &p)
-  {
-    drawVertex(p.x, p.y);
-  }
+  virtual void drawVertex(const Pt &p) { drawVertex(p.x, p.y); }
   virtual void drawCircle(double x, double y, double r) = 0;
   virtual void drawCircle(Pt p, double r) { drawCircle(p.x, p.y, r); }
   virtual void drawTopSemiCircle(double x, double y, double r) = 0;
-  virtual void drawTopSemiCircle(Pt p, double r)
-  {
-    drawTopSemiCircle(p.x, p.y, r);
-  }
+  virtual void drawTopSemiCircle(Pt p, double r);
   virtual void drawArc(double x, double y, double r, double t0, double t1) = 0;
-  virtual void drawArc(Pt center, double r, double t0, double t1)
-  {
-    drawArc(center.x, center.y, r, t0, t1);
-  }
+  virtual void drawArc(Pt center, double r, double t0, double t1);
 
+  typedef double (DFN) (const CConxSimpleArtist *sa, const CConxPoint &);
+  virtual void drawByBresenham(const CConxPoint &lb, const CConxPoint &rb,
+                               DFN *f, const CConxSimpleArtist *sa) = 0;
   virtual void setDrawingColor(const CConxColor &C) = 0;
   virtual void setPointSize(double pSize) = 0;
-  virtual void flush() = 0;
+  virtual void flushQueue() = 0; // the semantics of glFlush(), e.g.
   virtual void clear() = 0;
 
   // you must call this before drawing and after setting the size.
@@ -139,20 +119,9 @@ class CConxCanvas : VIRT public CConxDrawCanvas {
   CCONX_CLASSNAME("CConxCanvas")
 public:
   CConxCanvas() : modl(CONX_KLEIN_DISK) { }
-  CConxCanvas(const CConxCanvas &o) : CConxDrawCanvas(o)
-  {
-    uninitializedCopy(o);
-  }
-  CConxCanvas &operator=(const CConxCanvas &o)
-  {
-    (void) CConxDrawCanvas::operator=(o);
-    uninitializedCopy(o);
-    return *this;
-  }
-  int operator==(const CConxCanvas &o) const
-  {
-    return (artists == o.artists);
-  }
+  CConxCanvas(const CConxCanvas &o);
+  CConxCanvas &operator=(const CConxCanvas &o);
+  int operator==(const CConxCanvas &o) const;
   int operator!=(const CConxCanvas &o) const { return !operator==(o); }
 
   ConxModlType getModel() const { return modl; }
@@ -168,10 +137,7 @@ protected:
 
 
 private: // operations
-  void uninitializedCopy(const CConxCanvas &o)
-  {
-    artists = o.artists;
-  }
+  void uninitializedCopy(const CConxCanvas &o);
 
 private: // attributes
   ConxModlType modl;
@@ -180,7 +146,5 @@ private: // attributes
 
 
 OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxDumbCanvas);
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxCanvas);
-OOLTLT_INLINE P_STREAM_OUTPUT_SHORTCUT_DECL(CConxDrawCanvas);
 
 #endif // GPLCONX_HGMCANVAS_CXX_H

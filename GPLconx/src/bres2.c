@@ -33,7 +33,7 @@ static const char *conx_direction2string(ConxDirection a);
 static
 void conx_bres_tracebranch(ConxDirection last, Pt middle, double dw,
                            double dh, ConxMetric *func, void *fArg,
-                           ConxContinueFunc *keepgoing,
+                           ConxContinueFunc *keepgoing, void *kArg,
                            ConxBresTraceFunc *bres_trace);
 static
 ConxDirection conx_startpoint(Pt LB, double dw, double dh, ConxMetric *func,
@@ -139,7 +139,7 @@ ConxDirection conx_startpoint(Pt LB, double dw, double dh, ConxMetric *func,
 
 void conx_bres_trace(Pt middle, ConxDirection last, double dw, double dh,
                      ConxMetric *func, void *fArg, ConxContinueFunc *keepgoing,
-                     ConxPointFunc *pfunc, void *pArg)
+                     void *kArg, ConxPointFunc *pfunc, void *pArg)
 /* We trace a curve from a point going in one direction until we fall off
    the edge of the visualized world.  We are following local minima rather
    than finding zeroes by scan lines because we have well-behaved curves.
@@ -224,19 +224,19 @@ void conx_bres_trace(Pt middle, ConxDirection last, double dw, double dh,
     MOVE_POINT(&middle, last, dw, dh);
 
     (*pfunc)(middle.x, middle.y, pArg);
- } while ((*keepgoing)(middle, oldmiddle) && (++count<=15000));
+ } while ((*keepgoing)(middle, oldmiddle, kArg) && (++count<=15000));
 }
 
 void conx_bres_tracebranch(ConxDirection last, Pt middle, double dw,
                            double dh, ConxMetric *func, void *fArg,
-                           ConxContinueFunc *keepgoing,
+                           ConxContinueFunc *keepgoing, void *kArg,
                            ConxBresTraceFunc *bres_trace)
 {
   LOGGG0(LOGG_BRES2, "\nAbout to trace one branch of a conic section using "
          "the Bresenham method.\n");
 
   MOVE_POINT(&middle, last, dw, dh);
-  (*bres_trace)(middle, last, dw, dh, func, fArg, keepgoing);
+  (*bres_trace)(middle, last, dw, dh, func, fArg, keepgoing, kArg);
 
   last = conx_compass_opposite(last);
 
@@ -250,27 +250,26 @@ void conx_bres_tracebranch(ConxDirection last, Pt middle, double dw,
          "using the Bresenham method.\n");
 
   MOVE_POINT(&middle, last, dw, dh);
-  (*bres_trace)(middle, last, dw, dh, func, fArg, keepgoing);
+  (*bres_trace)(middle, last, dw, dh, func, fArg, keepgoing, kArg);
   /* now the other direction around, (DLC but from what point??) */
 
   LOGGG0(LOGG_BRES2, "\nDone tracing both branches of the conic section "
          "using the Bresenham method.\n");
 }
 
-void conx_bresenham(ConxBresenhamStarter *getB, ConxMetric *func,
+void conx_bresenham(Pt LB, Pt RB, ConxMetric *func,
                     void *fArg, double delta_x, double delta_y,
-                    ConxContinueFunc *keepgoing,
+                    ConxContinueFunc *keepgoing, void *kArg,
                     ConxBresTraceFunc *bres_trace)
+  /* LB and RB are points on the left and right branches, the same
+     point iff the conic section has only one branch.
+  */
 {
-  Pt LB, RB;
   ConxDirection last;
 
   assert(delta_x != 0.0); assert(delta_y != 0.0);
-  assert(keepgoing != NULL); assert(getB != NULL); assert(func != NULL);
+  assert(keepgoing != NULL); assert(func != NULL);
   LOGGG0(LOGG_TEXINFO, "\n@conx_bresenham\n");
-
-  /* Get points on the left and right branches. */
-  getB(&LB, &RB);
 
   LOGGG4(LOGG_BRES2, "The two points are: (" DOF ", " DOF ") and (" DOF ", "
          DOF ")\n", LB.x, LB.y, RB.x, RB.y);
@@ -280,7 +279,7 @@ void conx_bresenham(ConxBresenhamStarter *getB, ConxMetric *func,
   LOGGG3(LOGG_BRES2, "Start point: (" DOF ", " DOF ") will move in %s "
          "direction", LB.x, LB.y, conx_direction2string(last));
   conx_bres_tracebranch(last, LB, delta_x, delta_y, func, fArg, keepgoing,
-                        bres_trace);
+                        kArg, bres_trace);
 
   /* If we have two distinct branches, then trace the other also. */
   if ((RB.x != LB.x) || (RB.y != LB.y)) {
@@ -290,7 +289,7 @@ void conx_bresenham(ConxBresenhamStarter *getB, ConxMetric *func,
     LOGGG3(LOGG_BRES2, "Start point: (" DOF ", " DOF ") will move in %s "
            "direction", RB.x, RB.y, conx_direction2string(last));
     conx_bres_tracebranch(last, RB, delta_x, delta_y, func, fArg, keepgoing,
-                          bres_trace);
+                          kArg, bres_trace);
   }
   LOGGG0(LOGG_TEXINFO, "\n@end conx_bresenham\n");
 }

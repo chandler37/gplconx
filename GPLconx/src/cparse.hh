@@ -44,6 +44,8 @@ void conxP_final_cleanup(void);
 void conxP_reinitialize(void);
 void conxP_set_to_empty(SimpleClsRef *r);
 int conxP_is_empty(SimpleClsRef r);
+const char *conxP_get_specific_parse_error(SimpleClsRef r);
+int conxP_is_parse_error(SimpleClsRef r);
 void conxP_set_to_new_err(SimpleClsRef *resultPtr, const char *errString);
 void conxP_define_new_variable(SimpleClsRef *result, const char *varName);
 void conxP_print_line_of_output(SimpleClsRef *result);

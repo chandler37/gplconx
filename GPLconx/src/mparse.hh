@@ -37,39 +37,39 @@ class CConxMetaParser : VIRT public CConxObject {
 public:
   DEFAULT_PRINTON()
 public:
-  CConxMetaParser() { dbg = FALSE; }
+  CConxMetaParser() { dbg = FALSE; lastParseWasError = FALSE; }
   ~CConxMetaParser() { }
-  CConxMetaParser(const CConxMetaParser &o) : CConxObject(o) { dbg = o.dbg; }
-  CConxMetaParser &operator=(const CConxMetaParser &o)
-  {
-    (void) CConxObject::operator=(o);
-    dbg = o.dbg;
-    return *this;
-  }
+  CConxMetaParser(const CConxMetaParser &o);
+  CConxMetaParser &operator=(const CConxMetaParser &o);
 
   // parser debugging does not matter for equality.
   int operator==(const CConxMetaParser &o) const { return m == o.m; }
   int operator!=(const CConxMetaParser &o) const { return !operator==(o); }
 
   CConxString getLastParseResult() const;
-  int parse(const char *s);
-  int parse(FILE *f);
+
+  // These return -1 for a fatal error, which I think is impossible,
+  // or the number of non-fatal errors otherwise.
+  long parse(const char *s);
+  long parse(FILE *f);
+
   void restoreStartupObjectWorld(); // Forget all actions from parses.
   void debugParse(Boole s) { dbg = s; }
   Boole isDebuggingParse() const { return dbg; }
+  Boole lastParseHadNonFatalErrors() const { return lastParseWasError; }
 
 protected: // virtual functions:
-  virtual void initializeClsMgr(CConxClsManager *m)
-  {
-    assert(m != NULL);
-    m->firstInit();  // it doesn't hurt to call firstInit() repeatedly.
-  }
+  virtual void initializeClsMgr(CConxClsManager *m);
 
 private: // operations
-  int innerParse();
+
+  long innerParse();
+  // returns -1 for a fatal error, which I think is impossible, or the number of non-fatal errors otherwise.
+
   CConxClsManager &getClsMgr() { return m; }
 
 private: // attributes
+  Boole lastParseWasError;
   CConxClsManager m;
   Boole dbg;
 }; // class CConxMetaParser

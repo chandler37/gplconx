@@ -41,5 +41,5 @@ proc tconx_help_help { } {
 
 proc tconx_help_about { } {
     # DLC
-    tconx_new_text [tconx_base].text_about "[tconx_package]'s tconx version [tconx_version], Copyright (C) 1996-2001 David L. Chandler\n[tconx_package] comes with ABSOLUTELY NO WARRANTY\nThis is free software, and you are welcome to redistribute it\nunder certain conditions; read the COPYING file for details." "About [tconx_package]"
+    tconx_new_text [tconx_base].text_about "[tconx_package] version [tconx_version], Copyright (C) 1996-2001 David L. Chandler\n[tconx_package] comes with ABSOLUTELY NO WARRANTY\nThis is free software, and you are welcome to redistribute it\nunder certain conditions; read the COPYING file for details." "About [tconx_package]"
 }

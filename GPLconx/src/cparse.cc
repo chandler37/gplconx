@@ -30,6 +30,7 @@
 #include "CString.hh"
 #include "clsmgr.hh"
 #include "cparse.hh"
+#include "sterror.hh"
 
 #define PARSING_PROMPT "$ " << flush
 
@@ -322,6 +323,8 @@ static CConxString cat;
 void conxP_yyerror(const char *s)
 // Uses pyyerror.
 {
+  assert(mgr != NULL);
+  mgr->reportParsingError(s);
   // kill the last parse error.
   if (pyyerror != NULL) {
     delete pyyerror;
@@ -364,4 +367,29 @@ void conxP_handle_yyerror(SimpleClsRef *result, const char *first,
   CConxString es = first;
   es += conxP_get_accumulated_pyyerror(breaker);
   conxP_set_to_new_err(result, es.getString());
+}
+
+const char *conxP_get_specific_parse_error(SimpleClsRef r)
+/* This will not be valid if r is changed or destroyed. */
+{
+  assert(conxP_is_parse_error(r));
+  CClsBase *t = NULL;
+  REF2OBJ(t, &r);
+  assert(t != NULL);
+  return ((CClsError *)t)->getValue().getString();
+}
+
+int conxP_is_parse_error(SimpleClsRef r)
+/* Returns non-zero if r points to a CClsParseError object instance.  If you
+   don't take note of such a result and pass it on to the user, then
+   `System unrecogNizedUNARYmessage . 2.2' will just print as `>>> 2.2' with
+   the user unaware that the first statement went bomb-o.
+*/
+{
+  if (conxP_is_empty(r)) return 0;
+
+  CClsBase *trueRecv = NULL;
+  REF2OBJ(trueRecv, &r);
+  return (!trueRecv->isClassInstance()
+          && trueRecv->isType(CClsBase::CLS_ERROR));
 }

@@ -42,26 +42,9 @@ class CConxGLCanvas : VIRT public CConxCanvas {
   DEFAULT_PRINTON()
 public:
   CConxGLCanvas() : lowestSD(3), highestSD(2) { }
-  CConxGLCanvas(const CConxGLCanvas &o)
-    : CConxCanvas(o)
-  {
-    // Just clears all our stored drawings since we don't share them between
-    // instances, hence it's the same as DLC...
-    uninitializedCopy(o);
-  }
-  CConxGLCanvas &operator=(const CConxGLCanvas &o)
-  {
-    // Just clears all our stored drawings since we don't share them between
-    // instances.
-    (void) CConxCanvas::operator=(o);
-    deleteAllSD();
-    uninitializedCopy(o);
-    return *this;
-  }
-  ~CConxGLCanvas()
-  {
-    deleteAllSD();
-  }
+  CConxGLCanvas(const CConxGLCanvas &o);
+  CConxGLCanvas &operator=(const CConxGLCanvas &o);
+  ~CConxGLCanvas();
 
   SDID startSD() throw(int);
   void stopSD();
@@ -77,25 +60,34 @@ public:
   void drawVertex(double x, double y);
   void setDrawingColor(const CConxColor &C);
   void setPointSize(double pSize);
-  void flush();
+  void flushQueue();
   void clear();
   void initDraw();
+  void drawByBresenham(const CConxPoint &lb, const CConxPoint &rb,
+                       DFN *f, const CConxSimpleArtist *sa);
 
 
 private: // operations
-  void uninitializedCopy(const CConxGLCanvas &o)
-  {
-    // do NOT share stored drawings.
-    lowestSD = 3;
-    highestSD = 2;
-    // Do not allow initDraw to work for both. DLC?
-  }
+  void uninitializedCopy(const CConxGLCanvas &o);
+  static void bresVertex2(double a, double b, void *kArg);
+  static double bresMetric(Pt middle, void *t);
+  static void bresTrace(Pt middle, ConxDirection last,
+                        double dw, double dh,
+                        ConxMetric *func, void *fArg,
+                        ConxContinueFunc *keepgoing, void *kArg);
+
+  // The Bresenham method requires this to know when to stop.
+  static int bresKeepGoing(Pt middle, Pt oldmiddle, void *t);
+
 
 private: // attributes
   // These are invalid if and only if highestSD < lowestSD.
   // They allow deleteAllSD() to work.
   SDID lowestSD;
   SDID highestSD;
+
+  DFN *savedFoo;
+  const CConxSimpleArtist *savedFooArg;
 
   static Boole isInitialized;
 }; // class CConxGLCanvas

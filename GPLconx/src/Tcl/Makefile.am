@@ -22,5 +22,5 @@ AUTOMAKE_OPTIONS = 1.4 foreign
 pkgdata_DATA = tconx_a.tcl tconxt.ui.tcl tconx_b.tcl simple.ui.tcl tconx.tcl \
                tconx_d.tcl tconx_l.tcl tconx_m.tcl slider.ui.tcl tconx_s.tcl \
                tconx_w.tcl tconx_h.tcl tconx_p.tcl text.ui.tcl tconx_t.tcl \
-               tconx_u.tcl
+               tconx_u.tcl tconx_c.tcl
 EXTRA_DIST = tconxt.ui simple.ui slider.ui text.ui $(pkgdata_DATA)

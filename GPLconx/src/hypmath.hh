@@ -39,7 +39,7 @@ extern "C" {
 // class CConxHypEllipse;
 // class CConxEqDistCurve;
 
-/*
+/* DLC delete this junk!
 //////////////////////////////////////////////////////////////////////////////
 // Abstract class:
 class CConxGeomModel {

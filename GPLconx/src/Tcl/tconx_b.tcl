@@ -61,14 +61,18 @@ proc tconx_cca { action } {
 # Sets a ConxMenuChoices label for the current left click semantics, e.g.
 # CONXCMD_MGETFS for the
 # press-to-select-focus1-and-then-release-to-select-focus2 action.
-    global tconx_globls
-    set tconx_globls(click_action) $action
+    if [tconx_we_are_cxxconx] {
+        cxxconx_setup_mouse_semantics $action
+    } else {
+        global tconx_globls
+        set tconx_globls(click_action) $action
+    }
 }
 
 proc tconx_finally_show_main_window { root } {
     Debugloc "tconx_finally_show_main_window"
     
-    wm geometry $root +0+340
+    wm geometry $root 600x300+0+340; #DLC config file entry
     wm deiconify $root
 }
 
@@ -94,6 +98,35 @@ proc tconx_b1_release { x y W } {
     $W mouse up $x $y [tconx_current_mouse_semantics]
     $W render
 }
+
+proc cxxconx_b1_press { x y W } {
+    Debugloc "cxxconx_b1_press { $x $y $W }";
+    global tconx_globls
+    if [info exists tconx_globls(cxxconx_b1_press_action)] {
+        set mc [$W mouse2model $x $y]
+        eval "$tconx_globls(cxxconx_b1_press_action) $mc $W"
+    }
+}
+
+proc cxxconx_b1_release { x y W } {
+    Debugloc "cxxconx_b1_release { $x $y $W }";
+    global tconx_globls
+    if [info exists tconx_globls(cxxconx_b1_release_action)] {
+        set mc [$W mouse2model $x $y]
+        eval "$tconx_globls(cxxconx_b1_release_action) $mc $W"
+    }
+    # $W render DLC
+}
+
+proc cxxconx_b1_motion { x y W } {
+    Debugloc "cxxconx_b1_motion { $x $y $W }";
+    global tconx_globls
+    if [info exists tconx_globls(cxxconx_b1_motion_action)] {
+        set mc [$W mouse2model $x $y]
+        eval "$tconx_globls(cxxconx_b1_motion_action) $mc $W"
+    }
+}
+
 
 # proc tconx_b1_motion { x y W } {
 #     Debugloc "tconx_b1_motion { $x $y $W }";
@@ -122,10 +155,11 @@ proc tconx_exit_is_confirmed { {parent_window .} } {
 }
 
 proc tconx_exit { W } {
-# Call this before closing a window $W.
+# Call this before closing the window $W or the window containing $W.
 # Returns 1 if the window remains open (after the user intervened)
 
-    Debugloc "tconx_exit $W";
+    set W [winfo toplevel $W]
+    Debuglocup {tconx_exit $W}
     if {$W == [tconx_mother_widget_pathname]} {
         if {![tconx_exit_is_confirmed]} {
             return 1
@@ -141,7 +175,8 @@ proc tconx_exit { W } {
         if {![tconx_exit_is_confirmed]} {
             return 1
         }
-        exit 0
+        # `exit 0' will do, but more bugs are found if we do:
+        tconx_parse_smalltalkish { System exit }
     }
     destroy $W
     return 0
@@ -177,7 +212,14 @@ proc tconx_mother_widget_init { W } {
     bind $W <Alt-Key-u> "$base.checkbutton\#1 invoke; break;"
     bind $W <Alt-Key-k> "$base.checkbutton\#2 invoke; break;"
     bind $W <Alt-Key-p> "$base.checkbutton\#3 invoke; break;"
+
+    # DLC config file entry
+    global tconx_globls
+    set tconx_globls(auto_update_canvases) 1
+    tconx_mother_check auto_update
+    
     tconx_init_pew
+    tconx_st_init
 
     wm protocol $W WM_DELETE_WINDOW [list tconx_exit $W]
 
@@ -233,9 +275,16 @@ proc tconx_new_viz_window { W {ttl "n/a"} {ident Joe} {xcoord 0} {ycoord 0}
     grid rowconfigure $W.the_frame 1 -weight 1 -minsize 100
     grid columnconfigure $W.the_frame 1 -weight 1 -minsize 100
     pack $W.togl_wig -in $W.the_frame -fill both -expand 1
-    bind $W.togl_wig <ButtonPress-1> {tconx_b1_press %x %y %W}
-    #bind $W.togl_wig <B1-Motion> {tconx_b1_motion %x %y %W}
-    bind $W.togl_wig <ButtonRelease-1> {tconx_b1_release %x %y %W}
+    if ![tconx_we_are_cxxconx] {
+        bind $W.togl_wig <ButtonPress-1> {tconx_b1_press %x %y %W}
+        #bind $W.togl_wig <B1-Motion> {tconx_b1_motion %x %y %W}
+        bind $W.togl_wig <ButtonRelease-1> {tconx_b1_release %x %y %W}
+    } else {
+        # DLC
+        # DLC delete bind $W.togl_wig <ButtonPress-1> {cxxconx_b1_press %x %y %W}
+        # DLC delete bind $W.togl_wig <B1-Motion> {cxxconx_b1_motion %x %y %W}
+        # DLC delete bind $W.togl_wig <ButtonRelease-1> {cxxconx_b1_release %x %y %W}
+    }
     bind $W.togl_wig <ButtonPress-2> {tconx_b2_press_action %x %y %W}
     bind $W.togl_wig <B2-Motion> {tconx_b2_motion_action %x %y %W}
     bind $W.togl_wig <ButtonRelease-2> {
@@ -257,6 +306,8 @@ proc tconx_open_windows { } {
 }
 
 proc tconx_change_geometry { a args } {
+# DLC outdated
+
 # Changes parameters that affect the mathematics that is being visualized.
     set W [tconx_open_windows]
     foreach w $W {
@@ -397,8 +448,24 @@ proc tconx_model_number { model } {
     }
 }
 
+proc tconx_auto_update { } {
+    global tconx_globls
+    return $tconx_globls(auto_update_canvases)
+}
+
 proc tconx_mother_check { model } {
     Debugloc "tconx_mother_check $model"
+    if {"$model" == "auto_update"} {
+        global tconx_globls
+        set on $tconx_globls(auto_update_canvases)
+        if $on {
+            [tconx_base].button\#1 configure -state disabled
+            tconx_update_canvases_button_command [tconx_mother_widget_pathname]
+        } else {
+            [tconx_base].button\#1 configure -state normal
+        }
+        return;
+    }
     if [winfo exists [tconx_widg $model]] {
         if [tconx_exit [tconx_widg $model]] {
             global tconx_globls
@@ -432,6 +499,7 @@ proc tconx_alias { cmd } {
         VF { tconx_verbosity [tconx_verbosity_level LOGG_FULL] }
         VT { tconx_verbosity [tconx_verbosity_level LOGG_TEXINFO] }
         V0 { tconx_verbosity [tconx_verbosity_level LOGG_OFF] }
+        TCLV0 { DebugOff }
         QCD { return [[puhpt] query CONXCMD_SHOWCD] }
         . { tconx_do_conxcmd_only_once CONXCMD_OUTPUT }
         S { sync }
@@ -439,52 +507,9 @@ proc tconx_alias { cmd } {
     }
 }
 
-proc p { a } {
-    return [tconx_parse_smalltalkish $a]
-}
-
-proc tconx_parse_smalltalkish { a } {
-    # Any togl widget will do -- this should be a built-in command but
-    # I'm lazy.
-    return [[puhp].togl_wig yap "$a\n"]
-}
-
-proc Render { } {
-    tconx_parse_smalltalkish {pdc sync. kdc sync. uhpc sync}
-    [pdt] render; [kdt] render; [puhpt] render
-}
-
-proc DLC { } {
-# DLC This gets something on the screen.
-    p {d1 := Point x: -.6 y: .7 model: pd. d1 thickness set: 9 . pdc at: 1 put: d1. pdc sync}
-    Render
-}
-
-proc tconx_pew { } {
-# Returns the path of the parser's entry widget (pew)
-    return [tconx_base].entry\#3
-}
-
-proc tconx_prw { } {
-# Returns the path of the parser's result widget (pew)
-    return [tconx_base].text\#1
-}
-
-proc tconx_init_pew { } {
-    bind [tconx_pew] <Key-Return> tconx_handle_pew
-}
-
-proc tconx_set_prw_wrapping { e } {
-    if {"$e" != "word" && "$e" != "char"} {
-        set e none
+proc tconx_update_canvases_button_command { R } {
+    Debug_assert {$R == "."}
+    foreach w [tconx_open_windows] {
+        $w.togl_wig render
     }
-    [tconx_prw] configure -wrap $e
-}
-
-proc tconx_handle_pew { } {
-    set r [tconx_parse_smalltalkish [[tconx_pew] get]]
-    [tconx_prw] configure -state normal
-    [tconx_prw] delete 1.0 end
-    [tconx_prw] insert 1.0 $r
-    [tconx_prw] configure -state disabled
 }

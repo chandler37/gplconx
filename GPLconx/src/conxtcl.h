@@ -36,11 +36,16 @@
         return TCL_ERROR; \
       } while (0)
 
+#define TCONX_TCL_OK_ARRAY(mutable_string) \
+      do { \
+        Tcl_SetResult(interp, mutable_string, TCL_VOLATILE); \
+        return TCL_OK; \
+      } while (0)
+
 #define TCONX_TCL_OK(compileTimeStringConstant) \
       do { \
         char mutable_string[] = compileTimeStringConstant; \
-        Tcl_SetResult(interp, mutable_string, TCL_VOLATILE); \
-        return TCL_OK; \
+        TCONX_TCL_OK_ARRAY(mutable_string); \
       } while (0)
 
 /* This macro assumes there is a

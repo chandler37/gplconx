@@ -129,18 +129,18 @@ void conx_screen2model(int x, int y, double xa, double xb, double yc,
                        double yd, int sh, Pt *ModelCoords);
 void conxhm_p_getEstarted(Pt *LB, Pt *RB, Pt f1, Pt f2, double cdist);
 void conxhm_p_getHstarted(Pt *LB, Pt *RB, Pt f1, Pt f2, double cdist);
-void conxhm_p_getPstarted(Pt *LB, Pt *RB, Pt f1, double line_a, double line_r,
-                          double computol);
+int conxhm_p_getPstarted(Pt *LB, Pt *RB, Pt f1, double line_a, double line_r,
+                         double computol);
 void conxhm_p_getEQstarted(Pt *LB, Pt *RB, double line_a, double line_r,
                            double cdist, double ymin, double ymax);
 double conxpd_getr(double cx, double cy);
 /* end of hypmath.c */
 void conx_bres_trace(Pt middle, ConxDirection last, double dw, double dh,
                      ConxMetric *func, void *fArg, ConxContinueFunc *keepgoing,
-                     ConxPointFunc *pfunc, void *pArg);
-void conx_bresenham(ConxBresenhamStarter *getB, ConxMetric *func,
+                     void *kArg, ConxPointFunc *pfunc, void *pArg);
+void conx_bresenham(Pt LB, Pt RB, ConxMetric *func,
                     void *fArg, double delta_x, double delta_y,
-                    ConxContinueFunc *keepgoing,
+                    ConxContinueFunc *keepgoing, void *kArg,
                     ConxBresTraceFunc *bres_trace);
 /* end of bres2.c */
 void conx_longway(ConxMetric *test, void *fArg, ConxModlType modl,

@@ -39,6 +39,12 @@ public:
   static void printLongHelp(void);
 
   static int parseString(struct Togl *togl, int argc, char *argv[]);
+  static int mouseHandler(struct Togl *togl, int argc, char *argv[]);
+  static void setDebugMode(Boole y) { debugMode = y; }
+  static Boole isDebugMode() { return debugMode; }
+
+private:
+  static Boole debugMode;
 }; // class CConxToglObj
 
 #endif // GPLCONX_TOGLOBJ_H

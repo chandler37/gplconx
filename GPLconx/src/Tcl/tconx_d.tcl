@@ -39,12 +39,17 @@ proc Debugloc { msg args } {
     Debugn 1 {tconx loc:} $msg $args
 }
 
+proc Debuglocup { msg args } {
+# Location debugging lets you zero in on the problem code.
+    uplevel "Debugn_no_eval 1 " "{tconx loc: $msg $args}"
+}
+
 proc Debugn_no_eval { level cmd } {
 # Optionally print out a string that requires optional evaluation.  If you
 # try `Debugn 0 [print_a_lot]' you will slow your program
-# down.  Using `Debugneval 0 {[print_a_lot]}' will not
+# down.  Using `Debug_no_eval 0 {[print_a_lot]}' will not
 # actually run the proc print_a_lot unless it will
-# be printed out.  Of course, `Debugneval 0 [print_a_lot]' is perfectly
+# be printed out.  Of course, `Debug_no_eval 0 [print_a_lot]' is perfectly
 # useless, the same as Debugn.
 
 # Example:
@@ -53,8 +58,8 @@ proc Debugn_no_eval { level cmd } {
 #     puts "proc p has executed, slowing your program down";
 #     return "This is a debugging message";
 # }
-# Debugneval 1 {[p]} ;# This prints out nothing.
-# Debugneval 0 {[p]} ;# This prints out two lines, one a by-product.
+# Debug_no_eval 1 {[p]} ;# This prints out nothing.
+# Debug_no_eval 0 {[p]} ;# This prints out two lines, one a by-product.
     global tconx_globls
     if {[info exists tconx_globls(Debug,on)]
         && [info exists tconx_globls(Debug,level)]
