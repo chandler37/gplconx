@@ -27,6 +27,7 @@
 
 #include "stcharar.hh"
 #include "stsmalli.hh"
+#include "ststring.hh"
 #include "sterror.hh"
 
 Answerers *CClsCharacterArray::ansMachs = NULL;
@@ -37,6 +38,14 @@ CClsCharacterArray::oiActionLength(CClsBase **result, CConxClsMessage &o) const
 {
   RETURN_NEW_RESULT(result,
                     new CClsSmallInt((long)(getValue().getLength())));
+}
+
+NF_INLINE CClsBase::ErrType
+CClsCharacterArray::oiActionCat(CClsBase **result, CConxClsMessage &o) const
+{
+  ENSURE_SINGLE_ARG_IS_OF_TYPE(CClsCharacterArray, argv, o);
+  RETURN_NEW_RESULT(result, new CClsStringLiteral(CConxString(getValue())
+                                                  + argv[0]->getValue()));
 }
 
 NF_INLINE
@@ -50,6 +59,8 @@ void CClsCharacterArray::initializeAnsweringMachines()
                "Sets the receiver's value to that of the object passed in if their types agree");
     ST_CMETHOD(ansMachs, "length", "description", OBJECT, oiAnswererLength,
                "Returns the receiver's length, which does not include the '#' character");
+    ST_CMETHOD(ansMachs, ",:", "string ops", OBJECT, oiAnswererCat,
+               "Returns the receiver concatenated with the argument");
 
   }
 }

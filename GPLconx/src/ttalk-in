@@ -1,3 +1,13 @@
+'hi','di'
+'hi' , ' there', ' dave'
+'hi' , #there, ' dave'
+'hi' , #there , ' dave'
+'hi ' , #there , ' dave'
+#a , #b
+'a' , #b
+#a , 'b'
+'a' , 'b'
+#+ , #=
 nil := 3.3
 nil isNil
 nil notNil

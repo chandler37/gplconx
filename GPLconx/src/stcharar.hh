@@ -59,6 +59,8 @@ protected:
                                  oiActionSet, /* non-const */);
   ANSWERER_FOR_ACTION_DEFN_BELOW(CClsCharacterArray, oiAnswererLength,
                                  oiActionLength, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsCharacterArray, oiAnswererCat,
+                                 oiActionCat, const);
 private:
   static void initializeAnsweringMachines();
 
