@@ -12,6 +12,6 @@ aclocal -I .
 autoheader
 automake -a -c
 autoconf
-echo "Now run `/bin/sh ./configure'"
+echo "Now run \"/bin/sh ./configure\""
 
 exit 0
