@@ -101,7 +101,7 @@ This is edition @value{EDITION}, for GPLconx version @value{VERSION}.
 GPLconx is a program for visualizing the hyperbolic geometry of two dimensions
 in three
 models, the Poincar@'e Upper Half Plane (UHP), the Beltrami-Klein disk,
-and the Poincar@'e Disk.  The name is pronounce ``GEE-PEE-ELL KAHN-ICKS'',
+and the Poincar@'e Disk.  The name is pronounced ``gee-pee-ell kahn-icks'',
 as in conic sections.  This is because the visualization is limited to
 points, lines, line segments, circles, ellipses, hyperbolas, parabolas, and
 curves equidistant from lines, and because GPLconx is distributed under
@@ -150,9 +150,9 @@ more about free software and free documentation.
 @node Invoking GPLconx, Validation, Distribution, Top
 @chapter Invoking GPLconx
 
-Try `tconx --help'.
+Try @samp{tconx --help}, @samp{gconx}, @samp{cxxconx --help}, or @samp{tparser any three args_to_test_the_scripting_language}.
 @c DLC fill in the blanks!
-@c Books to read.
+@c Books to read.  DLC cite Modern Geometries and Greenberg and ...
 @c Mention GSSM.
 
 @node Validation, Concept Index, Invoking GPLconx, Top
