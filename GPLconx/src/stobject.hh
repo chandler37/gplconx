@@ -30,7 +30,7 @@
 #define GPLCONX_STOBJECT_CXX_H 1
 
 #include "gcobject.hh"
-#include "stmacros.hh"
+#include "sth_macr.hh"
 #include "sth_answ.hh"
 #include "CString.hh"
 
