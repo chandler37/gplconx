@@ -39,6 +39,7 @@
 #include "stcommon.hh"
 #include "stconx.hh"
 #include "cmparse.hh"
+#include "sth_var.hh"
 #include "tester.hh"
 
 static int tall(void);

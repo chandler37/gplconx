@@ -32,6 +32,10 @@
 #include "stsymbol.hh"
 #include "dgeomobj.hh"
 
+// DLC change all ST_METHOD to ST_CMETHOD or even better allow `x: aNumberX y: aNumberY m: aModelIdentifier'
+// DLC put the anonymous FTP space under CVS control or move the READMEs to
+// the website.
+// DLC move CArray.hh's classes into one class per header file
 #define DRAWABLE_STR " that can draw itself on a Canvas"
 //////////////////////////////////////////////////////////////////////////////
 // Our CConxDwGeomObj wrapper.

@@ -76,7 +76,7 @@ CConxString getObjectInstanceHelpMessage(const Answerers &a)
   for (size_t i = 0; i < a.size(); i++) {
     const CConxClsAnsMach &r = a.get(i);
     if (!r.isClassMessage())
-      s += "\t" + r.getMessageName() + " -- " + r.getCategory() + " -- " + r.getHelpTip() + "\n";
+      s += "\t" + r.getMessageName() + " (" + r.getCategory() + ") -- " + r.getHelpTip() + "\n";
   }
   return s;
 }
@@ -87,7 +87,7 @@ CConxString getClassInstanceHelpMessage(const Answerers &a)
   for (size_t i = 0; i < a.size(); i++) {
     const CConxClsAnsMach &r = a.get(i);
     if (r.isClassMessage())
-      s += "\t" + r.getMessageName() + " -- " + r.getCategory() + " -- " + r.getHelpTip() + "\n";
+      s += "\t" + r.getMessageName() + " (" + r.getCategory() + ") -- " + r.getHelpTip() + "\n";
   }
   return s;
 }

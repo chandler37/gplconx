@@ -255,7 +255,9 @@ void CClsHypEllipse::uninitializedCopy(const CClsHypEllipse &o)
 
   FOREACH_MEMBER_G(o, i) {
     assert(o.getNthMember(i) != NULL);
-    CClsBase *j = o.getNthMember(i);
+    const CClsBase *jC = o.getNthMember(i);
+    CClsBase *j;
+    CONST_CAST(CClsBase *, j, jC);
     setNthMemberPointer(i, j);
   }
 
@@ -317,7 +319,10 @@ CClsBase *CClsHypEllipse::getNthMember(size_t i)
 NF_INLINE
 const CClsBase *CClsHypEllipse::getNthMember(size_t i) const
 {
-  return getNthMember(i);
+  const CClsHypEllipse *tC = this;
+  CClsHypEllipse *t;
+  CONST_CAST(CClsHypEllipse *, t, tC);
+  return t->getNthMember(i);
 }
 
 NF_INLINE

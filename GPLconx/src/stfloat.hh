@@ -53,6 +53,9 @@ public:
   static double getRandom(double low, double high);
 
 protected:
+  virtual ErrType asFloat(CClsBase **result);
+
+protected:
   ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererSet,
                                  oiActionSet, /* non-const */);
   ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererBetweenAnd,
@@ -89,6 +92,16 @@ protected:
                                  oiActionLn, const);
   ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererPower,
                                  oiActionPower, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererGT,
+                                 oiActionGT, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererLT,
+                                 oiActionLT, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererGTE,
+                                 oiActionGTE, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererLTE,
+                                 oiActionLTE, const);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsFloat, oiAnswererSqrt,
+                                 oiActionSqrt, const);
   // DLC put these in number!
 
 private:

@@ -282,9 +282,8 @@ Line help
 Circle help
 Point random isPoint
 (Point random: 0.0) isPoint
-(Point random: 0.0) x
 (Line random: 0.0) isPoint
-(Line random: 0.0) A
+(Line random: 0.0) isLine
 3.3 negation
 3.3 reciprocal
 .1 reciprocal

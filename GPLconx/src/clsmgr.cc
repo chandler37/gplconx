@@ -28,6 +28,8 @@
 #include "clsmgr.hh"
 #include "stcommon.hh"
 #include "stconx.hh"
+#include "sth_var.hh"
+#include "sth_assn.hh"
 
 NF_INLINE
 long CConxClsManager::makeAssignments(const CConxClsAssignmentList &al,

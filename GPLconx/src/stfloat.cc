@@ -81,45 +81,55 @@ void CClsFloat::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ST_METHOD(ansMachs, "between:and:", OBJECT,
-              oiAnswererBetweenAnd,
-              "Returns true iff the inclusive range from the first argument to the second argument contains the receiver");
-    ST_METHOD(ansMachs, "set:", OBJECT,
-              oiAnswererSet,
-              "Sets the receiver's value to the argument's floating-point value, coercing if possible (from a SmallInt, e.g.)");
-    ST_METHOD(ansMachs, "randomBetween:and:", CLASS,
-              ciAnswererRandomBetweenAnd,
-              "Returns a random number in the given interval");
-    ST_METHOD(ansMachs, "exp", OBJECT, oiAnswererExp,
-              "Returns e to the receiver's power, the anti-natural-logarithm");
-    ST_METHOD(ansMachs, "ln", OBJECT, oiAnswererLn,
-              "Returns the natural logarithm of the receiver");
-    ST_METHOD(ansMachs, "log10", OBJECT, oiAnswererLog10,
-              "Returns the common (base 10) logarithm of the receiver");
-    ST_METHOD(ansMachs, "Pi", CLASS, ciAnswererPi,
-              "Returns a new object instance, Pi, the circumference of a circle with radius 1");
-    ST_METHOD(ansMachs, "e", CLASS, ciAnswererE,
-              "Returns a new object instance, e, the base of the natural logarithm");
-    ST_METHOD(ansMachs, "sin", OBJECT, oiAnswererSine,
-              "Returns the sine of the receiver");
-    ST_METHOD(ansMachs, "cos", OBJECT, oiAnswererCosine,
-              "Returns the cosine of the receiver");
-    ST_METHOD(ansMachs, "tan", OBJECT, oiAnswererTangent,
-              "Returns the tangent of the receiver");
-    ST_METHOD(ansMachs, "plus:", OBJECT, oiAnswererPlus,
-              "Returns the sum of the receiver and argument");
-    ST_METHOD(ansMachs, "minus:", OBJECT, oiAnswererMinus,
-              "Returns difference between the receiver and argument");
-    ST_METHOD(ansMachs, "times:", OBJECT, oiAnswererTimes,
-              "Returns the product of the receiver and argument");
-    ST_METHOD(ansMachs, "dividedBy:", OBJECT, oiAnswererDividedBy,
-              "Returns the receiver divided by the argument");
-    ST_METHOD(ansMachs, "power:", OBJECT, oiAnswererPower,
-              "Returns the receiver to the power of the argument");
-    ST_METHOD(ansMachs, "negation", OBJECT, oiAnswererNegation,
-              "Returns the negation of the receiver");
-    ST_METHOD(ansMachs, "reciprocal", OBJECT, oiAnswererReciprocal,
-              "Returns the reciprocal of the receiver");
+    ST_CMETHOD(ansMachs, "between:and:", "math", OBJECT,
+               oiAnswererBetweenAnd,
+               "Returns true iff the inclusive range from the first argument to the second argument contains the receiver");
+    ST_CMETHOD(ansMachs, "set:", "superclass method implementation", OBJECT,
+               oiAnswererSet,
+               "Sets the receiver's value to the argument's floating-point value, coercing if possible (from a SmallInt, e.g.)");
+    ST_CMETHOD(ansMachs, "randomBetween:and:", "instance creation", CLASS,
+               ciAnswererRandomBetweenAnd,
+               "Returns a random number in the given interval");
+    ST_CMETHOD(ansMachs, "exp", "math", OBJECT, oiAnswererExp,
+               "Returns e to the receiver's power, the anti-natural-logarithm");
+    ST_CMETHOD(ansMachs, "ln", "math", OBJECT, oiAnswererLn,
+               "Returns the natural logarithm of the receiver");
+    ST_CMETHOD(ansMachs, "log10", "math", OBJECT, oiAnswererLog10,
+               "Returns the common (base 10) logarithm of the receiver");
+    ST_CMETHOD(ansMachs, "Pi", "constants", CLASS, ciAnswererPi,
+               "Returns a new object instance, Pi, the circumference of a circle with radius 1");
+    ST_CMETHOD(ansMachs, "e", "constants", CLASS, ciAnswererE,
+               "Returns a new object instance, e, the base of the natural logarithm");
+    ST_CMETHOD(ansMachs, "sin", "math", OBJECT, oiAnswererSine,
+               "Returns the sine of the receiver");
+    ST_CMETHOD(ansMachs, "cos", "math", OBJECT, oiAnswererCosine,
+               "Returns the cosine of the receiver");
+    ST_CMETHOD(ansMachs, "tan", "math", OBJECT, oiAnswererTangent,
+               "Returns the tangent of the receiver");
+    ST_CMETHOD(ansMachs, "plus:", "math", OBJECT, oiAnswererPlus,
+               "Returns the sum of the receiver and argument");
+    ST_CMETHOD(ansMachs, "minus:", "math", OBJECT, oiAnswererMinus,
+               "Returns difference between the receiver and argument");
+    ST_CMETHOD(ansMachs, "times:", "math", OBJECT, oiAnswererTimes,
+               "Returns the product of the receiver and argument");
+    ST_CMETHOD(ansMachs, "dividedBy:", "math", OBJECT, oiAnswererDividedBy,
+               "Returns the receiver divided by the argument");
+    ST_CMETHOD(ansMachs, "power:", "math", OBJECT, oiAnswererPower,
+               "Returns the receiver to the power of the argument");
+    ST_CMETHOD(ansMachs, "negation", "math", OBJECT, oiAnswererNegation,
+               "Returns the negation of the receiver");
+    ST_CMETHOD(ansMachs, "reciprocal", "math", OBJECT, oiAnswererReciprocal,
+               "Returns the reciprocal of the receiver");
+    ST_CMETHOD(ansMachs, "gt:", "comparison", OBJECT, oiAnswererGT,
+               "Returns true if the receiver is greater than the argument");
+    ST_CMETHOD(ansMachs, "lt:", "comparison", OBJECT, oiAnswererLT,
+               "Returns true if the receiver is less than the argument");
+    ST_CMETHOD(ansMachs, "gte:", "comparison", OBJECT, oiAnswererGTE,
+               "Returns true if the receiver is greater than or equal to the argument");
+    ST_CMETHOD(ansMachs, "lte:", "comparison", OBJECT, oiAnswererLTE,
+               "Returns true if the receiver is less than or equal to the argument");
+    ST_CMETHOD(ansMachs, "sqrt", "math", OBJECT, oiAnswererSqrt,
+               "Returns the square root of the receiver");
   }
 }
 
@@ -196,6 +206,41 @@ CClsFloat::oiActionPower(CClsBase **result, CConxClsMessage &o) const
   RETURN_FLOAT(result, pow(getValue(), fargv[0]));
 }
 
+// DLC test all these and move to number
+NF_INLINE
+CClsBase::ErrType 
+CClsFloat::oiActionGT(CClsBase **result, CConxClsMessage &o) const
+{
+  NEED_N_FLOATS(1, fargv, o, result);
+  RETURN_BOOLE(getValue() > fargv[0], result);
+}
+
+NF_INLINE
+CClsBase::ErrType 
+CClsFloat::oiActionGTE(CClsBase **result, CConxClsMessage &o) const
+{
+  NEED_N_FLOATS(1, fargv, o, result);
+  RETURN_BOOLE(getValue() >= fargv[0], result);
+}
+
+NF_INLINE
+CClsBase::ErrType 
+CClsFloat::oiActionLT(CClsBase **result, CConxClsMessage &o) const
+{
+  NEED_N_FLOATS(1, fargv, o, result);
+  RETURN_BOOLE(getValue() < fargv[0], result);
+}
+
+NF_INLINE
+CClsBase::ErrType 
+CClsFloat::oiActionLTE(CClsBase **result, CConxClsMessage &o) const
+{
+  NEED_N_FLOATS(1, fargv, o, result);
+  RETURN_BOOLE(getValue() <= fargv[0], result);
+}
+
+ACTION_WITH_NO_ARGS_IMPL(CClsFloat, const, oiActionSqrt,
+                         RETURN_FLOAT_R(sqrt(getValue())););
 ACTION_WITH_NO_ARGS_IMPL(CClsFloat, const, ciActionPi,
                          RETURN_FLOAT_R(M_PI););
 ACTION_WITH_NO_ARGS_IMPL(CClsFloat, const, oiActionExp,
@@ -247,3 +292,8 @@ CClsFloat &CClsFloat::operator=(const CClsFloat &o)
   return *this;
 }
 
+NF_INLINE
+CClsBase::ErrType CClsFloat::asFloat(CClsBase **result)
+{
+  RETURN_THIS_R();
+}

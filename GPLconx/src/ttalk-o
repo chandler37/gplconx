@@ -165,16 +165,16 @@ Object comment:
 
 Class methods:
 
-	help -- Returns help on this class's methods
-	true -- Returns a new object instance that represents truth.  The system predefines such an instance and assigns it to the variable `true'; you will benefit from increased efficiency if you just use `true'.
-	false -- Returns a new object instance that represents falsehood.  The system predefines such an instance and assigns it to the variable `false'; you will benefit from increased efficiency if you just use `false'
+	help (miscellaneous) -- Returns help on this class's methods
+	true (miscellaneous) -- Returns a new object instance that represents truth.  The system predefines such an instance and assigns it to the variable `true'; you will benefit from increased efficiency if you just use `true'.
+	false (miscellaneous) -- Returns a new object instance that represents falsehood.  The system predefines such an instance and assigns it to the variable `false'; you will benefit from increased efficiency if you just use `false'
 
 
 Instance methods:
-	not -- Returns a Boolean object instance whose truth value is the opposite of the receiver
-	and: -- Returns true iff the reciever and the Boolean argument are both true
-	or: -- Returns true iff either the reciever or the Boolean argument is true
-	xor: -- Returns true iff either the reciever or the Boolean argument is true but both are not
+	not (miscellaneous) -- Returns a Boolean object instance whose truth value is the opposite of the receiver
+	and: (miscellaneous) -- Returns true iff the reciever and the Boolean argument are both true
+	or: (miscellaneous) -- Returns true iff either the reciever or the Boolean argument is true
+	xor: (miscellaneous) -- Returns true iff either the reciever or the Boolean argument is true but both are not
 '
 $ >>> 'nil subclass:  #Object
 
@@ -183,102 +183,102 @@ Object comment:
 
 Class methods:
 
-	superClass -- Returns the class from which the receiver is derived
-	class -- Returns the class of which the receiver is a class instance
-	printString -- Returns a human-readable String object instance representation
-	isClass -- Returns true if the receiver is a class instance rather than an object instance
-	clone -- Returns an identical copy of the receiver (not the receiver itself) that shares any contents if the receiver is a container
-	help -- Returns help on using the receiver
-	isNil -- Returns true if the receiver isNil
-	notNil -- Returns true if the receiver is notNil
-	isFloat -- Returns true if the receiver isFloat
-	notFloat -- Returns true if the receiver is notFloat
-	isSymbol -- Returns true if the receiver isSymbol
-	notSymbol -- Returns true if the receiver is notSymbol
-	isString -- Returns true if the receiver isString
-	notString -- Returns true if the receiver is notString
-	isParseError -- Returns true if the receiver isParseError
-	notParseError -- Returns true if the receiver is notParseError
-	isModelIdentifier -- Returns true if the receiver isModelIdentifier
-	notModelIdentifier -- Returns true if the receiver is notModelIdentifier
-	isColor -- Returns true if the receiver isColor
-	notColor -- Returns true if the receiver is notColor
-	isCharacterArray -- Returns true if the receiver isCharacterArray
-	notCharacterArray -- Returns true if the receiver is notCharacterArray
-	isArray -- Returns true if the receiver isArray
-	notArray -- Returns true if the receiver is notArray
-	isSmallInt -- Returns true if the receiver isSmallInt
-	notSmallInt -- Returns true if the receiver is notSmallInt
-	isDrawable -- Returns true if the receiver isDrawable
-	notDrawable -- Returns true if the receiver is notDrawable
-	isNumber -- Returns true if the receiver isNumber
-	notNumber -- Returns true if the receiver is notNumber
-	isSystem -- Returns true if the receiver isSystem
-	notSystem -- Returns true if the receiver is notSystem
-	isCanvas -- Returns true if the receiver isCanvas
-	notCanvas -- Returns true if the receiver is notCanvas
-	isLine -- Returns true if the receiver isLine
-	notLine -- Returns true if the receiver is notLine
-	isCircle -- Returns true if the receiver isCircle
-	notCircle -- Returns true if the receiver is notCircle
-	isPoint -- Returns true if the receiver isPoint
-	notPoint -- Returns true if the receiver is notPoint
-	isParabola -- Returns true if the receiver isParabola
-	notParabola -- Returns true if the receiver is notParabola
-	isHypEllipse -- Returns true if the receiver isHypEllipse
-	notHypEllipse -- Returns true if the receiver is notHypEllipse
+	superClass (miscellaneous) -- Returns the class from which the receiver is derived
+	class (miscellaneous) -- Returns the class of which the receiver is a class instance
+	printString (miscellaneous) -- Returns a human-readable String object instance representation
+	isClass (miscellaneous) -- Returns true if the receiver is a class instance rather than an object instance
+	clone (miscellaneous) -- Returns an identical copy of the receiver (not the receiver itself) that shares any contents if the receiver is a container
+	help (miscellaneous) -- Returns help on using the receiver
+	isNil (miscellaneous) -- Returns true if the receiver isNil
+	notNil (miscellaneous) -- Returns true if the receiver is notNil
+	isFloat (miscellaneous) -- Returns true if the receiver isFloat
+	notFloat (miscellaneous) -- Returns true if the receiver is notFloat
+	isSymbol (miscellaneous) -- Returns true if the receiver isSymbol
+	notSymbol (miscellaneous) -- Returns true if the receiver is notSymbol
+	isString (miscellaneous) -- Returns true if the receiver isString
+	notString (miscellaneous) -- Returns true if the receiver is notString
+	isParseError (miscellaneous) -- Returns true if the receiver isParseError
+	notParseError (miscellaneous) -- Returns true if the receiver is notParseError
+	isModelIdentifier (miscellaneous) -- Returns true if the receiver isModelIdentifier
+	notModelIdentifier (miscellaneous) -- Returns true if the receiver is notModelIdentifier
+	isColor (miscellaneous) -- Returns true if the receiver isColor
+	notColor (miscellaneous) -- Returns true if the receiver is notColor
+	isCharacterArray (miscellaneous) -- Returns true if the receiver isCharacterArray
+	notCharacterArray (miscellaneous) -- Returns true if the receiver is notCharacterArray
+	isArray (miscellaneous) -- Returns true if the receiver isArray
+	notArray (miscellaneous) -- Returns true if the receiver is notArray
+	isSmallInt (miscellaneous) -- Returns true if the receiver isSmallInt
+	notSmallInt (miscellaneous) -- Returns true if the receiver is notSmallInt
+	isDrawable (miscellaneous) -- Returns true if the receiver isDrawable
+	notDrawable (miscellaneous) -- Returns true if the receiver is notDrawable
+	isNumber (miscellaneous) -- Returns true if the receiver isNumber
+	notNumber (miscellaneous) -- Returns true if the receiver is notNumber
+	isSystem (miscellaneous) -- Returns true if the receiver isSystem
+	notSystem (miscellaneous) -- Returns true if the receiver is notSystem
+	isCanvas (miscellaneous) -- Returns true if the receiver isCanvas
+	notCanvas (miscellaneous) -- Returns true if the receiver is notCanvas
+	isLine (miscellaneous) -- Returns true if the receiver isLine
+	notLine (miscellaneous) -- Returns true if the receiver is notLine
+	isCircle (miscellaneous) -- Returns true if the receiver isCircle
+	notCircle (miscellaneous) -- Returns true if the receiver is notCircle
+	isPoint (miscellaneous) -- Returns true if the receiver isPoint
+	notPoint (miscellaneous) -- Returns true if the receiver is notPoint
+	isParabola (miscellaneous) -- Returns true if the receiver isParabola
+	notParabola (miscellaneous) -- Returns true if the receiver is notParabola
+	isHypEllipse (miscellaneous) -- Returns true if the receiver isHypEllipse
+	notHypEllipse (miscellaneous) -- Returns true if the receiver is notHypEllipse
 
 
 Instance methods:
-	makeReadOnly -- Makes the object instance read-only; if the object is a container, such as Array, Canvas, Drawable, Point, Line, etc., then the contents become read-only also.  This is irreversible and comes with some performance advantages.  Clone a read-only object to get a read-write equivalent
-	isReadOnly -- Returns a Boolean to indicate the receiver's read-only status
-	superClass -- Returns the class from which the receiver is derived
-	class -- Returns the class of which the receiver is an object instance
-	printString -- Returns a human-readable String object instance representation
-	isClass -- Returns true if the receiver is a class instance rather than an object instance
-	cloneDeep -- Returns a copy of the receiver with, in the case or containers, all contents replaced by cloneDeep copies
-	clone -- Returns an identical copy of the receiver (not the receiver itself) that shares any contents if the receiver is a container
-	exactlyEquals: -- Returns true iff the receiver is precisely the same object instance as the argument (iff the pointers are equal, for you C folk)
-	set: -- Sets the receiver's value to a copy of the argument's value
-	help -- Returns help on using the receiver
-	isNil -- Returns true if the receiver isNil
-	notNil -- Returns true if the receiver is notNil
-	isFloat -- Returns true if the receiver isFloat
-	notFloat -- Returns true if the receiver is notFloat
-	isSymbol -- Returns true if the receiver isSymbol
-	notSymbol -- Returns true if the receiver is notSymbol
-	isString -- Returns true if the receiver isString
-	notString -- Returns true if the receiver is notString
-	isParseError -- Returns true if the receiver isParseError
-	notParseError -- Returns true if the receiver is notParseError
-	isModelIdentifier -- Returns true if the receiver isModelIdentifier
-	notModelIdentifier -- Returns true if the receiver is notModelIdentifier
-	isColor -- Returns true if the receiver isColor
-	notColor -- Returns true if the receiver is notColor
-	isCharacterArray -- Returns true if the receiver isCharacterArray
-	notCharacterArray -- Returns true if the receiver is notCharacterArray
-	isArray -- Returns true if the receiver isArray
-	notArray -- Returns true if the receiver is notArray
-	isSmallInt -- Returns true if the receiver isSmallInt
-	notSmallInt -- Returns true if the receiver is notSmallInt
-	isDrawable -- Returns true if the receiver isDrawable
-	notDrawable -- Returns true if the receiver is notDrawable
-	isNumber -- Returns true if the receiver isNumber
-	notNumber -- Returns true if the receiver is notNumber
-	isSystem -- Returns true if the receiver isSystem
-	notSystem -- Returns true if the receiver is notSystem
-	isCanvas -- Returns true if the receiver isCanvas
-	notCanvas -- Returns true if the receiver is notCanvas
-	isLine -- Returns true if the receiver isLine
-	notLine -- Returns true if the receiver is notLine
-	isCircle -- Returns true if the receiver isCircle
-	notCircle -- Returns true if the receiver is notCircle
-	isPoint -- Returns true if the receiver isPoint
-	notPoint -- Returns true if the receiver is notPoint
-	isParabola -- Returns true if the receiver isParabola
-	notParabola -- Returns true if the receiver is notParabola
-	isHypEllipse -- Returns true if the receiver isHypEllipse
-	notHypEllipse -- Returns true if the receiver is notHypEllipse
+	makeReadOnly (miscellaneous) -- Makes the object instance read-only; if the object is a container, such as Array, Canvas, Drawable, Point, Line, etc., then the contents become read-only also.  This is irreversible and comes with some performance advantages.  Clone a read-only object to get a read-write equivalent
+	isReadOnly (miscellaneous) -- Returns a Boolean to indicate the receiver's read-only status
+	superClass (miscellaneous) -- Returns the class from which the receiver is derived
+	class (miscellaneous) -- Returns the class of which the receiver is an object instance
+	printString (miscellaneous) -- Returns a human-readable String object instance representation
+	isClass (miscellaneous) -- Returns true if the receiver is a class instance rather than an object instance
+	cloneDeep (miscellaneous) -- Returns a copy of the receiver with, in the case or containers, all contents replaced by cloneDeep copies
+	clone (miscellaneous) -- Returns an identical copy of the receiver (not the receiver itself) that shares any contents if the receiver is a container
+	exactlyEquals: (miscellaneous) -- Returns true iff the receiver is precisely the same object instance as the argument (iff the pointers are equal, for you C folk)
+	set: (miscellaneous) -- Sets the receiver's value to a copy of the argument's value
+	help (miscellaneous) -- Returns help on using the receiver
+	isNil (miscellaneous) -- Returns true if the receiver isNil
+	notNil (miscellaneous) -- Returns true if the receiver is notNil
+	isFloat (miscellaneous) -- Returns true if the receiver isFloat
+	notFloat (miscellaneous) -- Returns true if the receiver is notFloat
+	isSymbol (miscellaneous) -- Returns true if the receiver isSymbol
+	notSymbol (miscellaneous) -- Returns true if the receiver is notSymbol
+	isString (miscellaneous) -- Returns true if the receiver isString
+	notString (miscellaneous) -- Returns true if the receiver is notString
+	isParseError (miscellaneous) -- Returns true if the receiver isParseError
+	notParseError (miscellaneous) -- Returns true if the receiver is notParseError
+	isModelIdentifier (miscellaneous) -- Returns true if the receiver isModelIdentifier
+	notModelIdentifier (miscellaneous) -- Returns true if the receiver is notModelIdentifier
+	isColor (miscellaneous) -- Returns true if the receiver isColor
+	notColor (miscellaneous) -- Returns true if the receiver is notColor
+	isCharacterArray (miscellaneous) -- Returns true if the receiver isCharacterArray
+	notCharacterArray (miscellaneous) -- Returns true if the receiver is notCharacterArray
+	isArray (miscellaneous) -- Returns true if the receiver isArray
+	notArray (miscellaneous) -- Returns true if the receiver is notArray
+	isSmallInt (miscellaneous) -- Returns true if the receiver isSmallInt
+	notSmallInt (miscellaneous) -- Returns true if the receiver is notSmallInt
+	isDrawable (miscellaneous) -- Returns true if the receiver isDrawable
+	notDrawable (miscellaneous) -- Returns true if the receiver is notDrawable
+	isNumber (miscellaneous) -- Returns true if the receiver isNumber
+	notNumber (miscellaneous) -- Returns true if the receiver is notNumber
+	isSystem (miscellaneous) -- Returns true if the receiver isSystem
+	notSystem (miscellaneous) -- Returns true if the receiver is notSystem
+	isCanvas (miscellaneous) -- Returns true if the receiver isCanvas
+	notCanvas (miscellaneous) -- Returns true if the receiver is notCanvas
+	isLine (miscellaneous) -- Returns true if the receiver isLine
+	notLine (miscellaneous) -- Returns true if the receiver is notLine
+	isCircle (miscellaneous) -- Returns true if the receiver isCircle
+	notCircle (miscellaneous) -- Returns true if the receiver is notCircle
+	isPoint (miscellaneous) -- Returns true if the receiver isPoint
+	notPoint (miscellaneous) -- Returns true if the receiver is notPoint
+	isParabola (miscellaneous) -- Returns true if the receiver isParabola
+	notParabola (miscellaneous) -- Returns true if the receiver is notParabola
+	isHypEllipse (miscellaneous) -- Returns true if the receiver isHypEllipse
+	notHypEllipse (miscellaneous) -- Returns true if the receiver is notHypEllipse
 '
 $ >>> Point(x: 0.36, y: -0.1, model: uhp) -- Drawable -- Color(RGB=[0.1, 0.9, 0.512]), garnishing on, thickness 3, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
 $ >>> true
@@ -402,27 +402,32 @@ Object comment:
 
 Class methods:
 
-	randomBetween:and: -- Returns a random number in the given interval
-	Pi -- Returns a new object instance, Pi, the circumference of a circle with radius 1
-	e -- Returns a new object instance, e, the base of the natural logarithm
+	randomBetween:and: (instance creation) -- Returns a random number in the given interval
+	Pi (constants) -- Returns a new object instance, Pi, the circumference of a circle with radius 1
+	e (constants) -- Returns a new object instance, e, the base of the natural logarithm
 
 
 Instance methods:
-	between:and: -- Returns true iff the inclusive range from the first argument to the second argument contains the receiver
-	set: -- Sets the receiver's value to the argument's floating-point value, coercing if possible (from a SmallInt, e.g.)
-	exp -- Returns e to the receiver's power, the anti-natural-logarithm
-	ln -- Returns the natural logarithm of the receiver
-	log10 -- Returns the common (base 10) logarithm of the receiver
-	sin -- Returns the sine of the receiver
-	cos -- Returns the cosine of the receiver
-	tan -- Returns the tangent of the receiver
-	plus: -- Returns the sum of the receiver and argument
-	minus: -- Returns difference between the receiver and argument
-	times: -- Returns the product of the receiver and argument
-	dividedBy: -- Returns the receiver divided by the argument
-	power: -- Returns the receiver to the power of the argument
-	negation -- Returns the negation of the receiver
-	reciprocal -- Returns the reciprocal of the receiver
+	between:and: (math) -- Returns true iff the inclusive range from the first argument to the second argument contains the receiver
+	set: (superclass method implementation) -- Sets the receiver's value to the argument's floating-point value, coercing if possible (from a SmallInt, e.g.)
+	exp (math) -- Returns e to the receiver's power, the anti-natural-logarithm
+	ln (math) -- Returns the natural logarithm of the receiver
+	log10 (math) -- Returns the common (base 10) logarithm of the receiver
+	sin (math) -- Returns the sine of the receiver
+	cos (math) -- Returns the cosine of the receiver
+	tan (math) -- Returns the tangent of the receiver
+	plus: (math) -- Returns the sum of the receiver and argument
+	minus: (math) -- Returns difference between the receiver and argument
+	times: (math) -- Returns the product of the receiver and argument
+	dividedBy: (math) -- Returns the receiver divided by the argument
+	power: (math) -- Returns the receiver to the power of the argument
+	negation (math) -- Returns the negation of the receiver
+	reciprocal (math) -- Returns the reciprocal of the receiver
+	gt: (comparison) -- Returns true if the receiver is greater than the argument
+	lt: (comparison) -- Returns true if the receiver is less than the argument
+	gte: (comparison) -- Returns true if the receiver is greater than or equal to the argument
+	lte: (comparison) -- Returns true if the receiver is less than or equal to the argument
+	sqrt (math) -- Returns the square root of the receiver
 '
 $ >>> '#Object subclass:  #Number
 
@@ -434,6 +439,7 @@ Class methods:
 
 
 Instance methods:
+	asFloat (miscellaneous) -- Returns a Float object instance version of the receiver
 '
 $ >>> '#Drawable subclass:  #Point
 
@@ -442,22 +448,22 @@ Object comment:
 
 Class methods:
 
-	new -- Returns a new object instance of a 2-D point in Hyperbolic geometry that can draw itself on a Canvas
-	random: -- Returns a new point randomly distributed in the Klein disk's Euclidean counterpart with Euclidean distance from (0, 0) less than the argument (maximum of 1.0 since the unit disk is at infinity) -- this has a random Euclidean radius, but the hyperbolic distance from hyperbolic (0, 0) is more likely to be small, i.e. it is not a random hyperbolic distance from (0, 0), because that would skew the points toward the edge of the disk, which is not a great idea for visualization.
-	random -- Returns what `random: 1.0' does
-	x:y:model: -- Returns a new, set object instance of a 2-D point in Hyperbolic geometry that can draw itself on a Canvas
-	x:y:m: -- Returns a new, set object instance of a 2-D point in Hyperbolic geometry that can draw itself on a Canvas
+	new (instance creation) -- Returns a new object instance of a 2-D point in Hyperbolic geometry that can draw itself on a Canvas
+	random: (instance creation) -- Returns a new point randomly distributed in the Klein disk's Euclidean counterpart with Euclidean distance from (0, 0) less than the argument (maximum of 1.0 since the unit disk is at infinity) -- this has a random Euclidean radius, but the hyperbolic distance from hyperbolic (0, 0) is more likely to be small, i.e. it is not a random hyperbolic distance from (0, 0), because that would skew the points toward the edge of the disk, which is not a great idea for visualization.
+	random (instance creation) -- Returns what `random: 1.0' does
+	x:y:model: (instance creation) -- Returns a new, set object instance of a 2-D point in Hyperbolic geometry that can draw itself on a Canvas
+	x:y:m: (instance creation) -- Returns a new, set object instance of a 2-D point in Hyperbolic geometry that can draw itself on a Canvas
 
 
 Instance methods:
-	distanceFromPoint: -- Returns the distance between the receiver and the Point object instance argument
-	betweenColinearPoint:andOtherColinearPoint: -- Returns true iff the receiver lies between two Point object instance arguments on the hyperbolic geometry line upon which the three Points are assumed to be colinear
-	x -- Returns the x
-	y -- Returns the y
-	model -- Returns the model
-	x: -- Sets the `x:' field; returns the receiver
-	y: -- Sets the `y:' field; returns the receiver
-	model: -- Sets the `model:' field; returns the receiver
+	distanceFromPoint: (hyperbolic geometry calculations) -- Returns the distance between the receiver and the Point object instance argument
+	betweenColinearPoint:andOtherColinearPoint: (hyperbolic geometry calculations) -- Returns true iff the receiver lies between two Point object instance arguments on the hyperbolic geometry line upon which the three Points are assumed to be colinear
+	x (miscellaneous) -- Returns the x
+	y (miscellaneous) -- Returns the y
+	model (miscellaneous) -- Returns the model
+	x: (miscellaneous) -- Sets the `x:' field; returns the receiver
+	y: (miscellaneous) -- Sets the `y:' field; returns the receiver
+	model: (miscellaneous) -- Sets the `model:' field; returns the receiver
 '
 $ >>> '#Drawable subclass:  #Parabola
 
@@ -466,15 +472,15 @@ Object comment:
 
 Class methods:
 
-	new -- Returns a new object instance of a parabola in Hyperbolic geometry that can draw itself on a Canvas
-	focus:line: -- Returns a new, set object instance of a parabola in Hyperbolic geometry that can draw itself on a Canvas
+	new (miscellaneous) -- Returns a new object instance of a parabola in Hyperbolic geometry that can draw itself on a Canvas
+	focus:line: (miscellaneous) -- Returns a new, set object instance of a parabola in Hyperbolic geometry that can draw itself on a Canvas
 
 
 Instance methods:
-	focus -- Returns the focus
-	line -- Returns the line
-	focus: -- Sets the `focus:' field; returns the receiver
-	line: -- Sets the `line:' field; returns the receiver
+	focus (miscellaneous) -- Returns the focus
+	line (miscellaneous) -- Returns the line
+	focus: (miscellaneous) -- Sets the `focus:' field; returns the receiver
+	line: (miscellaneous) -- Sets the `line:' field; returns the receiver
 '
 $ >>> '#Drawable subclass:  #Line
 
@@ -483,19 +489,19 @@ Object comment:
 
 Class methods:
 
-	new -- Returns a new object instance of a line in Hyperbolic geometry that can draw itself on a Canvas
-	A:B:isSegment: -- Returns a new, set object instance of a 2-D line in Hyperbolic geometry that can draw itself on a Canvas
-	random: -- Returns a new 2-D line in Hyperbolic geometry with two ``random'' Points with Euclidean Klein Disk radius less than the argument (see help for `Point random:')
-	random -- Returns a new 2-D line in Hyperbolic geometry with two ``random'' Points (see help for `Point random')
+	new (miscellaneous) -- Returns a new object instance of a line in Hyperbolic geometry that can draw itself on a Canvas
+	A:B:isSegment: (miscellaneous) -- Returns a new, set object instance of a 2-D line in Hyperbolic geometry that can draw itself on a Canvas
+	random: (miscellaneous) -- Returns a new 2-D line in Hyperbolic geometry with two ``random'' Points with Euclidean Klein Disk radius less than the argument (see help for `Point random:')
+	random (miscellaneous) -- Returns a new 2-D line in Hyperbolic geometry with two ``random'' Points (see help for `Point random')
 
 
 Instance methods:
-	A -- Returns the A
-	B -- Returns the B
-	isSegment -- Returns the isSegment
-	A: -- Sets the `A:' field; returns the receiver
-	B: -- Sets the `B:' field; returns the receiver
-	isSegment: -- Sets the `isSegment:' field; returns the receiver
+	A (miscellaneous) -- Returns the A
+	B (miscellaneous) -- Returns the B
+	isSegment (miscellaneous) -- Returns the isSegment
+	A: (miscellaneous) -- Sets the `A:' field; returns the receiver
+	B: (miscellaneous) -- Sets the `B:' field; returns the receiver
+	isSegment: (miscellaneous) -- Sets the `isSegment:' field; returns the receiver
 '
 $ >>> '#Drawable subclass:  #Circle
 
@@ -504,21 +510,20 @@ Object comment:
 
 Class methods:
 
-	new -- Returns a new object instance of a circle in Hyperbolic geometry that can draw itself on a Canvas
-	center:radius: -- Returns a new, set object instance of a circle in Hyperbolic geometry that can draw itself on a Canvas
+	new (miscellaneous) -- Returns a new object instance of a circle in Hyperbolic geometry that can draw itself on a Canvas
+	center:radius: (miscellaneous) -- Returns a new, set object instance of a circle in Hyperbolic geometry that can draw itself on a Canvas
 
 
 Instance methods:
-	center -- Returns the center
-	radius -- Returns the radius
-	center: -- Sets the `center:' field; returns the receiver
-	radius: -- Sets the `radius:' field; returns the receiver
+	center (miscellaneous) -- Returns the center
+	radius (miscellaneous) -- Returns the radius
+	center: (miscellaneous) -- Sets the `center:' field; returns the receiver
+	radius: (miscellaneous) -- Sets the `radius:' field; returns the receiver
 '
 $ >>> true
 $ >>> true
-$ >>> 0
 $ >>> false
-$ >>> Point(x: -0, y: -0, model: kd) -- Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> true
 $ >>> -3.3
 $ >>> 0.30303
 $ >>> 10

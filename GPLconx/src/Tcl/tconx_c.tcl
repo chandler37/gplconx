@@ -438,8 +438,8 @@ proc tconx_st_init { } {
 
     # Replace these with "clone" or "cloneDeep" if you don't want all
     # models to start out alike.
-    set pdcClone ""
-    set uhpcClone ""
+    set pdcClone "" ;# DLC config file entry
+    set uhpcClone "" ;# DLC config file entry
 
     tconx_parse_smalltalkish "$f1 := Point x: .5 y: .75 model: uhp ...\
                               $f2 := Point x: .2 y: .75 model: uhp ...\

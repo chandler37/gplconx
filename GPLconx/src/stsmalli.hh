@@ -50,6 +50,9 @@ public:
   int operator!=(const CClsSmallInt &o) { return !operator==(o); }
 
 protected:
+  virtual ErrType asFloat(CClsBase **result);
+
+protected:
   ANSWERER_FOR_ACTION_DEFN_BELOW(CClsSmallInt, oiAnswererBetweenAnd,
                                  oiActionBetweenAnd, const);
   NEW_OI_ANSWERER(CClsSmallInt);

@@ -28,6 +28,7 @@ AC_CONFIG_AUX_DIR(.)
 
 dnl Checks for programs.
 AC_PROG_CC
+AC_PROG_MAKE_SET
 AC_PROG_CXX
 AC_PROG_CPP
 dnl We need yacc/bison and lex/flex:
@@ -75,6 +76,55 @@ dnl DLC check version.
 missing_dir=`cd $ac_aux_dir && pwd`
 AM_MISSING_PROG(GENGETOPT, gengetopt, $missing_dir)
 
+dnl If you have Mark J. Kilgard's GLUT, use this to tell idir such that
+dnl $idir/GL/glut.h exists and ldir such that $ldir/libglut* exists.
+dnl You still must independently enable GLUT.
+AC_ARG_WITH(glut-incdir,
+[  --with-glut-incdir[=DIR]   where to find GL/glut.h],
+GLUTINCDIR=$withval
+)
+AC_ARG_WITH(glut-libdir,
+[  --with-glut-libdir[=DIR]   where to find libglut*],
+GLUTLIBDIR=$withval
+)
+AC_ARG_ENABLE(glut,
+  [  --enable-glut   Make gconx, GPLconx with a primitive GLUT GUI.],
+  [
+    case "${enableval}" in
+      yes) enableglut=true ;;
+      no)  enableglut=false ;;
+      *)   AC_MSG_ERROR([bad value ${enableval} for --enable-glut]) ;;
+    esac
+  ],
+  [ enableglut=false ]
+)
+if test "$enableglut" = "true"; then
+        AC_CHECK_HEADER($GLUTINCDIR/GL/glut.h, GCONX=gconx, AC_MSG_ERROR($GLUTINCDIR/GL/glut.h was not found so do not use --enable-glut or fix --with-glut-incdir))
+fi
+AC_SUBST(GLUTLIBDIR)
+AC_SUBST(GLUTINCDIR)
+AC_SUBST(GCONX)
+
+dnl tconx is outdated, so don't make it.  It does not have the Smalltalkish
+dnl language.
+AC_ARG_ENABLE(tconx,
+  [  --enable-tconx   Make tconx, the outdated predecessor to cxxconx.],
+  [
+    case "${enableval}" in
+      yes) enabletconx=true ;;
+      no)  enabletconx=false ;;
+      *)   AC_MSG_ERROR([bad value ${enableval} for --enable-tconx]) ;;
+    esac
+  ],
+  [ enabletconx=false ]
+)
+if test "$enabletconx" = "true"; then
+        LIBCONXLA=libconx.la
+        TCONX=tconx
+fi
+AC_SUBST(TCONX)
+AC_SUBST(LIBCONXLA)
+
 dnl Extensive gcc compiler warnings help ensure correctness.
 AC_ARG_ENABLE(warn,
   [  --enable-warn   Enable compiler warnings if gcc is used],
@@ -85,7 +135,7 @@ AC_ARG_ENABLE(warn,
       *)   AC_MSG_ERROR([bad value ${enableval} for --enable-warn]) ;;
     esac
   ],
-  [ compwarnings=$debug ]
+  [ compwarnings=false ]
 )
 FIRM_CFLAGS=""
 if test x$compwarnings = xtrue; then
@@ -99,7 +149,27 @@ fi
 
 AC_SUBST(FIRM_CFLAGS)
 
+dnl The maintainer has more fun since he has the `website/' directory from
+dnl the CVS repository enabled.  Use --with-maint-user=dchandler
+dnl or whatever your gplconx.sourceforge.net user name is.
+AC_ARG_WITH(maint-user,
+[  --with-maint-user[=USERNAME]   Enable maintainer-only features],
+MAINTUSER=$withval
+)
+if test x$MAINTUSER != x; then
+        if test x$MAINTUSER != xdchandler; then
+                AC_MSG_ERROR([bad user name ${MAINTUSER} for --with-maint-user])
+        fi
+fi
+
+
 dnl See section ``Autoconf `.o' macros'' in libtool manual (libtool.info*)
 LTLIBOBJS=`echo "$LIBOBJS" | sed 's/\.o/.lo/g'`
 AC_SUBST(LTLIBOBJS)
-AC_OUTPUT(Makefile src/Makefile Togl/Makefile src/Tcl/Makefile doc/Makefile)
+if test x$MAINTUSER = xdchandler; then
+        MAINTSUBDIRS=website
+        AC_LINK_FILES(README, website/README)
+fi
+AC_SUBST(MAINTSUBDIRS)
+AC_OUTPUT(Makefile src/Makefile Togl/Makefile src/Tcl/Makefile doc/Makefile src/lcl/Makefile website/Makefile)
+

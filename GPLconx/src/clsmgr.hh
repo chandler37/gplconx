@@ -89,6 +89,9 @@ class CClsFloat;
 class CClsSymbol;
 class CClsSmallInt;
 
+class CConxClsVariable;
+class CConxClsAssignmentList;
+
 // Low-priority efficiency issue: DLC do not make a Float instance for temporaries, i.e. add a double to the YYSTYPE union.
 
 

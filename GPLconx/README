@@ -45,9 +45,9 @@ gplconx-announce.
 To install, you can usually just edit `src/Makefile.inc' and tell where
 to find your libGL, libGLU, libtcl, libtk, etc. and then run
 `/bin/sh ./configure; make all install'.  The only non-standard package
-you need is `lcl-0.3', the Linux Class Library.  Download and install it,
-and then edit `src/Makefile.inc' to point to it too.
-Later versions of GPLconx may include it, who knows...
+you need is `lcl-0.3', the Linux Class Library, but the subset of it that
+we use (which is not Linux-specific) is in `src/lcl' and is configured
+automatically.
 
 Before running `make', you can edit `config.h' to change a few things that
 make little difference (unless you run into trouble later).  More instructions

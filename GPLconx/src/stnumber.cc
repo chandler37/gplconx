@@ -26,6 +26,7 @@
 #endif
 
 #include "stnumber.hh"
+#include "sterror.hh"
 
 CConxOwnerArray<CConxClsAnsMach> *CClsNumber::ansMachs = NULL;
 
@@ -35,7 +36,17 @@ void CClsNumber::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
+    ST_METHOD(ansMachs, "asFloat", OBJECT,
+              oiAnswererAsFloat,
+              "Returns a Float object instance version of the receiver");
   }
+}
+
+NF_INLINE
+CClsBase::ErrType 
+CClsNumber::oiActionAsFloat(CClsBase **result, CConxClsMessage &o)
+{
+  return asFloat(result);
 }
 
 NF_INLINE
@@ -62,3 +73,8 @@ CConxString CClsNumber::printString() const
   }
 }
 
+NF_INLINE
+CClsBase::ErrType CClsNumber::asFloat(CClsBase **result)
+{
+  REQUIRE_METHOD_IN_SUBCLASS();
+}

@@ -342,21 +342,29 @@ void CClsPoint::initializeAnsweringMachines()
   if (ansMachs == NULL) {
     ansMachs = new Answerers();
     if (ansMachs == NULL) OOM();
-    ST_METHOD(ansMachs, "new", CLASS, ciAnswererNew,
+    ST_CMETHOD(ansMachs, "new", "instance creation", CLASS, ciAnswererNew,
               "Returns a new object instance of a 2-D point in Hyperbolic geometry" DRAWABLE_STR);
-    ST_METHOD(ansMachs, "random:", CLASS, ciAnswererRandom,
-              "Returns a new point randomly distributed in the Klein disk's Euclidean counterpart with Euclidean distance from (0, 0) less than the argument (maximum of 1.0 since the unit disk is at infinity) -- this has a random Euclidean radius, but the hyperbolic distance from hyperbolic (0, 0) is more likely to be small, i.e. it is not a random hyperbolic distance from (0, 0), because that would skew the points toward the edge of the disk, which is not a great idea for visualization.");
-    ST_METHOD(ansMachs, "random", CLASS, ciAnswererRandom1,
-              "Returns what `random: 1.0' does");
-    ST_METHOD(ansMachs, "x:y:model:", CLASS, ciAnswererXYModel,
-              "Returns a new, set object instance of a 2-D point in Hyperbolic geometry" DRAWABLE_STR);
-    ST_METHOD(ansMachs, "x:y:m:", CLASS, ciAnswererXYModel,
-              "Returns a new, set object instance of a 2-D point in Hyperbolic geometry" DRAWABLE_STR);
+    ST_CMETHOD(ansMachs, "random:", "instance creation", CLASS,
+               ciAnswererRandom,
+               "Returns a new point randomly distributed in the Klein disk's Euclidean counterpart with Euclidean distance from (0, 0) less than the argument (maximum of 1.0 since the unit disk is at infinity) -- this has a random Euclidean radius, but the hyperbolic distance from hyperbolic (0, 0) is more likely to be small, i.e. it is not a random hyperbolic distance from (0, 0), because that would skew the points toward the edge of the disk, which is not a great idea for visualization.");
+    ST_CMETHOD(ansMachs, "random", "instance creation", CLASS,
+               ciAnswererRandom1,
+               "Returns what `random: 1.0' does");
+    ST_CMETHOD(ansMachs, "x:y:model:", "instance creation", CLASS,
+               ciAnswererXYModel,
+               "Returns a new, set object instance of a 2-D point in Hyperbolic geometry" DRAWABLE_STR);
+    ST_CMETHOD(ansMachs, "x:y:m:", "instance creation", CLASS,
+               ciAnswererXYModel,
+               "Returns a new, set object instance of a 2-D point in Hyperbolic geometry" DRAWABLE_STR);
     // DLC ParseError object instance `help' gives `Object help'
-    ST_METHOD(ansMachs, "distanceFromPoint:", OBJECT, oiAnswererDistanceFromPoint,
-              "Returns the distance between the receiver and the Point object instance argument");
-    ST_METHOD(ansMachs, "betweenColinearPoint:andOtherColinearPoint:", OBJECT, oiAnswererBetweenAnd,
-              "Returns true iff the receiver lies between two Point object instance arguments on the hyperbolic geometry line upon which the three Points are assumed to be colinear");
+    ST_CMETHOD(ansMachs, "distanceFromPoint:",
+               "hyperbolic geometry calculations", OBJECT,
+               oiAnswererDistanceFromPoint,
+               "Returns the distance between the receiver and the Point object instance argument");
+    ST_CMETHOD(ansMachs, "betweenColinearPoint:andOtherColinearPoint:",
+               "hyperbolic geometry calculations", OBJECT,
+               oiAnswererBetweenAnd,
+               "Returns true iff the receiver lies between two Point object instance arguments on the hyperbolic geometry line upon which the three Points are assumed to be colinear");
     ADD_ANS_GETTER("x", X);
     ADD_ANS_GETTER("y", Y);
     ADD_ANS_GETTER("model", Model);

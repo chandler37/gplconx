@@ -18,7 +18,7 @@
 */
 
 /*
-  C++ Smalltalkish Number  class.
+  C++ Smalltalkish Number class.
 */
 
 #ifndef GPLCONX_STNUMBER_CXX_H
@@ -26,7 +26,7 @@
 
 #include "stobject.hh"
 
-
+class CClsFloat;
 //////////////////////////////////////////////////////////////////////////////
 // Our equivalent to Smalltalk's Number class.
 class CClsNumber : VIRT public CClsBase {
@@ -47,6 +47,11 @@ public:
   int operator!=(const CClsNumber &o) { return !operator==(o); }
   
   virtual double getFloatValue() const;
+  virtual ErrType asFloat(CClsBase **result);
+  ANSWERER_FOR_ACTION_DEFN_BELOW(CClsNumber, oiAnswererAsFloat,
+                                 oiActionAsFloat, /* non-const, could modify
+                                                     if we're already a
+                                                     CClsFloat */);
 
 private:
   static void initializeAnsweringMachines();

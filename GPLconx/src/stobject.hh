@@ -30,12 +30,37 @@
 #define GPLCONX_STOBJECT_CXX_H 1
 
 #include "gcobject.hh"
-#include "sthelper.hh"
 #include "stmacros.hh"
+#include "sth_answ.hh"
 #include "CString.hh"
 
 class CConxClsAnsMach;
 class CConxClsMessage;
+
+// Declaring these in advance is unnecessary but makes compiler messages
+// more meaningful.
+class CClsUndefinedObject;
+class CClsBoolean;
+class CClsFloat;
+class CClsModelIdentifier;
+class CClsColor;
+class CClsCharacterArray;
+class CClsArray;
+class CClsSmallInt;
+class CClsDrawable;
+class CClsNumber;
+class CClsSystem;
+class CClsCanvas;
+class CClsLine;
+class CClsCircle;
+class CClsParabola;
+class CClsHypEllipse;
+class CClsError;
+class CClsSymbol;
+class CClsString;
+class CClsPoint;
+// DLC NEWSTCLASS
+
 
 
 //////////////////////////////////////////////////////////////////////////////

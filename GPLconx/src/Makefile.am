@@ -27,14 +27,16 @@ include Makefile.inc
 AM_YFLAGS = -d
 ## For a C++ lexer, name scanner.l scanner.ll and use AM_LFLAGS = -+ -olex.yy.c
 
-SUBDIRS = Tcl
+SUBDIRS = Tcl lcl
 
 AM_CFLAGS = $(FIRM_CFLAGS)
 AM_CXXFLAGS = $(FIRM_CFLAGS)
 
-bin_PROGRAMS = gconx tconx cxxconx
+bin_PROGRAMS = @GCONX@ @TCONX@ cxxconx
+EXTRA_PROGRAMS = gconx tconx
 noinst_PROGRAMS = tgeomobj tdgeomob tCString tderive tparser
-noinst_LTLIBRARIES = libconx.la libconxu.la libcxxconx.la libcls.la
+noinst_LTLIBRARIES = @LIBCONXLA@ libconxu.la libcxxconx.la libcls.la
+EXTRA_LTLIBRARIES = libconx.la
 
 ttalk-sh: tparser
 
@@ -54,6 +56,10 @@ EXTRA_DIST = tconxopt.ggo getopt.h parser.h ttalk-in ttalk-o ttalk-sh \
 
 BUILT_SOURCES = tconxopt.c tconxopt.h
 
+lcl_CPPFLAGS = -I$(srcdir)/lcl
+lcl_LDFLAGS =
+lcl_LIBS = $(top_builddir)/src/lcl/libcxlcl.a
+
 ## We have to include togl.h, and it is located relative to top_srcdir.
 AM_CPPFLAGS = -I$(top_srcdir) $(lcl_CPPFLAGS) $(glut_CPPFLAGS) $(glu_CPPFLAGS) $(gl_CPPFLAGS) $(tk_CPPFLAGS) $(tcl_CPPFLAGS)
 
@@ -68,7 +74,8 @@ libconxu_la_LIBADD = @LTLIBOBJS@
 libconx_la_SOURCES = conxv.c lines.c
 
 libcls_la_SOURCES = parser.y scanner.l cparse.cc clsmgr.cc mparse.cc \
-                    sthelper.cc stmparse.cc \
+                    sth_var.cc sth_answ.cc sth_msg.cc \
+                    sth_kmsg.cc sth_karg.cc sth_assn.cc stmparse.cc \
 		    sterror.cc stcharar.cc ststring.cc stsymbol.cc \
 		    stobject.cc stsmalli.cc stnumber.cc gcobject.cc \
                     stboole.cc stundefo.cc stgarray.cc stfloat.cc \
@@ -118,6 +125,9 @@ tdgeomob_LDADD = libcxxconx.la libconxu.la
 tCString_SOURCES = tCString.cc tester.cc
 tCString_LDADD = libcxxconx.la libconxu.la
 
+glut_LDFLAGS = @GLUTLIBDIR@
+glut_CPPFLAGS = @GLUTINCDIR@
+
 gconx_SOURCES = glutconx.c gl.c
 gconx_LDADD = libconx.la libconxu.la $(glut_LDFLAGS) $(glut_LIBS) \
                 $(glu_LDFLAGS) $(glu_LIBS) $(gl_LDFLAGS) $(gl_LIBS)
@@ -141,6 +151,8 @@ noinst_HEADERS = viewer.h point.h globals.h util.h conxtcl.h bresint.h \
                  canvas.hh color.hh glcanvas.hh dgeomobj.hh cparse.hh \
                  parsearg.h clsmgr.hh CObject.hh tester.hh Starray.hh \
                  CArray.hh mparse.hh stcommon.hh stconx.hh sthelper.hh \
+	         sth_var.hh sth_answ.hh sth_msg.hh sth_kmsg.hh \
+	         sth_assn.hh sth_karg.hh \
                  cmparse.hh stmparse.hh stmacros.hh sterror.hh stobject.hh \
                  stcharar.hh ststring.hh stsymbol.hh gcobject.hh stsmalli.hh \
                  stnumber.hh stboole.hh stundefo.hh stgarray.hh stfloat.hh \
@@ -178,7 +190,13 @@ NL_SOURCE_FILES = $(srcdir)/toglconx.c $(srcdir)/glutconx.c \
 	$(srcdir)/mparse.hh $(srcdir)/mparse.cc \
 	$(srcdir)/stmparse.hh $(srcdir)/stmparse.cc \
 	$(srcdir)/stcommon.hh \
-	$(srcdir)/sthelper.hh $(srcdir)/sthelper.cc \
+	$(srcdir)/sthelper.hh \
+	$(srcdir)/sth_var.hh $(srcdir)/sth_var.cc \
+	$(srcdir)/sth_answ.hh $(srcdir)/sth_answ.cc \
+	$(srcdir)/sth_msg.hh $(srcdir)/sth_msg.cc \
+	$(srcdir)/sth_kmsg.hh $(srcdir)/sth_kmsg.cc \
+	$(srcdir)/sth_assn.hh $(srcdir)/sth_assn.cc \
+	$(srcdir)/sth_karg.hh $(srcdir)/sth_karg.cc \
 	$(srcdir)/stconx.hh $(srcdir)/stmacros.hh \
 	$(srcdir)/cmparse.hh $(srcdir)/stobject.hh $(srcdir)/stobject.cc \
 	$(srcdir)/sterror.hh $(srcdir)/sterror.cc \
@@ -227,3 +245,4 @@ s:
 	@echo $(NL_SOURCE_FILES)
 
 MAINTAINERCLEANFILES = y.output parser.c parser.h
+CLEANFILES = gconx cxxconx tconx

@@ -28,6 +28,7 @@
 #include "stsmalli.hh"
 #include "sterror.hh"
 #include "stboole.hh"
+#include "stfloat.hh"
 
 CConxOwnerArray<CConxClsAnsMach> *CClsSmallInt::ansMachs = NULL;
 
@@ -92,3 +93,8 @@ long CClsSmallInt::getValue() const
   return d;
 }
 
+NF_INLINE
+CClsBase::ErrType CClsSmallInt::asFloat(CClsBase **result)
+{
+  RETURN_FLOAT_R(getValue());
+}

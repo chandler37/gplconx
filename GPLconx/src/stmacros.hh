@@ -27,7 +27,7 @@
 #include <ctype.h>
 #include <strstream.h>
 
-#include "sthelper.hh"
+#include "sth_msg.hh"
 
 //////////////////////////////////////////////////////////////////////////////
 // Helper macros:
@@ -37,6 +37,8 @@
    do { \
      SET_RESULT(result, newObj); return OK_NEW_THING; /* DLC check oom GC */ \
    } while (0)
+
+class CConxClsAnsMach;
 
 #define TRY_TO_ANSWER_BY_MACHINE() \
     initializeAnsweringMachines(); \
@@ -50,6 +52,7 @@
     }
 
 class CClsBase;
+class CConxClsMessage;
 
 #define DEFAULT_SEND_MESSAGE(superClass) \
 public: \
@@ -198,6 +201,7 @@ class CClsError; // : public CClsBase;
   } while(0)
 
 #define RETURN_THIS(result) RETURN_EXISTING(result, this)
+#define RETURN_THIS_R() RETURN_EXISTING(result, this)
 
 #define REMOVE_A_USER(obj) \
   do { \
@@ -277,6 +281,12 @@ class CClsNumber;
                                      functionName, \
                                      comment))
 
+#define ST_CMETHOD(am, stMethodName, c, classOrObject, functionName, comment) \
+        (am)->append(CConxClsAnsMach(stMethodName, \
+                                     CConxClsAnsMach:: ## classOrObject, \
+                                     functionName, c, \
+                                     comment))
+
 #define ADD_ANS_GETTER(mname, fn) \
    ST_METHOD(ansMachs, mname, OBJECT, oiAnswerer ## fn, "Returns the " mname)
 
@@ -295,5 +305,8 @@ cls ## :: ## func(CClsBase **result, CConxClsMessage &o) constness \
 #define RETURN_FLOAT_R(m) RETURN_FLOAT(result, m)
 #define RETURN_BOOLE_R(m) RETURN_BOOLE(result, m)
 
+#define REQUIRE_METHOD_IN_SUBCLASS() \
+    RETURN_ERROR_RESULT(result, \
+                        "the method is the responsibility of the subclass")
 
 #endif // GPLCONX_STMACROS_CXX_H

@@ -32,8 +32,6 @@
 #include "CString.hh"
 #include "CArray.hh"
 #include "Starray.hh"
-#include "sthelper.hh"
-#include "decls.hh"
 
 #include "gcobject.hh"
 

@@ -1,4 +1,4 @@
-GPLconx THANKS...
+GPLconx is what it is thanks to the following:
 
 Dr. D. E. "Steve" Stevenson, Associate Professor of Computer Science
 at Clemson University.  He mentored me, David L. Chandler, in the
@@ -6,3 +6,6 @@ geometry, the numerics, the visualization, and the C language itself.
 
 Spencer Kimball and Peter Mattis for The GIMP, from which HSV support
 is stolen.
+
+Jens Reimann <ctron@dentrassi.de> and Rik Hemsley <rik@kde.org>,
+authors of the Linux Class Library.

@@ -1,14 +1,13 @@
 ## Before installing, edit this file.
 ## This is included by Makefile.am, so change it before you run `configure'
 
-lcl_PATH = /home/davidc/installed/linux_class_library/
-lcl_LDFLAGS = -L$(lcl_PATH)lib
-lcl_LIBS = -llcl -lpthread
-lcl_CPPFLAGS = -I$(lcl_PATH)include
+## _CPPFLAGS has the -I directives.
+## _LDFLAGS has the -L directives
+## _LIBS has the `-lfoo' or `libfoo.a' statement.
 
-glut_LDFLAGS = -L/usr/X11R6/lib
+## specify glut_LDFLAGS with --with-glut-libdir
+## specify glut_CPPFLAGS with --with-glut-incdir
 glut_LIBS = -lglut
-glut_CPPFLAGS =
 
 glu_LDFLAGS =
 glu_LIBS = -lGLU

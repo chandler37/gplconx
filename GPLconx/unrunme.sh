@@ -9,3 +9,4 @@ rm -f config.h config.h.in aclocal.m4 configure Makefile Makefile.in missing \
       src/Makefile src/Makefile.in Togl/Makefile.in Togl/Makefile \
       src/Tcl/Makefile src/Tcl/Makefile.in doc/Makefile doc/Makefile.in \
       src/lcl/Makefile src/lcl/Makefile.in
+rm -f website/Makefile website/Makefile.in
