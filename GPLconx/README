@@ -1,0 +1,49 @@
+GPLconx is a visualization tool that provides interactive visualization of
+points, lines, circles, ellipses, hyperbolas, parabolas, and equidistant
+curves in three models of the hyperbolic geometry of two dimensions,
+the Poincare Upper Half Plane, the Poincare Disk, and the Beltrami-Klein Disk.
+
+Such visualization is helpful when you are trying to appreciate the
+implications of replacing Euclid's Fifth Postulate with the idea that,
+``A line A can have two distinct parallel lines C and D that go through a
+point D not lying on A.''  Although this may be the true geometry of our part
+of the cosmos, it is not the geometry that most of us learn in high school.
+Playing with conic sections in GPLconx will expand your mathematical horizons.
+Every geometry student should have the chance to interact with hyperbolic
+geometry.
+
+Currently, GPLconx is written in C and C++ and has both a Tcl/Tk GUI
+(with widgets built with SpecTcl 1.1) and a GLUT GUI that enhance the
+visualization, which is done in OpenGL.  It uses GNU Autoconf and GNU
+Automake for configuration, and should run on any Un*x or GNU/Linux system.
+A Java port is in the works.  A 3-D version is desired,
+since there exist models that put all of space inside a unit sphere.  This
+is great for representing a universe of data, such as the World Wide Web,
+and has also been used to great effect as eye candy for electronica.
+
+In short, GPLconx exists because postulates are not as hands-on for most
+people as a GUI.
+
+The user interface and language are changing so that more students can
+have access to GPLconx.
+
+GPLconx is released under the GNU General Public License.  See the file
+`COPYING' for details.
+
+Togl, found in `Togl/', is released under its own license.  See `Togl/README'
+for more.
+
+SpecTcl 1.1 is used to engineer the `src/*.ui' which become the
+`src/*.ui.tcl'.
+
+You can find GPLconx on the web at `http://gplconx.sourceforge.net'.  There
+are two mailing lists of general interest, gplconx-users and
+gplconx-announce.
+
+To install, you can usually just run `/bin/sh ./configure; make all install'.
+Before running `make', you can edit `config.h' to change a few things that
+make little difference (unless you run into trouble later).  More instructions
+on installation can be found in `INSTALL'.
+
+See `AUTHOR', `NEWS', `THANKS', `TODO', `README.DEV', `LICENSE', `INSTALL'
+and `COPYING' for more information.

@@ -1,0 +1,13 @@
+This is GPLconx's copy of Togl, an edited version of Togl-1.6, and it is
+not the official release of Togl.  Togl can be found at
+`http://togl.sourceforge.net'.
+
+If you are using a version of Tk that is not supported, then you will get
+a compile error.  You'll then have to point `togl.c' to the `tkInt.h' file
+from your version of Tk.  Tk can be found at
+`http://tktoolkit.sourceforge.net'.  Your `tkInt.h'
+may use `#include' to include other files, and you should copy all of them
+to this directory along with `tkInt.h'.  You should then edit togl.c
+and replace the `#  error  Sorry, ...' with `#include "tkInt.h"'.
+
+See the file `LICENSE' in this directory for information on using Togl.

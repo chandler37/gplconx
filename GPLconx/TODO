@@ -1,0 +1,86 @@
+This file is licensed to you under the license specified in the included file
+`COPYING'. Look there for further details.
+
+
+SPECIFIC TASKS:
+
+jGPLconx -- See sourceforge. DLC
+
+remove CConxPoint * and CConxLine * from geomobj.hh
+
+Make the copy constructor and assignment operator `= 0' for the canvases?
+Copying semantics are tricky there.
+
+Use gengetopt strings with newlines for prettier --help output.
+
+UML.
+
+cxxconx: Explain how to use a different memory manager by overloading new and delete.
+
+Include a GPL'ed strtod.c and use AM_FUNC_STRTOD
+
+Do an `extern inline' and `static inline' check in addition to the regular
+AC_C_INLINE.  Irix CC -fullwarn -ansi needs this, maybe?
+
+DLC questionable
+
+UI: Add metrics that show the distance between a point and another point or a
+line.
+
+Add perpendiculars.
+
+Triangles
+
+Grep for DLC in all files; read the notes.
+
+Better README file.
+
+Texinfo documentation.
+Use the FSF's FDL.
+
+        Bug: ./tconx; Get Foci, then do a circle.  Oops, the foci didn't
+             change for all models!
+
+   Axes and a grid.
+
+   Replace glClear with a rectangle draw.
+
+   Can we use functions that have the same zeroes as the actual conxp_circle,
+   conxk_ellipse, etc.?  These functions could be quicker to execute.  Does
+   the behavior of the approximate zeroes matter?
+
+   Even for a circle of radius 5.1, you can see the octagonization
+   that is a result of non-adaptive tstep and/or the conversion
+   between the poincare uhp and the disks.  Fix this.
+
+   Points and lines with names.
+
+   Good command-line (readline'd) interface.
+
+   Slow, reliable conics don't work in tconx!!!
+
+   fork() for glutconx
+   Make configure.in more general.
+
+   bounds checking on disp and data arrays.
+
+   mouse function doesn't propogate to all models.
+
+   conx_disp in conx_menufunc??? That seems redundant.
+
+   compile-and-execute display lists (which require updating when the
+   GETXXYY command is executed, anytime else???)!!! efficient redraws!
+
+   GUI idea -- slider bar and x10 x.1 buttons for the conic distance.,
+   text labels, tconx initial window positioning.
+
+On the project web page, link to Togl and SpecTcl 1.1 and NonEuclid and
+NotKnot and ...
+
+dchandler@users.sourceforge.net or dchandler@gplconx.sourceforge.net ?
+
+web page, web page, web page.
+
+From the web page, link to the mailing lists.
+
+source control the web page.

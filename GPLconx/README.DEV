@@ -1,0 +1,52 @@
+This file is licensed to you under the license specified in the included file
+`COPYING'. Look there for further details.
+
+
+README for GPLconx developers
+=============================
+
+Don't implement a new numerical routine without thinking twice about
+catastophic cancellation and round-off errors.  If you don't know what these
+are, then you need to find out more about pragmatic numerical analysis.
+IEEE arithmetic is _not_ the same as the arithmetic of your pencil to paper.
+For a quick proof, just compile and run the following C snippet:
+{
+  long i = 1;
+  while ((float)i*(1.0/(float)i) == 1.0) ++i;
+  printf("I bet you didn't know that (float)%ld*(1.0/(float)%ld) != 1.0\n",
+         i, i);
+}
+Try it with different compiler optimizations; you may get different results!
+
+
+In GPLconx's C++ class hierarchy, single inheritance is a must.  Since this
+is an educational tool and since most schools don't have access to a Un*x
+box, GPLconx will eventually be ported to Java.  When you see multiple
+inheritance in GPLconx, it is only of classes that would be Java interfaces.
+See the file comment for `src/geomobj.hh' for more.
+
+
+See how `src/tderive.cc' defines classes A, B, C, and Cbad to understand
+how to properly extend (subclass) a base class.  If you rely on the
+compiler-provided copy constructor (i.e., `A::A(A &)') and assignment
+operator (i.e., `A &operator=(A &)'), you will shoot yourself in the foot.
+
+
+If you subclass or change a geometric object, e.g. CConxLine or CConxDwLine,
+be sure that any new attributes that affect the drawing will trigger a redraw
+when they are set.  The `setValidity()' method and the `isValid' attribute
+are there for this reason.  For efficiency's sake, stored drawings (think
+OpenGL display lists) are used, and they need to be redrawn when something
+changes.
+
+
+Any new class should have a test program or a new entry in one of the
+existing test programs.  See `src/Makefile.am' for the `tgeomobj' example;
+consult the GNU Automake documentation for more.
+
+
+There is a gplconx-devel mailing list; see
+`http://www.sourceforge.net/projects/gplconx' for more info.
+
+
+David L. Chandler, original author

@@ -1,0 +1,257 @@
+Type something to be parsed, or `System helpMe' for on-line help:
+$ >>> ParseError: Cannot reassign that variable, it is reserved.
+$ >>> true
+$ >>> false
+$ >>> true
+$ >>> false
+$ >>> false
+$ >>> true
+$ >>> nil
+$ >>> true
+$ >>> false
+$ >>> true
+$ >>> false
+$ >>> true
+$ >>> false
+$ >>> false
+$ >>> false
+$ >>> true
+$ >>> false
+$ >>> false
+$ >>> true
+$ >>> ParseError: Cannot reassign that variable, it is reserved.
+$ >>> 3.3
+$ >>> true
+$ >>> ModelIdentifier
+$ >>> Model Identifier 'uhp' which refers to the Poincare Upper Half Plane
+$ >>> Model Identifier 'pd' which refers to the Poincare Disk
+$ >>> Model Identifier 'kd' which refers to the Beltrami-Klein Disk
+$ >>> ParseError: Cannot reassign that variable, it is reserved.
+$ >>> 3.3
+$ >>> ModelIdentifier
+$ >>> ParseError: unknown keyword message
+$ >>> ParseError: `m:', keyword number 3, requires an argument of type ``ModelIdentifier object instance''
+$ >>> [puhp(3.3, 4.4), kd(0.2112, 0.936), pd(0.164794, 0.730337)]
+$ >>> [puhp(3.3, 4.4), kd(0.2112, 0.936), pd(0.164794, 0.730337)]
+$ >>> [puhp(3.3, 4.4), kd(0.2112, 0.936), pd(0.164794, 0.730337)]
+$ >>> [puhp(3.3, 4.7), kd(0.194232, 0.941142), pd(0.152144, 0.737206)]
+$ >>> 0.065958
+$ >>> [puhp(0.428571, 1.29363), kd(0.3, 0.3), pd(0.157436, 0.157436)]
+$ >>> [puhp(-0.230769, 0.696568), kd(-0.3, -0.3), pd(-0.157436, -0.157436)]
+$ >>> ParseError: Syntax error: parse error
+$ >>> [puhp(0, 1), kd(0, 0), pd(0, 0)]
+$ >>> ParseError: unknown unary message
+$ >>> ParseError: unknown keyword message
+$ >>> true
+$ >>> false
+$ >>> [puhp(3.3, 4.4), kd(0.2112, 0.936), pd(0.164794, 0.730337)]
+$ >>> 0.1
+$ >>> [puhp(3.3, 4.4), kd(0.2112, 0.936), pd(0.164794, 0.730337)]
+$ >>> 0.1
+$ >>> [puhp(0.1, 4.4), kd(0.00981836, 0.901816), pd(0.00685636, 0.629757)]
+$ >>> [puhp(3.3, 4.4), kd(0.2112, 0.936), pd(0.164794, 0.730337)]
+$ $ >>> ParseError: receiver is read-only
+$ >>> Model Identifier 'P ' which refers to no valid model
+$ >>> true
+$ >>> false
+$ >>> true
+$ >>> false
+$ >>> Color(RGB=[0.3, 0.5, 0.7])
+$ >>> 0.3
+$ >>> 0.5
+$ >>> 0.7
+$ >>> 210
+$ >>> 0.571429
+$ >>> 0.7
+$ >>> Color(RGB=[0.3, 0.5, 0.7])
+$ >>> Color(RGB=[0.4, 0.5, 0.1])
+$ >>> Color(RGB=[0.4, 0.5, 0.1])
+$ >>> 'Color'
+$ >>> 'Number class'
+$ >>> ParseError: There is no super-class; this is the root of the class hierarchy
+$ >>> Model Identifier 'poincare upper h' which refers to the Poincare Upper Half Plane
+$ >>> ParseError: Syntax error: parse error, expecting `TOK_STMT_END' or `'.''
+$ >>> ParseError: Syntax error: parse error, expecting `TOK_STMT_END' or `'.''
+$ >>> Model Identifier 'poincare' which refers to no valid model
+$ >>> 'Symbol'
+$ >>> 'CharacterArray class'
+$ >>> 'Symbol class'
+$ >>> 'CharacterArray class'
+$ >>> Color(RGB=[0, 0, 0])
+$ >>> true
+$ >>> true
+$ >>> true
+$ >>> true
+$ >>> false
+$ >>> false
+$ >>> true
+$ >>> #( 3 4 5 #hi )
+$ >>> #( )
+$ >>> #( 'first' )
+$ >>> Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> #BRESENHAM
+$ >>> #B
+$ >>> ParseError: You can set a String to a Symbol, but not vice versa
+$ >>> ParseError: Syntax error: parse error, expecting `TOK_STMT_END' or `'.''
+$ >>> 'hi'
+$ >>> 'ss'
+$ >>> 2
+$ >>> 0
+$ >>> ParseError: Syntax error: parse error, expecting `TOK_STMT_END' or `'.''
+$ >>> 1
+$ >>> ParseError: Scanner error, unrecognized token
+$ >>> ParseError: Scanner error, unrecognized token
+$ >>> 5
+$ >>> true
+$ >>> false
+$ >>> false
+$ >>> ParseError: receiver is read-only
+$ >>> ParseError: `set:', keyword number 1, requires an argument of type ``Number object instance''
+$ >>> 4.4
+$ >>> 2.2
+$ >>> 2.2
+$ >>> ParseError: receiver is read-only
+$ >>> Model Identifier 'pd' which refers to the Poincare Disk
+$ >>> #j
+$ >>> ParseError: You can set a String to a Symbol, but not vice versa
+$ >>> true
+$ >>> true
+$ >>> 2
+$ >>> ParseError: Syntax error: parse error, expecting `TOK_STMT_END' or `'.''
+$ >>> #hi
+$ >>> #( #a1 #a2 #a3 )
+$ >>> #a1
+$ >>> ParseError: `at:', keyword number 1, requires an argument of type ``SmallInt object instance''
+$ >>> #a1
+$ >>> #a3
+$ >>> ParseError: not yet implemented, should grow I guess -- I need an integer class first.
+$ >>> #( #a1 #a2 #a3 'wow' )
+$ >>> Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Color(RGB=[0, 1, 0.3])
+$ >>> #BRESENHAM
+$ >>> Color(RGB=[0.1, 0.3, 0.44])
+$ >>> Drawable -- Color(RGB=[0.1, 0.3, 0.44]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> 1
+$ >>> 2.5
+$ >>> Drawable -- Color(RGB=[0.1, 0.3, 0.44]), garnishing on, thickness 2.5, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> 0.0015
+$ >>> Drawable -- Color(RGB=[0.1, 0.3, 0.44]), garnishing on, thickness 2.5, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.0015, drawing method #BRESENHAM
+$ >>> 0.001
+$ >>> Drawable -- Color(RGB=[0, 1, 0.3]), garnishing on, thickness 1, slow drawing method tolerance 0.001, drawing method #BRESENHAM
+$ >>> [puhp(0.36, 0.37), kd(0.568496, -0.579155), pd(0.358834, -0.365562)]
+$ >>> 0.36
+$ >>> 0.37
+$ >>> 0.39
+$ >>> [puhp(0.36, 0.39), kd(0.561754, -0.560428), pd(0.349226, -0.348402)]
+$ >>> ParseError: unknown unary message
+$ >>> Model Identifier 'uhp' which refers to the Poincare Upper Half Plane
+$ >>> Model Identifier 'kd' which refers to the Beltrami-Klein Disk
+$ >>> [puhp(0.590164, 1.38939), kd(0.36, 0.39), pd(0.194855, 0.211093)]
+$ >>> 0.36
+$ >>> 0.39
+$ >>> -0.1
+$ >>> Model Identifier 'uhp' which refers to the Poincare Upper Half Plane
+$ >>> [puhp(0.36, 0), kd(0.637394, -0.770538), pd(0.637394, -0.770538)]
+$ >>> 'that was truncated as it should have been'
+$ >>> 'This is the Smalltalk-80-ish system that GPLconx uses to give you incredible expressive power (um, one day...).  The system's documentation is in the Texinfo document that you'll find bundled with the source, which is freely available since GPLconx is GPL'ed.  To get up to speed more quickly, download and check out GNU Smalltalk, which is full-featured and better-documented.
+Another good source of help is by typing `Object help', or `System help', or `2 help', or `0.3 help', e.g.  This gives you information about the class of the receiver, such as which methods work.  There are no binary methods in this system, and you cannot extend it unless you alter the C++ source code.'
+$ >>> '#Object subclass:  #Boolean
+
+Object comment:
+'I am a Boolean value, i.e. I am either true or false.'
+
+Class methods:
+
+	help -- returns help on this class's methods
+	true -- returns a new object instance that represents truth.  The system predefines such an instance and assigns it to the variable `true'; you will benefit from increased efficiency if you just use `true'.
+	false -- returns a new object instance that represents falsehood.  The system predefines such an instance and assigns it to the variable `false'; you will benefit from increased efficiency if you just use `false'
+
+
+Instance methods:
+	not -- Returns a Boolean object instance whose truth value is the opposite of the receiver
+	and: -- Returns true iff the reciever and the Boolean argument are both true
+	or: -- Returns true iff either the reciever or the Boolean argument is true
+	xor: -- Returns true iff either the reciever or the Boolean argument is true but both are not
+'
+$ >>> 'nil subclass:  #Object
+
+Object comment:
+'I am the root of the GPLconx class hierarchy.  All other classes are derived from me.'
+
+Class methods:
+
+	superClass -- Returns the class from which the receiver is derived
+	class -- Returns the class of which the receiver is a class instance
+	printString -- Returns a human-readable String object instance representation
+	isClass -- Returns true if the receiver is a class instance rather than an object instance
+	clone -- Returns an identical copy of the receiver (not the receiver itself)
+	help -- Returns help on using the receiver
+	isNil -- Returns true if the receiver isNil
+	notNil -- Returns true if the receiver is notNil
+	isFloat -- Returns true if the receiver isFloat
+	notFloat -- Returns true if the receiver is notFloat
+	isSymbol -- Returns true if the receiver isSymbol
+	notSymbol -- Returns true if the receiver is notSymbol
+	isString -- Returns true if the receiver isString
+	notString -- Returns true if the receiver is notString
+	isParseError -- Returns true if the receiver isParseError
+	notParseError -- Returns true if the receiver is notParseError
+	isModelIdentifier -- Returns true if the receiver isModelIdentifier
+	notModelIdentifier -- Returns true if the receiver is notModelIdentifier
+	isColor -- Returns true if the receiver isColor
+	notColor -- Returns true if the receiver is notColor
+	isCharacterArray -- Returns true if the receiver isCharacterArray
+	notCharacterArray -- Returns true if the receiver is notCharacterArray
+	isArray -- Returns true if the receiver isArray
+	notArray -- Returns true if the receiver is notArray
+	isSmallInt -- Returns true if the receiver isSmallInt
+	notSmallInt -- Returns true if the receiver is notSmallInt
+	isDrawable -- Returns true if the receiver isDrawable
+	notDrawable -- Returns true if the receiver is notDrawable
+	isNumber -- Returns true if the receiver isNumber
+	notNumber -- Returns true if the receiver is notNumber
+	isSystem -- Returns true if the receiver isSystem
+	notSystem -- Returns true if the receiver is notSystem
+	isCanvas -- Returns true if the receiver isCanvas
+	notCanvas -- Returns true if the receiver is notCanvas
+
+
+Instance methods:
+	superClass -- Returns the class from which the receiver is derived
+	class -- Returns the class of which the receiver is an object instance
+	printString -- Returns a human-readable String object instance representation
+	isClass -- Returns true if the receiver is a class instance rather than an object instance
+	clone -- Returns an identical copy of the receiver (not the receiver itself)
+	set: -- Sets the receiver's value to a copy of the argument's value
+	help -- Returns help on using the receiver
+	isNil -- Returns true if the receiver isNil
+	notNil -- Returns true if the receiver is notNil
+	isFloat -- Returns true if the receiver isFloat
+	notFloat -- Returns true if the receiver is notFloat
+	isSymbol -- Returns true if the receiver isSymbol
+	notSymbol -- Returns true if the receiver is notSymbol
+	isString -- Returns true if the receiver isString
+	notString -- Returns true if the receiver is notString
+	isParseError -- Returns true if the receiver isParseError
+	notParseError -- Returns true if the receiver is notParseError
+	isModelIdentifier -- Returns true if the receiver isModelIdentifier
+	notModelIdentifier -- Returns true if the receiver is notModelIdentifier
+	isColor -- Returns true if the receiver isColor
+	notColor -- Returns true if the receiver is notColor
+	isCharacterArray -- Returns true if the receiver isCharacterArray
+	notCharacterArray -- Returns true if the receiver is notCharacterArray
+	isArray -- Returns true if the receiver isArray
+	notArray -- Returns true if the receiver is notArray
+	isSmallInt -- Returns true if the receiver isSmallInt
+	notSmallInt -- Returns true if the receiver is notSmallInt
+	isDrawable -- Returns true if the receiver isDrawable
+	notDrawable -- Returns true if the receiver is notDrawable
+	isNumber -- Returns true if the receiver isNumber
+	notNumber -- Returns true if the receiver is notNumber
+	isSystem -- Returns true if the receiver isSystem
+	notSystem -- Returns true if the receiver is notSystem
+	isCanvas -- Returns true if the receiver isCanvas
+	notCanvas -- Returns true if the receiver is notCanvas
+'
+$ 

@@ -1,0 +1,15 @@
+I, David L. Chandler, am the original author and current maintainer.
+
+I wrote GPLconx in an attempt to learn something about visualization,
+C programming, Unix, and Makefiles.  The mathematics-related code and
+a GLUT GUI was written in the summer of 1996 under the mentorship of
+Dr. D. E. "Steve" Stevenson of Clemson University.  I was in a six-week
+high school research program at the South Carolina Governor's School for
+Science and Mathematics at the time.
+
+GPLconx was my first C program of any consequence, and I'm afraid that
+you can tell by looking at the old source code.  It has since been
+rewritten in C++ and will again be rewritten in Java.  It may even be
+ported to PalmOS one of these days.
+
+Send mail to <dchandler@users.sourceforge.net>.

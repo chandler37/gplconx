@@ -1,0 +1,251 @@
+WidGet file, version 1.1, created:  Wed Feb 28 21:00:36 EST 2001
+Widget menubutton#4
+	other error {}
+	other tags {}
+	other level {}
+	other help {}
+	other master .frame#1
+	other pathname menubutton#4
+	configure menu m
+	other tabbing {}
+	other item_name help_mb
+	geometry row 1
+	other type menubutton
+	configure text Help
+	geometry column 6
+	other comments {}
+	configure underline 0
+Widget frame#5
+	other panel {}
+	geometry row 3
+	other resize_row 0
+	other type frame
+	other error {}
+	other min_row 6
+	other master {}
+	other pathname frame#5
+	other tags {}
+	other resize_column 3
+	other level 1
+	other help {}
+	other min_column 30
+	configure borderwidth 2
+	other comments {}
+	geometry column 1
+	configure relief ridge
+	other tabbing {}
+	other item_name frame#5
+	geometry sticky nesw
+Widget frame#6
+	other panel {}
+	geometry row 2
+	other resize_row {3 3 3}
+	other type frame
+	other error {}
+	other min_row {12 30 30}
+	other master {}
+	other pathname frame#6
+	other tags {}
+	other resize_column 3
+	other level 1
+	other help {}
+	other min_column 27
+	configure borderwidth 2
+	other comments {}
+	geometry column 1
+	configure relief sunken
+	other tabbing {}
+	other item_name mainframe
+	geometry sticky nesw
+Widget menubutton#8
+	other error {}
+	other tags {}
+	other level {}
+	other help {}
+	other master .frame#1
+	other pathname menubutton#8
+	configure menu m
+	other tabbing {}
+	other item_name draw_mb
+	geometry row 1
+	other type menubutton
+	configure text Draw
+	geometry column 3
+	other comments {}
+	configure underline 0
+Widget menubutton#10
+	other error {}
+	other tags {}
+	other level {}
+	other help {}
+	other master .frame#1
+	other pathname menubutton#10
+	configure menu m
+	other tabbing {}
+	other item_name input_mb
+	geometry row 1
+	other type menubutton
+	configure text Input
+	geometry column 4
+	configure underline 0
+	other comments {}
+Widget menubutton#9
+	other error {}
+	other tags {}
+	other level {}
+	other help {}
+	other master .frame#1
+	other pathname menubutton#9
+	configure menu m
+	other tabbing {}
+	other item_name mouse_mb
+	geometry row 1
+	other type menubutton
+	configure text Mouse
+	geometry column 2
+	other comments {}
+	configure underline 0
+Widget checkbutton#1
+	configure variable tconx_globls(check_puhp)
+	other error {}
+	other tags {}
+	other level {}
+	other help {}
+	configure command {tconx_mother_check puhp}
+	other master .frame#6
+	other pathname checkbutton#1
+	configure font Helvetica,20,Bold
+	other tabbing {}
+	other item_name checkbutton#1
+	geometry row 1
+	other type checkbutton
+	configure text {Poincare Upper Half Plane}
+	configure underline 9
+	other comments {}
+	geometry column 1
+Widget f
+	other generic_options {button {activebackground #ececec activeforeground Black anchor center background #d9d9d9 bitmap {} borderwidth 2 command {} comments {} cursor {} default disabled disabledforeground #a3a3a3 error {- button configuration -} font Times,0 foreground Black height 0 help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 image {} item_name sample_button justify center level {} master {} padx 9 pady 3 pathname sample_button relief raised state normal tabbing {} tags {} takefocus {} text button textvariable {} type button underline -1 width 0 wraplength 0
+		} canvas {background #d9d9d9 borderwidth 0 closeenough 1.0 comments {} confine 1 cursor {} error {- canvas configuration -} height 207 help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 insertbackground Black insertborderwidth 0 insertofftime 300 insertontime 600 insertwidth 2 item_name sample_canvas level {} master {} pathname sample_canvas relief flat scrollregion {} selectbackground #c3c3c3 selectborderwidth 1 selectforeground Black tabbing {} tags {} takefocus {} type canvas width 295 xscrollcommand {} xscrollincrement 0 yscrollcommand {} yscrollincrement 0
+		} checkbutton {activebackground #ececec activeforeground Black anchor center background #d9d9d9 bitmap {} borderwidth 2 command {} comments {} cursor {} disabledforeground #a3a3a3 error {- checkbutton configuration -} font Times,0 foreground Black height 0 help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 image {} indicatoron 1 item_name sample_checkbutton justify center level {} master {} offvalue 0 onvalue 1 padx 1 pady 1 pathname sample_checkbutton relief flat selectcolor #b03060 selectimage {} state normal tabbing {} tags {} takefocus {} text checkbutton textvariable {} type checkbutton underline -1 variable example_checkbutton width 0 wraplength 0
+		} entry {background #d9d9d9 borderwidth 2 comments {} cursor xterm error {- entry configuration -} exportselection 1 font Times,0 foreground Black help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 insertbackground Black insertborderwidth 0 insertofftime 300 insertontime 600 insertwidth 2 item_name sample_entry justify left level {} master {} pathname sample_entry relief sunken selectbackground #c3c3c3 selectborderwidth 1 selectforeground Black show {} state normal tabbing {} tags {} takefocus {} textvariable entry type entry width 20 xscrollcommand {}
+		} frame {
+		} label {
+		} listbox {background #d9d9d9 borderwidth 2 comments {} cursor {} error {- listbox configuration -} exportselection 1 font Times,0 foreground Black height 10 help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 item_name sample_listbox level {} master {} pathname sample_listbox relief sunken selectbackground #c3c3c3 selectborderwidth 1 selectforeground Black selectmode browse setgrid 0 tabbing {} tags {} takefocus {} type listbox width 20 xscrollcommand {} yscrollcommand {}
+		} menubutton {
+		} message {
+		} radiobutton {activebackground #ececec activeforeground Black anchor center background #d9d9d9 bitmap {} borderwidth 2 command {} comments {} cursor {} disabledforeground #a3a3a3 error {- radiobutton configuration -} font Times,0 foreground Black height 0 help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 image {} indicatoron 1 item_name sample_radiobutton justify center level {} master {} padx 1 pady 1 pathname sample_radiobutton relief flat selectcolor #b03060 selectimage {} state normal tabbing {} tags {} takefocus {} text radiobutton textvariable {} type radiobutton underline -1 value {} variable example_radiobutton width 0 wraplength 0
+		} scale {
+		} scrollbar {activebackground #ececec activerelief raised background #d9d9d9 borderwidth 2 command {} comments {} cursor {} elementborderwidth -1 error {- scrollbar configuration -} help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 item_name sample_scrollbar jump 0 level {} master {} orient vertical pathname sample_scrollbar relief sunken repeatdelay 300 repeatinterval 100 tabbing {} tags {} takefocus {} troughcolor #c3c3c3 type scrollbar width 15
+		} text {
+		}
+	}
+	other panel {}
+	other resize_row {0 3 0}
+	other type frame
+	other code {tconx_mother_widget_init $root
+}
+	other min_row {30 28 7}
+	other master {}
+	other pathname f
+	other resize_column 3
+	other tags {}
+	other level 0
+	configure background #e9e9e9
+	other min_column 125
+	other help {}
+	other Colors {black white bisque grey red green blue magenta yellow #d9d9d9}
+	other comments {}
+	other item_name f
+	other tabbing {}
+Widget checkbutton#2
+	configure variable tconx_globls(check_kd)
+	other error {}
+	other tags {}
+	other level {}
+	other help {}
+	configure command {tconx_mother_check kd}
+	other master .frame#6
+	other pathname checkbutton#2
+	configure font Helvetica,20,Bold
+	other tabbing {}
+	other item_name checkbutton#2
+	geometry row 2
+	other type checkbutton
+	configure text {Beltrami-Klein Disk}
+	configure underline 9
+	other comments {}
+	geometry column 1
+Widget checkbutton#3
+	configure variable tconx_globls(check_pd)
+	other error {}
+	other tags {}
+	other level {}
+	other help {}
+	configure command {tconx_mother_check pd}
+	other master .frame#6
+	other pathname checkbutton#3
+	configure font Helvetica,20,Bold
+	other tabbing {}
+	other item_name checkbutton#3
+	geometry row 3
+	other type checkbutton
+	configure text {Poincare Disk}
+	configure underline 0
+	other comments {}
+	geometry column 1
+Widget menubutton#1
+	other error {}
+	other tags {}
+	other level {}
+	other help {}
+	other master .frame#1
+	other pathname menubutton#1
+	configure menu m
+	other tabbing {}
+	other item_name file_mb
+	geometry row 1
+	other type menubutton
+	configure text File
+	geometry column 1
+	other comments {}
+	configure underline 0
+Widget entry#2
+	other {} {}
+	geometry row 1
+	other error {}
+	other type entry
+	configure textvariable tconx_globls(bottom_entry)
+	other master .frame#5
+	other pathname entry#2
+	other tags {}
+	configure font Helvetica,12,Bold
+	other level {}
+	configure width 1
+	other help {}
+	other comments {}
+	configure selectborderwidth 0
+	geometry column 1
+	other item_name bottom_entry
+	other tabbing {}
+	configure relief flat
+	geometry sticky ew
+Widget frame#1
+	other panel {}
+	geometry row 1
+	other resize_row 0
+	other type frame
+	other error {can't modify -container option after widget is created}
+	other min_row 13
+	other master {}
+	other pathname frame#1
+	other tags {}
+	other resize_column {0 0 0 0 3 0}
+	other level 1
+	other help {}
+	other min_column {26 26 10 30 30 30}
+	other comments {}
+	geometry column 1
+	other tabbing {}
+	other item_name frame#1
+	geometry sticky new
+

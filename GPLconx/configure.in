@@ -1,0 +1,102 @@
+# GPLconx -- visualize 2-D hyperbolic geometry.
+# Copyright (C) 1996-2001  David L. Chandler
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+dnl Process this file with autoconf to produce a configure script.
+
+AC_INIT(src/conxv.c)
+AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE(GPLconx, 0.146)
+
+AC_CONFIG_AUX_DIR(.)
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_CPP
+dnl We need yacc/bison and lex/flex:
+AC_PROG_YACC
+AM_PROG_LEX
+
+AC_DISABLE_SHARED
+AM_PROG_LIBTOOL
+AC_PROG_INSTALL
+dnl AC_PROG_RANLIB
+
+dnl src/ttalk-sh depends on `#!' support:
+AC_SYS_INTERPRETER
+AM_CONDITIONAL(WE_HAVE_SYS_INTERP, test "$interpval" = "yes")
+
+dnl Checks for libraries.
+AC_CHECK_LIB(m, sin)
+
+dnl Checks for header files.
+AC_HEADER_STDC
+dnl DLC use these checks.
+AC_CHECK_HEADERS(GL/glut.h GL/gl.h GL/glu.h errno.h ctype.h stdio.h stdlib.h string.h assert.h unistd.h sys/stat.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_SIZE_T
+AC_C_INLINE
+
+
+dnl Checks for library functions.  CHECK_LIB should be called first.
+AC_REPLACE_FUNCS(acosh)
+
+dnl Check for gengetopt-2.2's generated source's dependencies, but don't put
+dnl them in LIBOBJS since those go into the library, and these go into tconx
+dnl but not gconx.
+dnl
+dnl If you suspect that your getopt_long is present but not working correctly,
+dnl then change getopt_long to getooopt_long, which will not be found, and
+dnl you will use GPLconx's getopt and getopt_long.
+AC_SUBST(GGOOBJS)
+AC_CHECK_FUNCS(getopt_long , , [GGOOBJS="$GGOOBJS getopt.o getopt1.o"])
+
+dnl GNU gengetopt-2.2 turns tconxopt.ggo into `.c' and `.h' files.
+dnl DLC check version.
+missing_dir=`cd $ac_aux_dir && pwd`
+AM_MISSING_PROG(GENGETOPT, gengetopt, $missing_dir)
+
+dnl Extensive gcc compiler warnings help ensure correctness.
+AC_ARG_ENABLE(warn,
+  [  --enable-warn   Enable compiler warnings if gcc is used],
+  [
+    case "${enableval}" in
+      yes) compwarnings=true ;;
+      no)  compwarnings=false ;;
+      *)   AC_MSG_ERROR([bad value ${enableval} for --enable-warn]) ;;
+    esac
+  ],
+  [ compwarnings=$debug ]
+)
+FIRM_CFLAGS=""
+if test x$compwarnings = xtrue; then
+        if test "x$GCC" = xyes; then
+                FIRM_CFLAGS="$FIRM_CFLAGS -Wall -Wtraditional -Wpointer-arith -Wno-parentheses -Wcast-qual -Wcast-align -Wnested-externs -Wmissing-prototypes -Wmissing-declarations -Wstrict-prototypes -Wwrite-strings"
+        fi
+dnl -Waggregate-return warnings will alert you to possible performance
+dnl pitfalls.
+dnl Don't bother with other compilers, that's what CFLAGS and CXXFLAGS are for.
+fi
+
+AC_SUBST(FIRM_CFLAGS)
+
+dnl See section ``Autoconf `.o' macros'' in libtool manual (libtool.info*)
+LTLIBOBJS=`echo "$LIBOBJS" | sed 's/\.o/.lo/g'`
+AC_SUBST(LTLIBOBJS)
+AC_OUTPUT(Makefile src/Makefile Togl/Makefile src/Tcl/Makefile doc/Makefile)

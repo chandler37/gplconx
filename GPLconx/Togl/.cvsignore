@@ -1,0 +1,6 @@
+.deps
+.libs
+Makefile
+Makefile.in
+libtogl.la
+togl.lo

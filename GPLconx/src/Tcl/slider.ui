@@ -1,0 +1,350 @@
+WidGet file, version 1.1, created:  Wed Feb 28 02:58:42 EST 2001
+Widget button#10
+	geometry row 2
+	other error {}
+	other type button
+	other master .frame#5
+	configure text {Set value}
+	other pathname button#10
+	other tags {}
+	configure font Helvetica,12,Bold
+	other level {}
+	other help {}
+	configure underline 4
+	other comments {}
+	geometry column 1
+	other item_name button#10
+	other tabbing {}
+	configure command {tconx_slider_button right_set %R}
+Widget frame#2
+	other panel {}
+	geometry row 2
+	other resize_row 0
+	other error {}
+	other type frame
+	other min_row 30
+	other master {}
+	other pathname frame#2
+	other resize_column {1 0 3 0}
+	other tags {}
+	other level 1
+	other min_column {30 30 30 30}
+	other help {}
+	other comments {}
+	geometry column 1
+	other item_name frame#2
+	other tabbing {}
+	geometry sticky nesw
+Widget button#1
+	geometry row 1
+	other error {}
+	other type button
+	other master .frame#2
+	configure text Help
+	other pathname button#1
+	other tags {}
+	configure font Helvetica,12,Bold
+	other level {}
+	other help {}
+	other comments {}
+	configure underline 0
+	geometry column 4
+	other item_name button#1
+	other tabbing {}
+	configure command {tconx_slider_button help %R}
+Widget button#11
+	geometry row 3
+	other error {}
+	other type button
+	other master .frame#5
+	configure text Lower
+	other pathname button#11
+	other tags {}
+	configure font Helvetica,12,Bold
+	other level {}
+	other help {}
+	configure underline 2
+	other comments {}
+	geometry column 1
+	other item_name button#11
+	other tabbing {}
+	configure command {tconx_slider_button right_lower %R}
+Widget button#2
+	geometry row 1
+	other error {}
+	other type button
+	other master .frame#2
+	configure text Apply
+	other pathname button#2
+	other tags {}
+	configure font Helvetica,12,Bold
+	other level {}
+	other help {}
+	other comments {}
+	configure underline 0
+	geometry column 1
+	other item_name button#2
+	other tabbing {}
+	configure command {tconx_slider_button apply %R}
+Widget frame#3
+	other panel {}
+	geometry row 1
+	other resize_row 0
+	other error {}
+	other type frame
+	other min_row 30
+	other master .frame#1
+	other pathname frame#3
+	other resize_column {1 0 3 0 0}
+	other tags {}
+	other level 2
+	other min_column {30 30 30 30 30}
+	other help {}
+	other comments {}
+	geometry column 1
+	other item_name frame#3
+	other tabbing {}
+	geometry sticky nesw
+Widget button#12
+	geometry row 2
+	other error {}
+	other type button
+	other master .frame#1
+	configure text {Set Manually}
+	other pathname button#12
+	other tags {}
+	configure font Helvetica,12,Bold
+	other level {}
+	other help {}
+	configure underline 4
+	other comments {}
+	geometry column 1
+	other item_name button#12
+	other tabbing {}
+	configure command {tconx_slider_button set_manually %R}
+Widget button#3
+	geometry row 1
+	other error {}
+	other type button
+	other master .frame#2
+	configure text Close
+	other pathname button#3
+	other tags {}
+	configure font Helvetica,12,Bold
+	other level {}
+	other help {}
+	other comments {}
+	configure underline 0
+	geometry column 2
+	configure command {tconx_slider_button close %R}
+	other tabbing {}
+	other item_name button#3
+Widget frame#4
+	other panel {}
+	geometry row 1
+	other resize_row {0 3 0}
+	other type frame
+	other error {}
+	other min_row {30 30 30}
+	other master .frame#3
+	other pathname frame#4
+	other resize_column 0
+	other tags {}
+	other level 3
+	other min_column 30
+	other help {}
+	other comments {}
+	geometry column 1
+	other item_name frame#4
+	other tabbing {}
+	geometry sticky nesw
+Widget frame#5
+	other panel {}
+	geometry row 1
+	other resize_row {0 0 0}
+	other error {}
+	other type frame
+	other min_row {30 30 30}
+	other master .frame#3
+	other pathname frame#5
+	other resize_column 0
+	other tags {}
+	other level 3
+	other min_column 30
+	other help {}
+	other comments {}
+	geometry column 5
+	other item_name frame#5
+	other tabbing {}
+	geometry sticky nesw
+Widget button#6
+	geometry row 1
+	other error {}
+	other type button
+	other master .frame#4
+	configure text Higher
+	other pathname button#6
+	other tags {}
+	configure font Helvetica,12,Bold
+	other level {}
+	other help {}
+	configure underline 1
+	other comments {}
+	geometry column 1
+	other item_name button#6
+	other tabbing {}
+	configure command {tconx_slider_button left_higher %R}
+Widget f
+	other generic_options {button {activebackground #ececec activeforeground Black anchor center background #d9d9d9 bitmap {} borderwidth 2 command {} comments {} cursor {} default disabled disabledforeground #a3a3a3 error {- button configuration -} font Times,0 foreground Black height 0 help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 image {} item_name sample_button justify center level {} master {} padx 9 pady 3 pathname sample_button relief raised state normal tabbing {} tags {} takefocus {} text button textvariable {} type button underline -1 width 0 wraplength 0
+		} canvas {background #d9d9d9 borderwidth 0 closeenough 1.0 comments {} confine 1 cursor {} error {- canvas configuration -} height 207 help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 insertbackground Black insertborderwidth 0 insertofftime 300 insertontime 600 insertwidth 2 item_name sample_canvas level {} master {} pathname sample_canvas relief flat scrollregion {} selectbackground #c3c3c3 selectborderwidth 1 selectforeground Black tabbing {} tags {} takefocus {} type canvas width 295 xscrollcommand {} xscrollincrement 0 yscrollcommand {} yscrollincrement 0
+		} checkbutton {activebackground #ececec activeforeground Black anchor center background #d9d9d9 bitmap {} borderwidth 2 command {} comments {} cursor {} disabledforeground #a3a3a3 error {- checkbutton configuration -} font Times,0 foreground Black height 0 help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 image {} indicatoron 1 item_name sample_checkbutton justify center level {} master {} offvalue 0 onvalue 1 padx 1 pady 1 pathname sample_checkbutton relief flat selectcolor #b03060 selectimage {} state normal tabbing {} tags {} takefocus {} text checkbutton textvariable {} type checkbutton underline -1 variable example_checkbutton width 0 wraplength 0
+		} entry {background #d9d9d9 borderwidth 2 comments {} cursor xterm error {- entry configuration -} exportselection 1 font Times,0 foreground Black help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 insertbackground Black insertborderwidth 0 insertofftime 300 insertontime 600 insertwidth 2 item_name sample_entry justify left level {} master {} pathname sample_entry relief sunken selectbackground #c3c3c3 selectborderwidth 1 selectforeground Black show {} state normal tabbing {} tags {} takefocus {} textvariable entry type entry width 20 xscrollcommand {}
+		} frame {
+		} label {
+		} listbox {background #d9d9d9 borderwidth 2 comments {} cursor {} error {- listbox configuration -} exportselection 1 font Times,0 foreground Black height 10 help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 item_name sample_listbox level {} master {} pathname sample_listbox relief sunken selectbackground #c3c3c3 selectborderwidth 1 selectforeground Black selectmode browse setgrid 0 tabbing {} tags {} takefocus {} type listbox width 20 xscrollcommand {} yscrollcommand {}
+		} menubutton {
+		} message {
+		} radiobutton {activebackground #ececec activeforeground Black anchor center background #d9d9d9 bitmap {} borderwidth 2 command {} comments {} cursor {} disabledforeground #a3a3a3 error {- radiobutton configuration -} font Times,0 foreground Black height 0 help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 image {} indicatoron 1 item_name sample_radiobutton justify center level {} master {} padx 1 pady 1 pathname sample_radiobutton relief flat selectcolor #b03060 selectimage {} state normal tabbing {} tags {} takefocus {} text radiobutton textvariable {} type radiobutton underline -1 value {} variable example_radiobutton width 0 wraplength 0
+		} scale {
+		} scrollbar {activebackground #ececec activerelief raised background #d9d9d9 borderwidth 2 command {} comments {} cursor {} elementborderwidth -1 error {- scrollbar configuration -} help {} highlightbackground #d9d9d9 highlightcolor Black highlightthickness 1 item_name sample_scrollbar jump 0 level {} master {} orient vertical pathname sample_scrollbar relief sunken repeatdelay 300 repeatinterval 100 tabbing {} tags {} takefocus {} troughcolor #c3c3c3 type scrollbar width 15
+		} text {
+		}
+	}
+	other panel {}
+	other resize_row {3 0}
+	other type frame
+	other code {tconx_slider_init $root
+}
+	other min_row {30 30}
+	other master {}
+	other pathname f
+	other resize_column 3
+	other tags {}
+	other level 0
+	configure background #e9e9e9
+	other min_column 30
+	other help {}
+	other Colors {black white bisque grey red green blue magenta yellow #d9d9d9}
+	other comments {}
+	other item_name f
+	other tabbing {}
+Widget button#7
+	geometry row 3
+	other error {}
+	other type button
+	other master .frame#4
+	configure text Lower
+	other pathname button#7
+	other tags {}
+	configure font Helvetica,12,Bold
+	other level {}
+	other help {}
+	configure underline 0
+	other comments {}
+	geometry column 1
+	other item_name button#7
+	other tabbing {}
+	configure command {tconx_slider_button left_lower %R}
+Widget button#8
+	geometry row 2
+	other error {}
+	other type button
+	other master .frame#4
+	configure text {Set value}
+	other pathname button#8
+	other tags {}
+	configure font Helvetica,12,Bold
+	other level {}
+	other help {}
+	configure underline 0
+	other comments {}
+	geometry column 1
+	other item_name button#8
+	other tabbing {}
+	configure command {tconx_slider_button left_set %R}
+Widget button#9
+	geometry row 1
+	other error {}
+	other type button
+	other master .frame#5
+	configure text Higher
+	other pathname button#9
+	other tags {}
+	configure font Helvetica,12,Bold
+	other level {}
+	other help {}
+	configure underline 2
+	other comments {}
+	geometry column 1
+	other item_name button#9
+	other tabbing {}
+	configure command {tconx_slider_button right_higher %R}
+Widget label#1
+	geometry row 1
+	other error {}
+	other type label
+	other master .frame#3
+	configure text lowval
+	other pathname label#1
+	other tags {}
+	configure font Courier,12
+	other level {}
+	other help {}
+	other comments {}
+	geometry column 2
+	other item_name label#1
+	other tabbing {}
+Widget scale#1
+	configure orient h
+	configure variable %B.scale_var
+	other error {}
+	other tags {}
+	other level {}
+	other help {}
+	configure command {tconx_slider_scale_motion %R}
+	configure label Value
+	other master .frame#3
+	other pathname scale#1
+	geometry sticky ew
+	other tabbing {}
+	other item_name scale#1
+	geometry row 1
+	other type scale
+	geometry column 3
+	other comments {}
+Widget label#2
+	geometry row 1
+	other error {}
+	other type label
+	other master .frame#3
+	configure text highval
+	other pathname label#2
+	other tags {}
+	configure font Courier,12
+	other level {}
+	other help {}
+	other comments {}
+	geometry column 4
+	other item_name label#2
+	other tabbing {}
+	other command {conx_slider_button apply %R}
+Widget frame#1
+	other panel {}
+	geometry row 1
+	other resize_row {1 3}
+	other error {}
+	other type frame
+	other min_row {30 8}
+	other master {}
+	other pathname frame#1
+	other resize_column 3
+	other tags {}
+	other level 1
+	other min_column 30
+	other help {}
+	other comments {}
+	geometry column 1
+	other item_name the_frame
+	other tabbing {}
+	geometry sticky nesw
+

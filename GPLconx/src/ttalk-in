@@ -1,0 +1,159 @@
+nil := 3.3
+nil isNil
+nil notNil
+.3e-1 isFloat
+Float isFloat
+.3e-1 notFloat
+Float notFloat
+q
+true
+false
+false or: true. false or: true
+false xor: true not
+false xor: Boolean true
+Boolean false xor: Boolean false
+Boolean true xor: true
+true and: false
+true and: true
+false and: true
+false and: false
+false xor: false not
+true := 3.3
+f1 := 3.3
+f1 between: (f2 := 2.2) and: 3.4
+MI := ModelIdentifier
+MI new: 'uhp' // for CClsModelIdentifier::CClsModelIdentifier(ConxModlType)
+MI new: 'pd'  // for CClsModelIdentifier::CClsModelIdentifier(ConxModlType)
+MI new: 'kd'  // for CClsModelIdentifier::CClsModelIdentifier(ConxModlType)
+ModelIdentifier := 3.3
+MI := 3.3
+MI := ModelIdentifier
+L1 := Point x: 3.3 y: 4.4 model: ModelIdentifier new: uhp
+L1 := Point x: 3.3 y: 4.4 m: #uhp
+L1 := Point x: 3.3 y: 4.4 model: (ModelIdentifier new: #uhp)
+L2 := L1
+ans
+L2 := Point x: 3.3 y: 4.7 model: (ModelIdentifier new: 'poincare upper ')
+L1 distanceFromPoint: L2
+p1 := Point x: .3 y: .3 m: (MI new: 'k')
+p2 := Point x: -.3 y: -.3 m: kd
+p3 := Point x: 0 y:  m: (MI new: 'k')
+p3 := Point x: 0 y: 0 m: (MI new: 'k')
+3.3 bewte
+3.3 bewte: (MI new: 'k')
+p3 betweenColinearPoint: p1 andOtherColinearPoint: p2
+p2 betweenColinearPoint: p1 andOtherColinearPoint: p3
+y := 4.4. x := 3.3. p1 := Point x: x y: y m: uhp. p2 := Point x: x clone y: y clone m: uhp clone
+y := 0.1
+p1
+x set: 0.1
+p1 // bound late
+p2 // bound early, if you will.
+//Test read-onlyness
+uhp set: 'p '
+uhp clone set: 'P '
+uhp isModelIdentifier
+uhp isParseError
+uhp unknownUnaryMessg isParseError
+uhp unknownUnaryMessg isModelIdentifier
+c1 := Color R: .3 G: .5 B: .7
+c1 R
+c1 G
+c1 B
+c1 H
+c1 S
+c1 V
+c2 := Color H: 210 S: 0.571429 V: 0.7
+c2 R: .4 G: .5 B: .1
+c2
+c2 class
+Float superClass
+Object superClass
+ModelIdentifier new: 'poincare upper h'
+ModelIdentifier new: #poincare_upper
+ModelIdentifier new: #poincare-upper
+ModelIdentifier new: #poincare
+#hi class
+#hi superClass
+Symbol class
+Symbol superClass
+Color new
+Color new isColor
+#hi isCharacterArray
+'hi' isCharacterArray
+#hi isSymbol
+'hi' isSymbol
+#hi isColor
+#hi notColor
+Array with: 3 with: 4 with:5 with: #hi
+l := Array new
+l at: 1 put: 'first'
+d := Drawable new
+dm := d drawingMethod
+dm set: #B
+dm set: 'hi'
+'hello' set #hi
+'hello' set: #hi
+'hello' set: 'ss'
+#hi length
+'' length
+# length
+#h length
+#.
+# .
+'12345' length
+L := Boolean true
+L set: false
+L
+true set: false
+3.3 set: false
+3.3 set: 4.4
+l1 := ans set: 2.2
+l1
+uhp set: (ModelIdentifier new: #kd)
+(ModelIdentifier new: #kd) set: #pd
+#hi set: #j
+#hi set: 'hie'
+2.2 between: 2 and: 3
+2.2 between: 2. and: 3
+2.
+2. #hi
+2.. #hi
+d := Array with: #a1 with: #a2 with: #a3
+d at: 1
+d at: 1.0
+d at: -1
+d at: 8
+d at: 8 put: j
+d at: 4 put: 'wow'
+d := Drawable new
+d color
+d drawingMethod
+d color set: (Color R: .1 G: .3 B: .44)
+d
+d thickness
+d thickness set: 2.5
+d
+d longwayMethodTolerance
+d
+d := Drawable new
+d longwayMethodTolerance set: .001
+d
+p := Point new
+p x
+p y
+p y set: .39
+p
+p m
+p model
+p model set: #kd
+p
+p x 
+p y
+p y set: -.1
+p model set: #uhp
+p
+'that was truncated as it should have been'
+((Array with: System) at: 1) helpMe
+Boolean help
+Object help

@@ -1,0 +1,29 @@
+#! /bin/sh
+
+# When `make check' calls this, srcdir is set.  We'll set it in case
+# you want to try `/bin/sh ./ttalk-sh' or `/bin/sh src/ttalk-sh.
+
+if test -z "$srcdir"; then
+    srcdir=.
+fi
+if test ! -f "${srcdir}/ttalk-o"; then
+    srcdir=src
+fi
+if test ! -f "${srcdir}/ttalk-o"; then
+    echo "You must chdir to this script's directory before running it.";
+    exit 77;
+fi
+if test -z "$top_builddir"; then
+    top_builddir=..
+fi
+if test ! -f "${top_builddir}/src/tparser"; then
+    top_builddir=.
+fi
+if test ! -f "${top_builddir}/src/tparser"; then
+    echo "You must chdir to this script's directory before running it.";
+    exit 77;
+fi
+
+# The real test:
+rm ${srcdir}/ttalk-o
+${top_builddir}/src/tparser any three args < ${srcdir}/ttalk-in > ${srcdir}/ttalk-o

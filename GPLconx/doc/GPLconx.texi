@@ -1,0 +1,216 @@
+% Copyright (C) 2001 David L. Chandler
+% This is the GPLconx manual.
+% For copying conditions for GPLconx, see the file gpl.texi.
+% For copying conditions for GPLconx's documentation, see the file `FDL' DLC
+% Use the Free Documentation License.
+
+\input texinfo @c -*-texinfo-*-
+@c %**start of header
+@setfilename GPLconx.info
+@settitle GPLconx
+@c For double-sided printing, uncomment:
+@c @setchapternewpage odd
+@c %**end of header
+
+@include version.texi
+
+@iftex
+@comment DLC use @finalout when done editing this file and before a release.
+@end iftex
+
+@direntry
+* GPLconx: (GPLconx).           Visualizing 2-D hyperbolic geometry.
+@end direntry
+
+@ifinfo
+GPLconx: Visualizing 2-D Hyperbolic Geometry, by David L. Chandler.
+
+This file documents GPLconx.
+
+Copyright (C) 1999, 2000, 2001 David L. Chandler.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+@ignore
+Permission is granted to process this file through Tex and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@end ignore
+Permission is granted to copy and distribute modified versions of
+this manual under the conditions for verbatim copying, provided that
+the entire resulting derived work is distributed under the terms of
+a permission notice identical to this one.
+
+Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for
+modified versions.
+@end ifinfo
+
+@titlepage
+@title GPLconx
+@subtitle Visualizing 2-D Hyperbolic Geometry
+@subtitle Edition @value{EDITION}, for GPLconx version @value{VERSION}
+@subtitle @value{UPDATED}
+@author by David L. Chandler
+
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 2001 David L. Chandler.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the same conditions as for modified versions.
+@end titlepage
+
+@node Top, Overview, (dir), (dir)
+@comment  node-name,  next,  previous,  up
+
+@ifinfo
+This file documents GPLconx, software that visualizes several models of
+2-D hyperbolic geometry.
+This is edition @value{EDITION}, for GPLconx version @value{VERSION}.
+
+@end ifinfo
+
+@menu
+* Overview::                    An introduction to GPLconx.
+* Distribution::                How to get GPLconx.
+* Invoking GPLconx::            Running GPLconx.
+* Validation::                  Why GPLconx's pictures are accurate.
+* Concept Index::               A list of important concepts.
+
+@end menu
+
+@include gpl.texi
+
+@node Overview, Distribution, Top, Top
+@chapter Overview
+
+GPLconx is a program for visualizing the hyperbolic geometry of two dimensions
+in three
+models, the Poincar@'e Upper Half Plane (UHP), the Beltrami-Klein disk,
+and the Poincar@'e Disk.  The name is pronounce ``GEE-PEE-ELL KAHN-ICKS'',
+as in conic sections.  This is because the visualization is limited to
+points, lines, line segments, circles, ellipses, hyperbolas, parabolas, and
+curves equidistant from lines, and because GPLconx is distributed under
+the terms of the GNU General Public License.  @xref{Distribution}.
+
+GPLconx is intended to inform and educate.  You should use GPLconx if you're
+taking a geometry class that is discussing non-Euclidean geometries such as
+hyperbolic, elliptical, Riemann, etc.  If your instruction focuses on
+postulates, your intuition will get a boost from playing with GPLconx.
+@c DLC
+
+While you are feeding your brain, take a look at @url{http://www.fsf.org}
+to learn more about why software like GPLconx wants to be free.
+
+The author is David L. Chandler, who did original development in the summer
+of 1996 under the
+mentorship of Dr. D. E. Stevenson, Associate Professor of Computer Science at
+Clemson University in Clemson, South Carolina.
+
+@node Distribution, Invoking GPLconx, Overview, Top
+@chapter Distribution
+
+@cindex obtaining GPLconx
+GPLconx is "free"; this means that everyone is free to use it and
+free to redistribute it on a free basis.  GPLconx is not in the public
+domain; it is copyrighted and there are restrictions on its
+distribution, but these restrictions are designed to permit everything
+that a good cooperating citizen would want to do.  What is not allowed
+is to try to prevent others from further sharing any version of GPLconx
+that they might get from you.  The precise conditions are found in the
+GNU General Public License that comes with GPLconx and also appears
+following this section.
+
+The easiest way to get a copy of GPLconx is from someone else who has
+it.  You need not ask for permission to do so, or tell any one else;
+just copy it.
+
+If you have access to the Internet, you can get the latest version of
+GPLconx from SourceForge; see @url{http://gplconx.sourceforge.net}.
+
+To give you an idea of the freedom that you have, this section is carved from
+the documentation for XEmacs, another piece of software that is shared
+under the GNU General Public License.  Visit @url{http://www.fsf.org} for
+more about free software and free documentation.
+
+@node Invoking GPLconx, Validation, Distribution, Top
+@chapter Invoking GPLconx
+
+Try `tconx --help'.
+@c DLC fill in the blanks!
+@c Books to read.
+@c Mention GSSM.
+
+@node Validation, Concept Index, Invoking GPLconx, Top
+@chapter Validation
+
+Calculators display numbers which
+sometimes correlate to the mathematical reality that you think they do.
+A desktop computer is a bigger calculator, so people trust it even more than
+they do a pocket calculator.  Why should you trust GPLconx to make accurate
+pictures rather than just pretty pictures?  In fact, how do you know it
+is not just a failed attempt to draw the conic sections in Euclidean
+geometry?  Well, you should trust the calculator only as much as the
+calculator's designer.  When I wrote the math-intensive portions of
+GPLconx, I had very little experience with floating-point arithmetic.  I
+have since learned a bit more, but I haven't done any numerical analysis.
+I treat Type I (vertical) lines in the Poincar@'e UHP separately from 
+Type II (semi-circular) lines, but I don't use the best numerics to determine
+when a line is actually Type I.
+
+In addition, I give you access to two methods to draw a conic section -- the
+faster Bresenham method and the slower brute-force method.  The slower method
+requires a parameter that you must specify if it is to produce a pretty curve.
+For the faster method, I find points on the conic section
+analytically@footnote{For instance, if you drop a perpendicular from the
+focus of a parabola to the line, you can then make a circle centered at the
+focus with a radius equal to one half of the distance between the focus and
+the line.  Of the two points where the perpendicular and the circle intersect,
+one and only one lies between the focus and the point where the perpendicular
+intersects the line.  That point is on the parabola.
+} and
+then use the smoothness of the curves to my advantage as I follow my nose
+along the curves@footnote{I find the value of the defining equation of the
+conic section at the center of each neighboring pixel in the direction that
+I'm traveling.  I then go where the absolute value is minimized and draw that
+pixel.  Repeat until you run off of the screen or outside of the unit circle.}.
+@c DLC Use some Real Analysis for once in your life!
+@c DLC What is the name of the line of a parabola???  ?-trix
+@c DLC do you actually use the center of each pixel??
+
+When the Bresenham method tracks a curve to the boundary of the viewable
+universe, it quits when it should not in some cases.  When you look at a circle
+drawn by the slow, reliable method
+and can see four different curves that are not connected, the Bresenham method
+will mess that up because it does not compute the point of re-entry and does
+not begin tracing anew.
+
+Also, when you use a Type I line in the UHP for a parabola, that may not work.
+@c DLC check it out and fix it if necessary.
+
+There are no other known mathematical/algorithmic bugs.
+@c DLC include example on how to get to this bug.  Even better, fix it!
+
+@node Concept Index,  , Validation, Top
+@unnumbered Concept Index
+
+This is an alphabetical list of the important concepts discussed.
+
+@printindex cp
+
+@contents
+@bye
