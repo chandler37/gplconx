@@ -27,62 +27,8 @@
 #include <assert.h>
 
 #include "point.hh"
-extern "C" {
 #include "viewer.h"
-}
 
-#include "decls.hh"
-
-// class CConxPoint;
-// class CConxLine;
-// class CConxCircle;
-// class CConxParabola;
-// class CConxHypEllipse;
-// class CConxEqDistCurve;
-
-/* DLC delete this junk!
-//////////////////////////////////////////////////////////////////////////////
-// Abstract class:
-class CConxGeomModel {
-public:
-  static double dist(const CConxPoint& A, const CConxPoint& B);
-  static virtual double dist(double x1, double y1, double x2, double y2)=0;
-  static virtual void convert(double x, double y, double &cx, double &cy,
-                              ConxModlType modl)=0;
-
-
-protected:
-  static virtual double dist(double x1, double y1, double x2, double y2)=0;
-};
-
-// The Poincare Upper Half Plane:
-class CConxPUHP : VIRT public CConxGeomModel {
-};
-
-// The Klein Disk (Beltrami-Klein Disk):
-class CConxKD : VIRT public CConxGeomModel {
-};
-
-// The Poincare Disk:
-class CConxPD : VIRT public CConxGeomModel {
-};
-
-inline CConxGeomModel::dist(const CConxPoint& A, const CConxPoint& B)
-{
-  return dist(A.getX(), A.getY(), B.getX(), B.getY());
-}
-*//* DLC */
-
-
-//////////////////////////////////////////////////////////////////////////////
-// A class with static functions that simplify coding for multiple models
-// of hyperbolic geometry.  There is some overhead involved, of course.
-class CConxMultiModel : VIRT public CConxObject {
-  CCONX_CLASSNAME("CConxMultiModel")
-public:
-  static void mmconvert(double xFrom, double yFrom, ConxModlType mFrom,
-                        double *xTo, double *yTo, ConxModlType mTo);
-};
-
+#include "CObject.hh"
 
 #endif // GPLCONX_HYPMATH_CXX_H
