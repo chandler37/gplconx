@@ -229,27 +229,28 @@ class CConxPrintableOwnerArray
   : VIRT public CConxOwnerArray<Type>, public CConxPrintable {
   CCONX_CLASSNAME("CConxPrintableOwnerArray")
 public:
-  CConxPrintableOwnerArray(const CConxPrintableOwnerArray &o) : CConxOwnerArray(o) { }
+  CConxPrintableOwnerArray(const CConxPrintableOwnerArray &o)
+    : CConxOwnerArray<Type>(o) { }
   CConxPrintableOwnerArray() { }
   
   // For easy initialization of up to four entries:
   CConxPrintableOwnerArray(const Type &v1, const Type &v2,
                            const Type &v3, const Type &v4) throw(const char *)
-    : CConxOwnerArray(v1, v2, v3, v4) { }
+    : CConxOwnerArray<Type>(v1, v2, v3, v4) { }
   CConxPrintableOwnerArray(const Type &v1, const Type &v2,
                            const Type &v3) throw(const char *)
-    : CConxOwnerArray(v1, v2, v3) { }
+    : CConxOwnerArray<Type>(v1, v2, v3) { }
   CConxPrintableOwnerArray(const Type &v1, const Type &v2) throw(const char *)
-    : CConxOwnerArray(v1, v2) { }
+    : CConxOwnerArray<Type>(v1, v2) { }
   CConxPrintableOwnerArray(const Type &v1) throw(const char *)
-    : CConxOwnerArray(v1) { }
+    : CConxOwnerArray<Type>(v1) { }
   CConxPrintableOwnerArray(Type *v1, Type *v2 = NULL, Type *v3 = NULL,
                            Type *v4 = NULL) throw(const char *)
-    : CConxOwnerArray(v1, v2, v3, v4) { }
+    : CConxOwnerArray<Type>(v1, v2, v3, v4) { }
 
   CConxPrintableOwnerArray &operator=(const CConxPrintableOwnerArray &o)
   {
-    (void) CConxOwnerArray::operator=(o);
+    (void) CConxOwnerArray<Type>::operator=(o);
     return *this;
   }
 
